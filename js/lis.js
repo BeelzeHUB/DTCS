@@ -1,1187 +1,401 @@
-/* ========================================================
-    HIS - Laboratory Information System Controller Actions
-    ======================================================== */
+/* =======================================================
+   DTCS - Laboratory Information System (LIS) Consolidated Controller
+   Main sidebar = all DTCS modules (handled by dashboard.css).
+   Laboratory Information = overview + 6 scroll sections; the sidebar
+   sub-menu highlights the section in view (scroll-spy) and can be
+   hidden/unhidden with the chevron button.
+   Handles sidebar toggle, sub-menu toggle, scroll-spy, search, toast,
+   spinner, charts, and per-section logic.
+   ======================================================= */
 
-document.addEventListener('DOMContentLoaded', function () {
-    console.log("Laboratory Information System pipeline connected.");
-
-    localStorage.removeItem('lis_patient_profile');
-
-    // Sidebar hide/unhide toggle (collapses to a slim sliver, not fully hidden)
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function () {
-            const hidden = document.body.classList.toggle('sidebar-hidden');
-            sidebarToggle.setAttribute('aria-label', hidden ? 'Show sidebar' : 'Hide sidebar');
-        });
-    }
-
-    // Simple interaction to toggle individual card states mockups
-    const testCards = document.querySelectorAll('.test-selection-card');
-    const testInfoArea = document.getElementById('testInfoArea');
-    const testInfoTitle = document.getElementById('testInfoTitle');
-    const testInfoDescription = document.getElementById('testInfoDescription');
-    const closeTestInfo = document.getElementById('closeTestInfo');
-
-    const testExplanations = {
-        'CBC': {
-            title: 'Complete Blood Count (CBC)',
-            description: 'Measures different components of blood including red blood cells, white blood cells, hemoglobin, hematocrit, and platelets. Used to evaluate overall health, detect infections, anemia, leukemia, and other blood disorders. For this patient, CBC helps monitor hemoglobin levels and detect any blood abnormalities.'
-        },
-        'Urinalysis': {
-            title: 'Urinalysis',
-            description: 'Examines the physical, chemical, and microscopic properties of urine. Detects protein, glucose, ketones, blood, and pH levels. Helps diagnose urinary tract infections, kidney diseases, diabetes, and liver problems. For this patient, it screens for kidney function and glucose abnormalities.'
-        },
-        'Blood Sugar': {
-            title: 'Blood Sugar Test',
-            description: 'Measures glucose levels in the blood. Fasting blood sugar is taken after 8-12 hours without eating. Postprandial is measured 2 hours after eating. Used to diagnose diabetes, monitor blood sugar control, and assess risk for diabetes complications. For this patient, monitors glucose control given the fasting protocol noted in the clinical note.'
-        },
-        'Lipid Profile': {
-            title: 'Lipid Profile',
-            description: 'Measures cholesterol and triglycerides in the blood. Includes Total Cholesterol, HDL (good), LDL (bad), and Triglycerides. Requires 12-hour fasting for accurate results. Helps assess risk for heart disease, stroke, and atherosclerosis. For this patient, screens cardiovascular risk and monitors lipid levels.'
-        }
-    };
-
-    testCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const wasChecked = this.classList.contains('checked');
-
-            if (!wasChecked) {
-                this.classList.add('checked');
-                const targetRadio = this.querySelector('.custom-radio-circle');
-                if(targetRadio) {
-                    targetRadio.classList.add('checked');
-                }
-            } else {
-                this.classList.remove('checked');
-                const targetRadio = this.querySelector('.custom-radio-circle');
-                if(targetRadio) {
-                    targetRadio.classList.remove('checked');
-                }
-            }
-
-            updateTestDescription();
-
-            const checkedCards = document.querySelectorAll('.test-selection-card.checked');
-            if (checkedCards.length > 0) {
-                triggerMediSenseForSelectedTests();
-            }
-        });
+/* ---------- Sidebar collapse toggle (main DTCS sidebar) ---------- */
+function lisSetupSidebar() {
+    const toggle = document.getElementById('sidebarToggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function () {
+        const hidden = document.body.classList.toggle('sidebar-hidden');
+        toggle.setAttribute('aria-label', hidden ? 'Show sidebar' : 'Hide sidebar');
     });
-
-    if (closeTestInfo && testInfoArea) {
-        closeTestInfo.addEventListener('click', function() {
-            testInfoArea.classList.add('d-none');
-            testCards.forEach(c => {
-                c.classList.remove('checked');
-                const radio = c.querySelector('.custom-radio-circle');
-                if (radio) radio.classList.remove('checked');
-            });
-            closeTestInfo.classList.add('d-none');
-
-            testInfoTitle.textContent = 'Requested Laboratory Tests';
-            testInfoDescription.textContent = 'Select a test above to view its description, purpose, and how it helps this patient. Available tests: CBC, Urinalysis, Blood Sugar, and Lipid Profile.';
-            testInfoArea.classList.remove('d-none');
-        });
-    }
-
-    function updateTestDescription() {
-        const checkedCards = document.querySelectorAll('.test-selection-card.checked');
-
-        const checkedNames = [];
-        checkedCards.forEach(card => {
-            const testName = card.querySelector('.font-weight-semibold');
-            if (testName) {
-                checkedNames.push(testName.textContent.trim());
-            }
-        });
-
-        if (checkedNames.length === 0) {
-            testInfoTitle.textContent = 'Requested Laboratory Tests';
-            testInfoDescription.textContent = 'Select a test above to view its description, purpose, and how it helps this patient. Available tests: CBC, Urinalysis, Blood Sugar, and Lipid Profile.';
-            testInfoArea.classList.remove('d-none');
-            const closeBtn = document.getElementById('closeTestInfo');
-            if (closeBtn) closeBtn.classList.add('d-none');
-            return;
-        }
-
-        const parts = checkedNames.map(function(name) {
-            const info = testExplanations[name];
-            const title = info ? info.title : name;
-            const desc = info ? info.description : '';
-            return '<strong>' + title + ':</strong> ' + desc;
-        });
-
-        testInfoTitle.textContent = 'Requested Laboratory Tests (' + checkedNames.length + ')';
-        testInfoDescription.innerHTML = parts.join('<br><br>');
-        testInfoArea.classList.remove('d-none');
-        const closeBtn = document.getElementById('closeTestInfo');
-        if (closeBtn) closeBtn.classList.remove('d-none');
-    }
-
-    // Save Changes action handler - saves patient profile locally without redirect
-    const saveBtn = document.querySelector('.btn-save-changes');
-    if(saveBtn) {
-        saveBtn.addEventListener('click', function() {
-            const patientNameDisplay = document.getElementById('patientNameDisplay');
-            const patientIdDisplay = document.getElementById('patientIdDisplay');
-            const avatarInitials = document.getElementById('patientAvatarInitials');
-            const editableFields = document.querySelectorAll('.patient-editable');
-            const clinicalNote = document.querySelector('.clinical-note-textarea');
-
-            const profileData = {
-                name: patientNameDisplay ? (patientNameDisplay.querySelector('input') ? patientNameDisplay.querySelector('input').value.trim() : patientNameDisplay.textContent.trim()) : '',
-                id: patientIdDisplay ? (patientIdDisplay.querySelector('input') ? patientIdDisplay.querySelector('input').value.trim() : (patientIdDisplay.textContent || '').trim()) : '',
-                initials: avatarInitials ? (avatarInitials.textContent || '').trim() : '',
-                fields: {},
-                clinicalNote: clinicalNote ? (clinicalNote.textContent || '').trim() : '',
-                savedAt: new Date().toISOString()
-            };
-
-            editableFields.forEach(function(field) {
-                const fieldName = field.dataset.field;
-                const input = field.querySelector('input');
-                const select = field.querySelector('select');
-                profileData.fields[fieldName] = input ? input.value.trim() : (select ? select.value.trim() : field.textContent.trim());
-            });
-
-            localStorage.setItem('lis_patient_profile', JSON.stringify(profileData));
-            updatePrintButtonState();
-            appendPendingToResults();
-
-            const originalText = this.innerHTML;
-            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Saving...';
-            this.disabled = true;
-
-            setTimeout(() => {
-                this.innerHTML = '<i class="bi bi-check-lg me-2"></i>Saved';
-                this.classList.remove('btn-save-changes');
-                this.classList.add('btn-success');
-
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.classList.remove('btn-success');
-                    this.classList.add('btn-save-changes');
-                    this.disabled = false;
-                }, 2000);
-            }, 800);
-        });
-    }
-
-    // Print Result action handler
-    const printBtn = document.querySelector('.btn-outline-secondary .bi-printer');
-    if (printBtn) {
-        const button = printBtn.closest('.btn-outline-secondary');
-        if (button) {
-            button.addEventListener('click', function() {
-                if (!isPatientProfileComplete()) {
-                    alert('Please fill up the Patient Profile first before printing.');
-                    return;
-                }
-                window.print();
-            });
-        }
-    }
-
-    // Go to Queue action handler
-    const queueBtn = document.querySelector('.btn-validate-queue');
-    if (queueBtn) {
-        queueBtn.addEventListener('click', function() {
-            const modalEl = document.getElementById('validationQueueModal');
-            if (modalEl && window.bootstrap) {
-                const modal = new bootstrap.Modal(modalEl);
-                renderValidationQueue();
-                modal.show();
-            } else {
-                const pendingCard = document.querySelector('.pending-card');
-                if (pendingCard) pendingCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-    }
-
-    // Table row action button handlers (event delegation for dynamic rows)
-    const resultsTable = document.querySelector('.alignment-middle-table');
-    if (resultsTable) {
-        resultsTable.addEventListener('click', function(e) {
-            const editBtn = e.target.closest('.btn-table-edit');
-            const deleteBtn = e.target.closest('.btn-table-delete');
-            const printBtn = e.target.closest('.btn-table-print');
-
-            if (editBtn) {
-                const row = editBtn.closest('tr');
-                if (row) {
-                    openLabResultEditor(row, {
-                        map: {
-                            param: v => `<span class="d-block font-weight-semibold text-dark">${v}</span>`,
-                            result: v => `<span class="font-weight-bold text-dark">${v}</span>`,
-                            range: v => `<span class="text-muted">${v || '—'}</span>`,
-                            unit: v => `<span class="text-muted">${v || 'N/A'}</span>`
-                        },
-                        statusClass: {
-                            'Normal': 'bg-soft-success text-success',
-                            'High': 'bg-soft-danger text-danger',
-                            'Low': 'bg-soft-danger text-danger',
-                            'Critical': 'bg-soft-danger text-danger'
-                        }
-                    });
-                }
-            }
-
-            if (deleteBtn) {
-                const row = deleteBtn.closest('tr');
-                if (row) {
-                    if (confirm('Are you sure you want to delete this lab result?')) {
-                        row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                        row.style.opacity = '0';
-                        row.style.transform = 'translateX(-20px)';
-                        setTimeout(function() {
-                            row.remove();
-                        }, 300);
-                    }
-                }
-            }
-
-            if (printBtn) {
-                if (!isPatientProfileComplete()) {
-                    alert('Please fill up the Patient Profile first before printing.');
-                    return;
-                }
-                const row = printBtn.closest('tr');
-                if (row) {
-                    printRowResult(row);
-                }
-            }
-        });
-    }
-
-    setupAddRecordModal({
-        map: {
-            param: v => `<span class="d-block font-weight-semibold text-dark">${v}</span>`,
-            result: v => `<span class="font-weight-bold text-dark">${v}</span>`,
-            range: v => `<span class="text-muted">${v || '—'}</span>`,
-            unit: v => `<span class="text-muted">${v || 'N/A'}</span>`
-        },
-        statusClass: {
-            'Normal': 'bg-soft-success text-success',
-            'High': 'bg-soft-danger text-danger',
-            'Low': 'bg-soft-danger text-danger',
-            'Critical': 'bg-soft-danger text-danger'
-        }
-    });
-
-    setupSearchFilter();
-    setupSearchAutocomplete();
-    setupMediSense();
-    setupPatientProfileEditor();
-    setupPatientIdManager();
-    setupValidationQueue();
-    updatePrintButtonState();
-});
-
-/* ========================================================
-    LIS - Patient ID Manager (localStorage-based auto-increment)
-    ======================================================== */
-function setupPatientIdManager() {
-    const patientIdDisplay = document.getElementById('patientIdDisplay');
-    if (!patientIdDisplay) return;
-
-    const STORAGE_KEY = 'lis_patient_id_counter';
-
-    function getNextId() {
-        let counter = localStorage.getItem(STORAGE_KEY);
-        if (!counter) {
-            counter = 1;
-        } else {
-            counter = parseInt(counter, 10) + 1;
-        }
-        localStorage.setItem(STORAGE_KEY, counter);
-        return counter;
-    }
-
-    function getCurrentId() {
-        const counter = localStorage.getItem(STORAGE_KEY);
-        return counter ? parseInt(counter, 10) : 1;
-    }
-
-    function updatePatientIdDisplay() {
-        const currentId = getCurrentId();
-        const input = patientIdDisplay.querySelector('input');
-        if (input) {
-            input.value = String(currentId).padStart(2, '0');
-        } else {
-            patientIdDisplay.textContent = 'ID: ' + String(currentId).padStart(2, '0');
-        }
-    }
-
-    updatePatientIdDisplay();
-
-    window.lisPatientIdManager = {
-        getNextId: getNextId,
-        getCurrentId: getCurrentId,
-        updatePatientIdDisplay: updatePatientIdDisplay
-    };
 }
 
-/* ========================================================
-    LIS - Patient Profile Validation
-    ======================================================== */
-function isPatientProfileComplete() {
-    const patientNameDisplay = document.getElementById('patientNameDisplay');
-    const patientIdDisplay = document.getElementById('patientIdDisplay');
-    const profileRows = document.querySelectorAll('.table-profile-info tr');
-    const ageField = profileRows[0] ? profileRows[0].querySelector('td:last-child') : null;
-    const genderField = profileRows[1] ? profileRows[1].querySelector('td:last-child') : null;
-
-    function getFieldValue(field) {
-        if (!field) return '';
-        const input = field.querySelector('input');
-        const select = field.querySelector('select');
-        if (input) {
-            const val = input.value.trim();
-            if (val !== '' && val !== input.placeholder) {
-                return val;
-            }
-            const text = (field.textContent || '').trim();
-            if (text && text !== input.placeholder) {
-                return text;
-            }
-        }
-        if (select) {
-            const val = select.value.trim();
-            if (val !== '') {
-                return val;
-            }
-        }
-        const text = (field.textContent || '').trim();
-        return text !== '' ? text : '';
-    }
-
-    const name = getFieldValue(patientNameDisplay);
-    const id = patientIdDisplay ? (patientIdDisplay.querySelector('input') ? patientIdDisplay.querySelector('input').value.trim() : (patientIdDisplay.textContent || '').trim()) : '';
-    const age = getFieldValue(ageField);
-    const gender = getFieldValue(genderField);
-
-    return name !== '' && id !== '' && age !== '' && gender !== '';
-}
-
-function updatePrintButtonState() {
-    const complete = isPatientProfileComplete();
-    const printButtons = document.querySelectorAll('.btn-table-print');
-    printButtons.forEach(function(btn) {
-        btn.disabled = !complete;
-        btn.style.opacity = complete ? '1' : '0.5';
-        btn.style.cursor = complete ? 'pointer' : 'not-allowed';
-    });
-
-    const topPrintBtn = document.querySelector('.btn-outline-secondary .bi-printer');
-    if (topPrintBtn) {
-        const button = topPrintBtn.closest('.btn-outline-secondary');
-        if (button) {
-            button.disabled = !complete;
-            button.style.opacity = complete ? '1' : '0.5';
-            button.style.cursor = complete ? 'pointer' : 'not-allowed';
-        }
-    }
-}
-
-/* ========================================================
-    LIS - Patient Profile Inputs Behavior
-    ======================================================== */
-function setupPatientProfileEditor() {
-    const patientNameDisplay = document.getElementById('patientNameDisplay');
-    const patientIdDisplay = document.getElementById('patientIdDisplay');
-    const avatarInitials = document.getElementById('patientAvatarInitials');
-    const editableFields = document.querySelectorAll('.patient-editable');
-    const uploadBtn = document.getElementById('uploadAvatarBtn');
-    const avatarInput = document.getElementById('avatarInput');
-
-    if (uploadBtn && avatarInput) {
-        uploadBtn.addEventListener('click', function() {
-            avatarInput.click();
-        });
-
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    avatarInitials.style.backgroundImage = 'url(' + evt.target.result + ')';
-                    avatarInitials.style.backgroundSize = 'cover';
-                    avatarInitials.style.backgroundPosition = 'center';
-                    avatarInitials.textContent = '';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    const fieldOrder = [
-        { id: 'patientNameDisplay', label: 'Name' },
-        { id: 'patientIdDisplay', label: 'Patient ID' },
-        { field: '[data-field="age"]', label: 'Age' },
-        { field: '[data-field="gender"]', label: 'Gender' },
-        { field: '[data-field="bloodType"]', label: 'Blood Type' },
-        { field: '[data-field="ward"]', label: 'Ward' },
-        { field: '[data-field="room"]', label: 'Room' },
-        { field: '[data-field="physician"]', label: 'Physician' }
-    ];
-
-    function getFieldValue(field) {
-        if (!field) return '';
-        const input = field.querySelector('input');
-        const select = field.querySelector('select');
-        if (input) {
-            const val = input.value.trim();
-            if (val !== '' && val !== input.placeholder) {
-                return val;
-            }
-            const text = (field.textContent || '').trim();
-            if (text && text !== input.placeholder) {
-                return text;
-            }
-        }
-        if (select) {
-            const val = select.value.trim();
-            if (val !== '') {
-                return val;
-            }
-        }
-        const text = (field.textContent || '').trim();
-        return text !== '' ? text : '';
-    }
-
-    function validateFieldAccess(fieldInfo) {
-        const currentIndex = fieldOrder.indexOf(fieldInfo);
-        if (currentIndex <= 0) return true;
-
-        for (let i = 0; i < currentIndex; i++) {
-            const prev = fieldOrder[i];
-            let prevField = null;
-            if (prev.id) {
-                prevField = document.getElementById(prev.id);
-            } else if (prev.field) {
-                prevField = document.querySelector('.patient-editable' + prev.field);
-            }
-            const prevValue = getFieldValue(prevField);
-            if (!prevValue) {
-                alert('Please fill up ' + prev.label + ' first before entering ' + fieldInfo.label + '.');
-                return false;
-            }
-        }
-        return true;
-    }
-
-    editableFields.forEach(function(field) {
-        const input = field.querySelector('input');
-        const select = field.querySelector('select');
-        const target = input || select;
-        const fieldName = field.dataset.field;
-        const isAgeField = field.classList.contains('patient-editable-age');
-
-        const fieldInfo = fieldOrder.find(function(f) {
-            if (f.id === 'patientNameDisplay') return field.id === 'patientNameDisplay';
-            if (f.id === 'patientIdDisplay') return field.id === 'patientIdDisplay';
-            if (f.field) return field.matches('.patient-editable' + f.field);
-            return false;
-        });
-
-        if (target && fieldInfo) {
-            target.addEventListener('focus', function() {
-                if (!validateFieldAccess(fieldInfo)) {
-                    this.blur();
-                }
-            });
-        }
-
-        if (input) {
-            input.addEventListener('input', function() {
-                if (isAgeField) {
-                    this.value = this.value.replace(/[^0-9]/g, '');
-                    if (this.value !== '' && parseInt(this.value, 10) > 200) {
-                        this.value = '200';
-                    }
-                }
-            });
-
-            input.addEventListener('blur', function() {
-                const val = this.value.trim();
-                if (val === '') {
-                    this.value = '';
-                }
-            });
-        }
-    });
-
-    if (patientNameDisplay) {
-        const nameInput = patientNameDisplay.querySelector('input');
-        if (nameInput) {
-            nameInput.addEventListener('blur', function() {
-                const val = this.value.trim();
-                if (val === '') {
-                    this.value = '';
-                }
-            });
-        }
-    }
-
-    if (patientIdDisplay) {
-        const idInput = patientIdDisplay.querySelector('input');
-        if (idInput) {
-            idInput.addEventListener('blur', function() {
-                const val = this.value.trim();
-                if (val === '') {
-                    this.value = '';
-                }
-            });
-        }
-    }
-}
-
-/* ========================================================
-    LIS - MediSense AI Support Assistant (Suggestions only)
-    ======================================================== */
-function triggerMediSenseForSelectedTests() {
-    const suggestions = generateMediSenseSuggestions();
-    renderMediSenseSuggestions(suggestions);
-    window._lastMediSenseSuggestions = suggestions;
-
-    const mediSenseModal = document.getElementById('mediSenseModal');
-    if (mediSenseModal && window.bootstrap) {
-        const modal = new bootstrap.Modal(mediSenseModal);
-        modal.show();
-    }
-}
-
-function setupMediSense() {
-    const btn = document.getElementById('mediSenseBtn');
-    const modalEl = document.getElementById('mediSenseModal');
-    const runBtn = document.getElementById('mediSenseRunBtn');
-    const applyBtn = document.getElementById('applyToClinicalNoteBtn');
-    if (!btn || !modalEl) return;
-
-    const modal = new bootstrap.Modal(modalEl);
-    let currentSuggestions = [];
-
-    btn.addEventListener('click', function (e) {
+/* ---------- Collapse / expand the Laboratory Information sub-menu (hide & unhide) ---------- */
+function lisSetupSubToggle() {
+    const toggle = document.getElementById('lisSubToggle');
+    const menu = document.getElementById('lisSubMenu');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', function (e) {
         e.preventDefault();
-        currentSuggestions = generateMediSenseSuggestions();
-        renderMediSenseSuggestions(currentSuggestions);
-        modal.show();
+        e.stopPropagation();
+        const hidden = menu.classList.toggle('collapsed');
+        toggle.classList.toggle('collapsed', hidden);
+        toggle.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+        // Re-run scroll-spy so the highlight updates (parent green vs sub-item) right away
+        window.dispatchEvent(new Event('scroll'));
     });
-
-    if (runBtn) {
-        runBtn.addEventListener('click', function () {
-            currentSuggestions = generateMediSenseSuggestions();
-            renderMediSenseSuggestions(currentSuggestions);
-        });
-    }
-
-    if (applyBtn) {
-        applyBtn.addEventListener('click', function () {
-            if (currentSuggestions.length === 0) {
-                currentSuggestions = generateMediSenseSuggestions();
-            }
-            applyMediSenseToClinicalNote(currentSuggestions);
-        });
-    }
 }
 
-function generateMediSenseSuggestions() {
-    const patientNameEl = document.getElementById('patientNameDisplay');
-    const patientIdEl = document.getElementById('patientIdDisplay');
-    const clinicalNote = document.querySelector('.clinical-note-textarea');
-    const nameInput = patientNameEl ? patientNameEl.querySelector('input') : null;
-    const patient = nameInput ? nameInput.value.trim() : (patientNameEl ? patientNameEl.textContent.trim() : 'the patient');
-    const patientId = patientIdEl ? (patientIdEl.querySelector('input') ? patientIdEl.querySelector('input').value.trim() : (patientIdEl.textContent || '').trim()) : '';
-    const noteText = clinicalNote ? (clinicalNote.textContent || '').trim() : '';
+/* ---------- Scroll-spy: highlight the sub-item for the section in view ---------- */
+function lisSetupScrollSpy() {
+    const items = document.querySelectorAll('.nav-sub-item');
+    const sections = Array.prototype.slice.call(document.querySelectorAll('.lis-section'));
+    const parentLink = document.getElementById('lisParentLink');
+    if (!items.length || !sections.length) return;
+    let ticking = false;
 
-    const profileRows = document.querySelectorAll('.table-profile-info tr');
-    const ageCell = profileRows[0] ? profileRows[0].querySelector('td:last-child') : null;
-    const genderCell = profileRows[1] ? profileRows[1].querySelector('td:last-child') : null;
-    const bloodTypeCell = profileRows[2] ? profileRows[2].querySelector('td:last-child') : null;
-    const wardCell = profileRows[3] ? profileRows[3].querySelector('td:last-child') : null;
-    const roomCell = profileRows[4] ? profileRows[4].querySelector('td:last-child') : null;
-    const physicianCell = profileRows[5] ? profileRows[5].querySelector('td:last-child') : null;
-
-    const age = ageCell ? (ageCell.querySelector('input') ? ageCell.querySelector('input').value.trim() : ageCell.textContent.trim()) : '';
-    const gender = genderCell ? (genderCell.querySelector('select') ? genderCell.querySelector('select').value.trim() : genderCell.textContent.trim()) : '';
-    const bloodType = bloodTypeCell ? (bloodTypeCell.querySelector('select') ? bloodTypeCell.querySelector('select').value.trim() : (bloodTypeCell.querySelector('input') ? bloodTypeCell.querySelector('input').value.trim() : bloodTypeCell.textContent.trim())) : '';
-    const ward = wardCell ? (wardCell.querySelector('select') ? wardCell.querySelector('select').value.trim() : (wardCell.querySelector('input') ? wardCell.querySelector('input').value.trim() : wardCell.textContent.trim())) : '';
-    const room = roomCell ? (roomCell.querySelector('select') ? roomCell.querySelector('select').value.trim() : (roomCell.querySelector('input') ? roomCell.querySelector('input').value.trim() : roomCell.textContent.trim())) : '';
-    const physician = physicianCell ? (physicianCell.querySelector('select') ? physicianCell.querySelector('select').value.trim() : (physicianCell.querySelector('input') ? physicianCell.querySelector('input').value.trim() : physicianCell.textContent.trim())) : '';
-
-    const requestedTests = [];
-    document.querySelectorAll('.test-selection-card.checked').forEach(function(card) {
-        const testName = card.querySelector('.font-weight-semibold');
-        if (testName) {
-            requestedTests.push(testName.textContent.trim());
-        }
-    });
-
-    const labResults = [];
-    const resultRows = document.querySelectorAll('.alignment-middle-table tbody tr:not(#lisNoResults)');
-    resultRows.forEach(function(row) {
-        const cells = row.querySelectorAll('td');
-        if (cells.length >= 5) {
-            const param = cells[0].textContent.trim();
-            const result = cells[1].textContent.trim();
-            const range = cells[2].textContent.trim();
-            const status = cells[4].textContent.trim();
-            labResults.push({ param, result, range, status });
-        }
-    });
-
-    let suggestions = [];
-
-    if (requestedTests.length > 0) {
-        suggestions.push('<strong>Requested Laboratory Tests (' + requestedTests.length + '):</strong> ' + requestedTests.join(', ') + '. Ensure all requested exams have corresponding recorded results before sign-off.');
-    } else {
-        suggestions.push('<strong>No tests selected.</strong> Please select at least one requested laboratory test from the test selection cards above.');
+    function setActive(id) {
+        items.forEach(function (i) { i.classList.toggle('active', i.dataset.lisTab === id); });
     }
 
-    if (requestedTests.includes('CBC')) {
-        const cbcResult = labResults.find(function(r) { return r.param.toLowerCase().includes('hemoglobin') || r.param.toLowerCase().includes('cbc'); });
-        if (cbcResult) {
-            if (cbcResult.status.toLowerCase().includes('normal')) {
-                suggestions.push('<strong>CBC Result:</strong> Hemoglobin is within normal range (' + cbcResult.result + ' g/dL). No immediate action required for ' + patient + '.');
-            } else if (cbcResult.status.toLowerCase().includes('high') || cbcResult.status.toLowerCase().includes('critical')) {
-                suggestions.push('<strong>CBC Alert:</strong> Hemoglobin is ' + cbcResult.status.toLowerCase() + ' (' + cbcResult.result + ' g/dL). Recommend follow-up consultation with ' + physician + ' for ' + patient + '.');
+    function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+            const menu = document.getElementById('lisSubMenu');
+            const hidden = menu && menu.classList.contains('collapsed');
+            // When the sub-menu is hidden, Laboratory Information keeps its green highlight
+            if (hidden) {
+                items.forEach(function (i) { i.classList.remove('active'); });
+                if (parentLink) parentLink.classList.add('active');
+                ticking = false;
+                return;
             }
-        } else {
-            suggestions.push('<strong>CBC Pending:</strong> Complete Blood Count has been requested but no result recorded yet. Enter CBC parameters via "Enter Additional Parameters" to proceed.');
-        }
-    }
-
-    if (requestedTests.includes('Blood Sugar')) {
-        const sugarResult = labResults.find(function(r) { return r.param.toLowerCase().includes('blood sugar') || r.param.toLowerCase().includes('glucose'); });
-        if (sugarResult) {
-            if (sugarResult.status.toLowerCase().includes('high')) {
-                suggestions.push('<strong>Blood Sugar Alert:</strong> Fasting Blood Sugar is elevated (' + sugarResult.result + ' mg/dL). Recommend dietary consultation and possible HbA1c follow-up for ' + patient + '.');
-            } else if (sugarResult.status.toLowerCase().includes('normal')) {
-                suggestions.push('<strong>Blood Sugar Normal:</strong> Fasting Blood Sugar is within normal range (' + sugarResult.result + ' mg/dL). No immediate action required.');
-            }
-        } else {
-            suggestions.push('<strong>Blood Sugar Pending:</strong> Blood Sugar test has been requested. Ensure patient maintains proper fasting protocol prior to sample collection.');
-        }
-    }
-
-    if (requestedTests.includes('Urinalysis')) {
-        const urineResult = labResults.find(function(r) { return r.param.toLowerCase().includes('urine') || r.param.toLowerCase().includes('urinalysis'); });
-        if (urineResult) {
-            if (urineResult.status.toLowerCase().includes('normal')) {
-                suggestions.push('<strong>Urinalysis Normal:</strong> Urine Glucose is ' + urineResult.result + '. No abnormalities detected.');
+            const top = window.scrollY || document.documentElement.scrollTop;
+            const offset = 140;
+            let current = sections[0].id;
+            sections.forEach(function (sec) {
+                if (sec.offsetTop - offset <= top) current = sec.id;
+            });
+            if (current === 'lis-overview') {
+                items.forEach(function (i) { i.classList.remove('active'); });
+                if (parentLink) parentLink.classList.add('active');
             } else {
-                suggestions.push('<strong>Urinalysis Review:</strong> Urine result shows ' + urineResult.status.toLowerCase() + '. Further investigation may be needed for ' + patient + '.');
+                if (parentLink) parentLink.classList.remove('active');
+                setActive(current.replace('tab-', ''));
             }
-        } else {
-            suggestions.push('<strong>Urinalysis Pending:</strong> Urinalysis has been requested. Ensure proper midstream clean-catch collection technique is followed.');
-        }
+            ticking = false;
+        });
     }
 
-    if (requestedTests.includes('Lipid Profile')) {
-        suggestions.push('<strong>Lipid Profile:</strong> Lipid profile test has been requested for ' + patient + '. Ensure patient fasts for 12 hours before sample collection for accurate results.');
-    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-    const criticalResults = labResults.filter(function(r) { return r.status.toLowerCase().includes('critical') || r.status.toLowerCase().includes('high') || r.status.toLowerCase().includes('low'); });
-    if (criticalResults.length > 0) {
-        suggestions.push('<strong>Critical Results (' + criticalResults.length + '):</strong> Immediate review required for ' + criticalResults.map(function(r) { return r.param; }).join(', ') + '. Notify ' + physician + ' for urgent clinical correlation.');
-    }
-
-    const normalResults = labResults.filter(function(r) { return r.status.toLowerCase().includes('normal'); });
-    if (normalResults.length > 0) {
-        suggestions.push('<strong>Normal Results (' + normalResults.length + '):</strong> ' + normalResults.map(function(r) { return r.param; }).join(', ') + ' are within normal limits. These can be signed off to clear the pending queue.');
-    }
-
-    if (noteText.toLowerCase().includes('fasting')) {
-        suggestions.push('<strong>Fasting Protocol:</strong> Documented fasting period is noted. Verify glucose results against the documented fasting duration for ' + patient + '.');
-    }
-
-    if (ward.toLowerCase().includes('icu') || ward.toLowerCase().includes('intensive')) {
-        suggestions.push('<strong>ICU Patient:</strong> ' + patient + ' is in ICU (' + ward + ' ' + room + '). Prioritize critical results and ensure expedited reporting to the attending physician.');
-    }
-
-    if (bloodType) {
-        suggestions.push('<strong>Blood Type:</strong> ' + patient + '\'s blood type is ' + bloodType + '. Ensure compatibility checks are in place for any transfusion requirements.');
-    }
-
-    if (age) {
-        suggestions.push('<strong>Patient Age:</strong> ' + patient + ' is ' + age + ' years old. Consider age-specific reference ranges when reviewing lab results.');
-    }
-
-    if (gender) {
-        suggestions.push('<strong>Patient Gender:</strong> ' + patient + ' is ' + gender + '. Note gender-specific reference ranges may apply to certain parameters.');
-    }
-
-    if (suggestions.length === 0) {
-        suggestions.push('<strong>Verify normal results first.</strong> The Normal results are good candidates for manual sign-off to clear the pending queue faster.');
-        suggestions.push('<strong>Review high values.</strong> Any abnormal results should be cross-referenced with ' + patient + '\'s history before approval.');
-        suggestions.push('<strong>Prioritize by urgency.</strong> Tackle Critical and High results ahead of Normal ones to shorten clinician wait time.');
-    }
-
-    window._lastMediSenseSuggestions = suggestions;
-    return suggestions;
-}
-
-function renderMediSenseSuggestions(suggestions) {
-    const container = document.getElementById('mediSenseSuggestions');
-    if (!container) return;
-    container.innerHTML = '';
-    suggestions.forEach(function(text) {
-        const div = document.createElement('div');
-        div.className = 'medisense-advice';
-        div.innerHTML = text;
-        container.appendChild(div);
+    // Clicking a sub-item / module card scrolls smoothly to its section
+    document.querySelectorAll('[data-lis-tab], [data-goto]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            const tab = link.dataset.lisTab || link.dataset.goto;
+            const target = document.getElementById(tab === 'requests' ? 'tab-requests' : 'tab-' + tab) || document.getElementById('tab-' + tab);
+            if (target) {
+                e.preventDefault();
+                const y = target.offsetTop - 90;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        });
     });
+
+    // Clicking "Laboratory Information" returns to the overview
+    if (parentLink) {
+        parentLink.addEventListener('click', function (e) {
+            if (parentLink.getAttribute('href') === '#lis-overview') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
 }
 
-function applyMediSenseToClinicalNote(suggestions) {
-    const clinicalNote = document.querySelector('.clinical-note-textarea');
-    if (!clinicalNote || suggestions.length === 0) return;
-
-    const timestamp = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    const mediSenseSection = '\n\n--- MediSense AI Suggestions (' + timestamp + ') ---\n';
-    const bulletPoints = suggestions.map(function(s) {
-        return '• ' + s.replace(/<[^>]+>/g, '').trim();
-    }).join('\n');
-
-    const currentNote = clinicalNote.textContent || '';
-    const updated = currentNote.includes('MediSense AI Suggestions')
-        ? currentNote
-        : (currentNote + mediSenseSection + bulletPoints);
-
-    clinicalNote.textContent = updated;
-
-    clinicalNote.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    clinicalNote.style.transition = 'box-shadow 0.3s ease';
-    clinicalNote.style.boxShadow = '0 0 0 4px rgba(46, 213, 115, 0.3)';
-    setTimeout(function() {
-        clinicalNote.style.boxShadow = '';
-    }, 2000);
+/* ---------- Toast notifications (UI only) ---------- */
+function lisToast(title, message, type) {
+    type = type || 'success';
+    const wrap = document.getElementById('lisToastWrap');
+    if (!wrap) return;
+    const icons = { success: 'bi-check-circle-fill', error: 'bi-x-circle-fill', info: 'bi-info-circle-fill', warning: 'bi-exclamation-triangle-fill' };
+    const el = document.createElement('div');
+    el.className = 'lis-toast ' + type;
+    el.innerHTML =
+        '<i class="bi ' + (icons[type] || icons.info) + ' lis-toast-icon"></i>' +
+        '<div class="lis-toast-body"><p class="lis-toast-title">' + title + '</p><p class="lis-toast-msg">' + message + '</p></div>' +
+        '<button class="lis-toast-close" aria-label="Dismiss"><i class="bi bi-x"></i></button>';
+    wrap.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add('show'); });
+    const remove = function () { el.classList.remove('show'); setTimeout(function () { el.remove(); }, 350); };
+    el.querySelector('.lis-toast-close').addEventListener('click', remove);
+    setTimeout(remove, 4000);
 }
 
-/* ========================================================
-    LIS - Search Bar Table Filter
-    ======================================================== */
-function setupSearchFilter() {
-    const input = document.getElementById('lisSearchInput');
-    const clearBtn = document.getElementById('lisSearchClear');
-    const table = document.querySelector('.alignment-middle-table');
+/* ---------- Loading spinner ---------- */
+function lisShowSpinner() { const s = document.getElementById('lisSpinner'); if (s) s.classList.add('show'); }
+function lisHideSpinner() { const s = document.getElementById('lisSpinner'); if (s) s.classList.remove('show'); }
+function lisWithButtonSpinner(btn, callback) {
+    if (!btn) { callback(); return; }
+    const original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="lis-btn-spinner"></span> Processing...';
+    setTimeout(function () { btn.disabled = false; btn.innerHTML = original; callback(); }, 900);
+}
+
+/* ---------- Generic table search ---------- */
+function lisSetupTableSearch(inputId, tableSelector, emptyRowId) {
+    const input = document.getElementById(inputId);
+    const table = document.querySelector(tableSelector);
     if (!input || !table) return;
-
-    const rows = table.querySelectorAll('tbody tr:not(#lisNoResults)');
-    const noResults = document.getElementById('lisNoResults');
-
-    function applyFilter() {
+    const rows = table.querySelectorAll('tbody tr:not(.lis-empty-row)');
+    function apply() {
         const term = input.value.trim().toLowerCase();
-        clearBtn.classList.toggle('d-none', term === '');
         let visible = 0;
-
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            const match = term === '' || text.includes(term);
+        rows.forEach(function (row) {
+            const match = term === '' || row.textContent.toLowerCase().includes(term);
             row.classList.toggle('d-none', !match);
             if (match) visible++;
         });
-
-        if (noResults) {
-            noResults.classList.toggle('d-none', visible !== 0);
-        }
+        const empty = document.getElementById(emptyRowId);
+        if (empty) empty.classList.toggle('d-none', visible !== 0);
     }
-
-    input.addEventListener('input', applyFilter);
-    input.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            input.value = '';
-            applyFilter();
-            input.blur();
-        }
-    });
-    clearBtn.addEventListener('click', function () {
-        input.value = '';
-        applyFilter();
-        input.focus();
-    });
+    input.addEventListener('input', apply);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { input.value = ''; apply(); input.blur(); } });
 }
 
-/* ========================================================
-    LIS - Search Bar Autocomplete / Quick Jump
-    ======================================================== */
-function setupSearchAutocomplete() {
-    const input = document.getElementById('lisSearchInput');
-    const table = document.querySelector('.alignment-middle-table');
-    if (!input || !table) return;
+/* ---------- Generic pagination (UI only) ---------- */
+function lisSetupPagination(scope, totalPages) {
+    const prev = document.getElementById(scope + 'PrevPage');
+    const next = document.getElementById(scope + 'NextPage');
+    const info = document.getElementById(scope + 'PageInfo');
+    if (!prev && !next) return;
+    let current = 1;
+    function render() {
+        if (info) info.textContent = 'Page ' + current + ' of ' + totalPages;
+        if (prev) prev.disabled = current === 1;
+        if (next) next.disabled = current === totalPages;
+    }
+    if (prev) prev.addEventListener('click', function () { if (current > 1) { current--; render(); } });
+    if (next) next.addEventListener('click', function () { if (current < totalPages) { current++; render(); } });
+    render();
+}
 
-    const tbody = table.querySelector('tbody');
-    if (!tbody) return;
+/* ---------- Notifications bell ---------- */
+function lisSetupNotifications() {
+    const bell = document.getElementById('lisNotifBtn');
+    if (!bell) return;
+    bell.addEventListener('click', function () { lisToast('Notifications', 'You have 3 unread laboratory alerts.', 'info'); });
+}
 
-    const rows = tbody.querySelectorAll('tr:not(#lisNoResults)');
-    const suggestions = [];
-    rows.forEach(row => {
-        const firstCell = row.querySelector('td');
-        if (firstCell) {
-            const strongEl = firstCell.querySelector('.font-weight-semibold');
-            const text = strongEl ? strongEl.textContent.trim() : firstCell.textContent.trim();
-            suggestions.push({ text, row });
-        }
+/* =======================================================
+   SECTION: LABORATORY REQUESTS
+   ======================================================= */
+function lisInitRequests() {
+    const filterBtn = document.getElementById('lisFilterBtn');
+    const filterBar = document.getElementById('lisFilterBar');
+    if (filterBtn && filterBar) filterBtn.addEventListener('click', function () {
+        filterBar.style.display = filterBar.style.display === 'none' ? 'block' : 'none';
     });
-
-    const dropdown = document.createElement('div');
-    dropdown.className = 'search-autocomplete-dropdown';
-
-    const container = input.closest('.search-bar-container');
-    if (!container) return;
-    container.style.position = 'relative';
-    container.appendChild(dropdown);
-
-    function render(items) {
-        dropdown.innerHTML = '';
-        if (!items.length) {
-            dropdown.classList.add('d-none');
-            return;
-        }
-        dropdown.classList.remove('d-none');
-        items.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'search-autocomplete-item';
-            div.textContent = item.text;
-            div.addEventListener('click', function () {
-                input.value = item.text;
-                dropdown.classList.add('d-none');
-
-                input.dispatchEvent(new Event('input'));
-
-                requestAnimationFrame(function () {
-                    item.row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    item.row.classList.add('search-highlight');
-                    setTimeout(function () {
-                        item.row.classList.remove('search-highlight');
-                    }, 2000);
-                });
-            });
-            dropdown.appendChild(div);
+    document.querySelectorAll('#tab-requests .lis-test-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () { this.classList.toggle('selected'); });
+    });
+    const form = document.getElementById('lisRequestForm');
+    const saveBtn = document.getElementById('lisSaveBtn');
+    if (form && saveBtn) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const selected = document.querySelectorAll('#tab-requests .lis-test-chip.selected').length;
+            if (selected === 0) { lisToast('Validation', 'Please select at least one laboratory test.', 'warning'); return; }
+            lisWithButtonSpinner(saveBtn, function () { lisToast('Request Saved', 'Laboratory request submitted with ' + selected + ' test(s).', 'success'); });
         });
     }
-
-    input.addEventListener('focus', function () {
-        const term = input.value.trim().toLowerCase();
-        const items = term ? suggestions.filter(function (s) { return s.text.toLowerCase().includes(term); }) : suggestions;
-        render(items);
+    const cancelBtn = document.getElementById('lisCancelBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', function () {
+        document.querySelectorAll('#tab-requests .lis-test-chip.selected').forEach(c => c.classList.remove('selected'));
+        lisToast('Cancelled', 'Request form cleared.', 'info');
     });
-
-    input.addEventListener('input', function () {
-        const term = input.value.trim().toLowerCase();
-        const items = term ? suggestions.filter(function (s) { return s.text.toLowerCase().includes(term); }) : suggestions;
-        render(items);
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!container.contains(e.target)) {
-            dropdown.classList.add('d-none');
+    const table = document.getElementById('lisRequestsTable');
+    if (table) table.addEventListener('click', function (e) {
+        const btn = e.target.closest('.lis-tbtn'); if (!btn) return;
+        const row = btn.closest('tr'); const id = row.querySelector('.lis-strong')?.textContent || 'record';
+        if (btn.classList.contains('view')) lisToast('View', 'Opening ' + id, 'info');
+        else if (btn.classList.contains('edit')) lisToast('Edit', 'Editing ' + id, 'info');
+        else if (btn.classList.contains('delete')) {
+            if (confirm('Delete ' + id + '?')) { row.style.transition = 'opacity .3s'; row.style.opacity = '0'; setTimeout(function () { row.remove(); }, 300); lisToast('Deleted', id + ' removed.', 'error'); }
         }
     });
+    lisSetupTableSearch('lisSearchInput', '#lisRequestsTable', 'lisEmptyRow');
+    lisSetupPagination('lis', 24);
 }
 
-/* ========================================================
-    LIS - Print Single Lab Result Row
-    ======================================================== */
-function printRowResult(row) {
-    const cells = row.querySelectorAll('td');
-    if (!cells.length) return;
+/* =======================================================
+   SECTION: SAMPLE COLLECTION
+   ======================================================= */
+function lisInitSamples() {
+    const form = document.getElementById('lisSampleForm');
+    const saveBtn = document.getElementById('lisSaveSampleBtn');
+    if (form && saveBtn) form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        lisWithButtonSpinner(saveBtn, function () { lisToast('Sample Collected', 'Specimen logged and barcode generated.', 'success'); });
+    });
+    const table = document.getElementById('lisSamplesTable');
+    if (table) table.addEventListener('click', function (e) {
+        const btn = e.target.closest('.lis-tbtn'); if (!btn) return;
+        const row = btn.closest('tr'); const id = row.querySelector('.lis-strong')?.textContent || 'sample';
+        if (btn.classList.contains('view')) lisToast('View', 'Opening ' + id, 'info');
+        else if (btn.classList.contains('print')) lisToast('Print', 'Printing label for ' + id, 'info');
+    });
+    lisSetupTableSearch('lisSearchInput', '#lisSamplesTable', 'lisEmptyRow');
+}
 
-    const paramCell = cells[0];
-    const resultCell = cells[1];
-    const rangeCell = cells[2];
-    const unitCell = cells[3];
-    const statusCell = cells[4];
+/* =======================================================
+   SECTION: TEST PROCESSING
+   ======================================================= */
+function lisInitProcessing() {
+    const form = document.getElementById('lisProcessForm');
+    const saveBtn = document.getElementById('lisSaveResultBtn');
+    const autoFlag = document.getElementById('lisAutoFlag');
+    const resultInput = document.getElementById('lisResultInput');
+    const rangeInput = document.getElementById('lisRange');
+    const flagSelect = document.getElementById('lisFlag');
+    function autoComputeFlag() {
+        if (!autoFlag || !autoFlag.checked) return;
+        const val = parseFloat((resultInput?.value || '').trim());
+        const range = (rangeInput?.value || '').match(/([\d.]+)\s*-\s*([\d.]+)/);
+        if (isNaN(val) || !range) { flagSelect.value = 'Normal'; return; }
+        const min = parseFloat(range[1]), max = parseFloat(range[2]);
+        if (val < min * 0.5 || val > max * 1.5) flagSelect.value = 'Critical';
+        else if (val < min) flagSelect.value = 'Low';
+        else if (val > max) flagSelect.value = 'High';
+        else flagSelect.value = 'Normal';
+    }
+    if (resultInput) resultInput.addEventListener('input', autoComputeFlag);
+    if (autoFlag) autoFlag.addEventListener('change', autoComputeFlag);
+    if (form && saveBtn) form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        lisWithButtonSpinner(saveBtn, function () { lisToast('Result Saved', 'Result entered with flag: ' + (flagSelect?.value || ''), 'success'); });
+    });
+    const table = document.getElementById('lisProcessTable');
+    if (table) table.addEventListener('click', function (e) {
+        const btn = e.target.closest('.lis-tbtn'); if (!btn) return;
+        const row = btn.closest('tr'); const test = row.querySelectorAll('td')[1]?.textContent || 'test';
+        if (btn.classList.contains('edit')) lisToast('Edit', 'Editing ' + test, 'info');
+        else if (btn.classList.contains('print')) lisToast('Print', 'Printing ' + test, 'info');
+    });
+    lisSetupTableSearch('lisSearchInput', '#lisProcessTable', 'lisEmptyRow');
+}
 
-    const paramText = paramCell.textContent.trim();
-    const resultText = resultCell.textContent.trim();
-    const rangeText = rangeCell.textContent.trim();
-    const unitText = unitCell.textContent.trim();
-    const statusText = statusCell.textContent.trim();
+/* =======================================================
+   SECTION: LABORATORY RESULTS
+   ======================================================= */
+function lisInitResults() {
+    const printBtn = document.getElementById('lisPrintBtn');
+    const pdfBtn = document.getElementById('lisPdfBtn');
+    const emailBtn = document.getElementById('lisEmailBtn');
+    if (printBtn) printBtn.addEventListener('click', function () { lisWithButtonSpinner(printBtn, function () { lisToast('Print', 'Sending report to printer...', 'info'); }); });
+    if (pdfBtn) pdfBtn.addEventListener('click', function () { lisToast('Download', 'Generating PDF report...', 'success'); });
+    if (emailBtn) emailBtn.addEventListener('click', function () { lisToast('Email', 'Report sent to requesting physician.', 'success'); });
+    if (document.getElementById('lisResultsTable')) lisSetupTableSearch('lisSearchInput', '#lisResultsTable', 'lisEmptyRow');
+}
 
-    const patientNameEl = document.getElementById('patientNameDisplay');
-    const patientIdEl = document.getElementById('patientIdDisplay');
-
-    function profileFieldValue(field) {
-        if (!field) return '';
-        const input = field.querySelector('input');
-        const select = field.querySelector('select');
-        if (input) {
-            const val = input.value.trim();
-            if (val !== '' && val !== input.placeholder) return val;
-            const text = (field.textContent || '').trim();
-            if (text && text !== input.placeholder) return text;
+/* =======================================================
+   SECTION: RESULT VERIFICATION
+   ======================================================= */
+function lisInitVerification() {
+    const table = document.getElementById('lisVerifyTable');
+    const pendingCountEl = document.getElementById('lisPendingCount');
+    function decPending() {
+        if (pendingCountEl) { let n = parseInt(pendingCountEl.textContent, 10) || 0; pendingCountEl.textContent = Math.max(0, n - 1); }
+    }
+    if (table) table.addEventListener('click', function (e) {
+        const btn = e.target.closest('.lis-tbtn'); if (!btn) return;
+        const row = btn.closest('tr'); const patient = row.querySelector('.lis-strong')?.textContent || 'result';
+        if (btn.classList.contains('approve')) {
+            const status = row.querySelectorAll('td')[4];
+            if (status) status.innerHTML = '<span class="lis-badge lis-badge-approved">Approved</span>';
+            decPending(); lisToast('Approved', patient + ' result verified.', 'success'); setTimeout(function () { row.remove(); }, 600);
+        } else if (btn.classList.contains('reject')) {
+            const status = row.querySelectorAll('td')[4];
+            if (status) status.innerHTML = '<span class="lis-badge lis-badge-rejected">Rejected</span>';
+            decPending(); lisToast('Rejected', patient + ' result rejected.', 'error');
+        } else if (btn.classList.contains('view')) {
+            lisToast('View', 'Opening ' + patient, 'info');
         }
-        if (select) {
-            const val = select.value.trim();
-            if (val !== '') return val;
-        }
-        return (field.textContent || '').trim();
-    }
+    });
+    lisSetupTableSearch('lisSearchInput', '#lisVerifyTable', 'lisEmptyRow');
+    lisSetupPagination('lis', 4);
+}
 
-    const ageCell = document.querySelector('.patient-editable[data-field="age"]');
-    const genderCell = document.querySelector('.patient-editable[data-field="gender"]');
-    const bloodTypeCell = document.querySelector('.patient-editable[data-field="bloodType"]');
-    const wardCell = document.querySelector('.patient-editable[data-field="ward"]');
-    const roomCell = document.querySelector('.patient-editable[data-field="room"]');
-    const physicianCell = document.querySelector('.patient-editable[data-field="physician"]');
-
-    const age = profileFieldValue(ageCell);
-    const gender = profileFieldValue(genderCell);
-    const bloodType = profileFieldValue(bloodTypeCell);
-    const ward = profileFieldValue(wardCell);
-    const room = profileFieldValue(roomCell);
-    const physician = profileFieldValue(physicianCell);
-
-    const patientName = profileFieldValue(patientNameEl);
-    const patientId = profileFieldValue(patientIdEl);
-
-
-    const clinicalNote = document.querySelector('.clinical-note-textarea');
-    const clinicalNoteText = clinicalNote ? (clinicalNote.textContent || '').trim() : '';
-
-    const mediSenseSuggestions = window._lastMediSenseSuggestions || [];
-    const mediSenseHtml = mediSenseSuggestions.map(function(s) {
-        return '<div class="suggestion-item" style="margin-top: 8px; padding: 10px; background: #f4faf7; border-left: 3px solid #2ed573; border-radius: 6px; font-size: 0.9rem; color: #1f3b30;">' + s + '</div>';
-    }).join('');
-
-    const printWindow = window.open('', '_blank', 'width=800,height=600');
-    if (!printWindow) {
-        alert('Please allow popups to print the lab result.');
-        return;
-    }
-
-    printWindow.document.write('<!DOCTYPE html><html><head><title>Print Lab Result</title>');
-    printWindow.document.write('<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">');
-    printWindow.document.write('<style>body{padding:40px;font-family:system-ui,-apple-system,sans-serif;color:#1e293b;} .print-header{text-align:center;margin-bottom:30px;border-bottom:2px solid #066838;padding-bottom:20px;} .print-header h1{margin:0;font-size:1.5rem;color:#066838;} .print-header p{margin:5px 0 0;color:#64748b;} .patient-section{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:30px;} .patient-section h3{margin:0 0 15px;font-size:1.1rem;color:#066838;} .patient-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 40px;} .patient-item{display:grid;grid-template-columns:120px 1fr;align-items:baseline;} .patient-label{color:#64748b;font-size:0.85rem;} .patient-value{font-weight:600;color:#1e293b;text-align:left;} .result-table{width:100%;border-collapse:collapse;margin-top:20px;} .result-table th,.result-table td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid #e2e8f0;} .result-table th{background:#f8fafc;font-weight:600;color:#334155;width:220px;} .result-table td{color:#1e293b;} .status-badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:0.85rem;font-weight:600;} .status-normal{background:#e8f8f0;color:#065f46;} .status-high{background:#fcece9;color:#b91c1c;} .status-low{background:#fcece9;color:#b91c1c;} .status-critical{background:#fcece9;color:#b91c1c;} .section-title{margin-top:30px;margin-bottom:15px;font-size:1.1rem;color:#066838;border-bottom:1px solid #e2e8f0;padding-bottom:8px;} .clinical-note-box{background:#f8fafc;border-radius:8px;padding:15px;white-space:pre-wrap;font-size:0.9rem;color:#334155;line-height:1.6;} .suggestions-section{margin-top:30px;} .suggestion-item{margin-top:8px;padding:10px;background:#f4faf7;border-left:3px solid #2ed573;border-radius:6px;font-size:0.9rem;color:#1f3b30;} .footer{margin-top:40px;padding-top:20px;border-top:1px solid #e2e8f0;text-align:center;color:#94a3b8;font-size:0.8rem;} @media print{body{padding:0;} .no-print{display:none;}}</style>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write('<div class="print-header"><h1>Laboratory Information System</h1><p>Lab Result Report</p></div>');
-    printWindow.document.write('<div class="patient-section"><h3>Patient Profile</h3><div class="patient-grid">');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Name:</span><span class="patient-value">' + patientName + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Patient ID:</span><span class="patient-value">' + patientId + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Age:</span><span class="patient-value">' + age + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Gender:</span><span class="patient-value">' + gender + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Blood Type:</span><span class="patient-value">' + bloodType + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Ward:</span><span class="patient-value">' + ward + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Room:</span><span class="patient-value">' + room + '</span></div>');
-    printWindow.document.write('<div class="patient-item"><span class="patient-label">Physician:</span><span class="patient-value">' + physician + '</span></div>');
-    printWindow.document.write('</div></div>');
-    printWindow.document.write('<table class="result-table">');
-    const statusClassMap = { 'Normal': 'status-normal', 'High': 'status-high', 'Low': 'status-low', 'Critical': 'status-critical' };
-    const statusBadgeClass = statusClassMap[statusText] || 'status-normal';
-    printWindow.document.write('<tr><th>Parameter</th><td>' + paramText.replace(/\s+/g, ' ').trim() + '</td></tr>');
-    printWindow.document.write('<tr><th>Result</th><td>' + resultText + '</td></tr>');
-    printWindow.document.write('<tr><th>Reference Range</th><td>' + rangeText + '</td></tr>');
-    printWindow.document.write('<tr><th>Unit</th><td>' + unitText + '</td></tr>');
-    printWindow.document.write('<tr><th>Status</th><td><span class="status-badge ' + statusBadgeClass + '">' + statusText + '</span></td></tr>');
-    printWindow.document.write('</table>');
-
-    if (clinicalNoteText) {
-        printWindow.document.write('<div class="section-title">Clinical Note</div>');
-        printWindow.document.write('<div class="clinical-note-box">' + clinicalNoteText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>');
-    }
-
-    if (mediSenseSuggestions.length > 0) {
-        printWindow.document.write('<div class="section-title suggestions-section"><strong>MediSense AI Suggestions</strong></div>');
-        printWindow.document.write(mediSenseHtml);
-    }
-
-    printWindow.document.write('<div class="footer"><p>Generated by HIS - Diagnostic Treatment, and Clinical Services</p><p>' + new Date().toLocaleString() + '</p></div>');
-    printWindow.document.write('<div class="no-print text-center mt-4"><button onclick="window.print()" class="btn btn-primary">Print / Save as PDF</button></div>');
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-
-    printWindow.onload = function() {
-        printWindow.focus();
-        setTimeout(function() {
-            printWindow.print();
-        }, 250);
+/* =======================================================
+   SECTION: LABORATORY REPORTS (Chart.js)
+   ======================================================= */
+let lisChartsReady = false;
+function lisInitCharts() {
+    if (lisChartsReady || !window.Chart) return;
+    lisChartsReady = true;
+    const brand = { blue: '#2563eb', teal: '#14b8a6', green: '#065f46', amber: '#d97706', red: '#dc2626', slate: '#475569' };
+    const mainData = {
+        daily: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+        weekly: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        monthly: ['W1', 'W2', 'W3', 'W4'],
+        yearly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     };
-}
-
-/* ========================================================
-    LIS - Pending Validation Queue
-    ======================================================== */
-const VALIDATION_QUEUE_KEY = 'lis_validation_queue';
-
-function getValidationQueue() {
-    const saved = JSON.parse(localStorage.getItem(VALIDATION_QUEUE_KEY) || 'null');
-    if (Array.isArray(saved) && saved.length) return saved;
-
-    const queue = [
-        { id: 1, patient: 'Mark Cortez', param: 'Hemoglobin (CBC)', result: '13.1', status: 'Normal' },
-        { id: 2, patient: 'Rynella Biclar', param: 'Fasting Blood Sugar', result: '118', status: 'High' },
-        { id: 3, patient: 'Lizelle Ongay', param: 'Urine Glucose', result: 'Negative', status: 'Normal' }
-    ];
-
-    localStorage.setItem(VALIDATION_QUEUE_KEY, JSON.stringify(queue));
-    return queue;
-}
-
-function setValidationQueue(queue) {
-    localStorage.setItem(VALIDATION_QUEUE_KEY, JSON.stringify(queue));
-    updatePendingCount();
-}
-
-function updatePendingCount() {
-    const queue = getValidationQueue().filter(function(item) {
-        return item.patient && item.patient !== 'Unassigned Patient' && item.patient.trim() !== '';
-    });
-    const actualCount = queue.length;
-    const pendingCountEl = document.getElementById('pendingCount');
-    if (pendingCountEl) pendingCountEl.textContent = actualCount;
-    const queueCountEl = document.getElementById('queueCount');
-    if (queueCountEl) queueCountEl.textContent = actualCount;
-}
-
-function renderValidationQueue(filter) {
-    const tbody = document.getElementById('validationQueueBody');
-    if (!tbody) return;
-    const queue = getValidationQueue().filter(function(item) {
-        return item.patient && item.patient !== 'Unassigned Patient' && item.patient.trim() !== '';
-    });
-    const term = (filter || '').trim().toLowerCase();
-    const filtered = queue.filter(function(item) {
-        return !term || item.patient.toLowerCase().includes(term) || item.param.toLowerCase().includes(term);
-    });
-
-    tbody.innerHTML = '';
-    if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">No completed patient profiles in the validation queue.</td></tr>';
-    } else {
-        filtered.forEach(function(item) {
-            const tr = document.createElement('tr');
-            const statusClass = item.status === 'Normal' ? 'bg-soft-success text-success' : 'bg-soft-danger text-danger';
-            tr.innerHTML =
-                '<td class="ps-3 py-2 font-weight-medium text-dark">' + item.patient + '</td>' +
-                '<td class="py-2">' + item.param + '</td>' +
-                '<td class="py-2 font-weight-bold text-dark">' + item.result + '</td>' +
-                '<td class="py-2"><span class="badge-status-pill ' + statusClass + ' text-uppercase">' + item.status + '</span></td>' +
-                '<td class="py-2 pe-3 text-end d-flex align-items-center justify-content-end gap-2">' +
-                    '<input type="checkbox" class="form-check-input queue-row-check m-0" data-id="' + item.id + '" title="Select for validation">' +
-                    '<button type="button" class="btn btn-sm btn-save-changes queue-validate-one" data-id="' + item.id + '">Validate</button>' +
-                '</td>';
-            tbody.appendChild(tr);
-        });
-    }
-    updatePendingCount();
-}
-
-function syncValidationQueueFromResults() {
-    const patientNameEl = document.getElementById('patientNameDisplay');
-    const patientName = patientNameEl ? (patientNameEl.querySelector('input') ? patientNameEl.querySelector('input').value.trim() : (patientNameEl.textContent || '').trim()) : '';
-    const patientLabel = patientName || 'Unassigned Patient';
-
-    if (!patientName || !isPatientProfileComplete()) {
-        setValidationQueue([]);
-        const search = document.getElementById('queueSearch');
-        renderValidationQueue(search ? search.value : '');
-        return;
-    }
-
-    const queue = [];
-    const resultRows = document.querySelectorAll('.alignment-middle-table tbody tr:not(#lisNoResults)');
-    let idCounter = 1;
-    resultRows.forEach(function(row) {
-        const cells = row.querySelectorAll('td');
-        if (cells.length < 5) return;
-        const paramEl = cells[0].querySelector('.font-weight-semibold');
-        const param = paramEl ? paramEl.textContent.trim() : cells[0].textContent.replace(/\s+/g, ' ').trim();
-        const result = cells[1].textContent.trim();
-        const status = cells[4].textContent.trim();
-        queue.push({ id: idCounter++, patient: patientLabel, param: param, result: result, status: status });
-    });
-
-    if (queue.length === 0) {
-        queue.push({ id: idCounter++, patient: patientLabel, param: 'No recorded results', result: '—', status: 'Normal' });
-    }
-
-    setValidationQueue(queue);
-    const search = document.getElementById('queueSearch');
-    renderValidationQueue(search ? search.value : '');
-}
-
-function appendPendingToResults() {
-    if (!isPatientProfileComplete()) {
-        return;
-    }
-
-    const tbody = document.querySelector('.alignment-middle-table tbody');
-    if (!tbody) return;
-    const statusClass = {
-        'Normal': 'bg-soft-success text-success',
-        'High': 'bg-soft-danger text-danger',
-        'Low': 'bg-soft-danger text-danger',
-        'Critical': 'bg-soft-danger text-danger'
+    const mainValues = {
+        daily: [12, 8, 34, 40, 38, 22],
+        weekly: [210, 240, 225, 260, 280, 150, 119],
+        monthly: [980, 1040, 1120, 1284],
+        yearly: [9200, 9800, 10200, 11000, 11400, 12100, 12840, 13200, 12900, 13400, 13800, 14100]
     };
-
-    getValidationQueue().forEach(function(item) {
-        const tr = document.createElement('tr');
-        tr.className = 'border-bottom';
-        tr.innerHTML =
-            '<td class="ps-3 py-3"><span class="d-block font-weight-semibold text-dark">' + item.param + '</span></td>' +
-            '<td class="py-3"><span class="result-value font-weight-bold text-dark">' + item.result + '</span></td>' +
-            '<td class="py-3 text-muted">—</td>' +
-            '<td class="py-3 text-muted">N/A</td>' +
-            '<td class="py-3 status-col"><span class="badge-status-pill ' + (statusClass[item.status] || 'bg-soft-secondary text-muted') + ' text-uppercase">' + item.status + '</span></td>' +
-            '<td class="py-3 pe-3 sticky-action"><button type="button" class="btn btn-table-edit"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-table-print"><i class="bi bi-printer"></i></button><button type="button" class="btn btn-table-delete"><i class="bi bi-trash"></i></button></td>';
-        tbody.appendChild(tr);
+    let mainChart = null;
+    const mainCanvas = document.getElementById('lisMainChart');
+    if (mainCanvas) {
+        mainChart = new Chart(mainCanvas.getContext('2d'), {
+            type: 'bar',
+            data: { labels: mainData.daily, datasets: [{ label: 'Tests', data: mainValues.daily, backgroundColor: brand.blue, borderRadius: 6 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+    document.querySelectorAll('[data-range]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('[data-range]').forEach(b => { b.classList.remove('lis-btn-primary'); b.classList.add('lis-btn-outline'); });
+            btn.classList.remove('lis-btn-outline'); btn.classList.add('lis-btn-primary');
+            const r = btn.dataset.range;
+            if (mainChart) { mainChart.data.labels = mainData[r]; mainChart.data.datasets[0].data = mainValues[r]; mainChart.update(); }
+        });
+    });
+    const cat = document.getElementById('lisCategoryChart');
+    if (cat) new Chart(cat.getContext('2d'), {
+        type: 'doughnut',
+        data: { labels: ['Hematology', 'Chemistry', 'Urinalysis', 'Microbiology', 'Serology'], datasets: [{ data: [420, 380, 210, 148, 126], backgroundColor: [brand.red, brand.blue, brand.amber, brand.green, brand.teal], borderWidth: 2 }] },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    const trend = document.getElementById('lisTrendChart');
+    if (trend) new Chart(trend.getContext('2d'), {
+        type: 'line',
+        data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Avg Hours', data: [2.8, 2.7, 2.6, 2.5, 2.4, 2.3, 2.4], borderColor: brand.teal, backgroundColor: 'rgba(20,184,166,0.15)', fill: true, tension: 0.4 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+    const flag = document.getElementById('lisFlagChart');
+    if (flag) new Chart(flag.getContext('2d'), {
+        type: 'pie',
+        data: { labels: ['Normal', 'High', 'Low', 'Critical'], datasets: [{ data: [1102, 96, 49, 37], backgroundColor: [brand.green, brand.amber, brand.blue, brand.red], borderWidth: 2 }] },
+        options: { responsive: true, maintainAspectRatio: false }
     });
 }
-
-function setupValidationQueue() {
-    const search = document.getElementById('queueSearch');
-    const selectAll = document.getElementById('queueSelectAll');
-    const validateSelected = document.getElementById('queueValidateSelected');
-
-    if (search) {
-        search.addEventListener('input', function() {
-            renderValidationQueue(search.value);
-        });
-    }
-
-    if (selectAll) {
-        selectAll.addEventListener('change', function() {
-            document.querySelectorAll('.queue-row-check').forEach(function(cb) {
-                cb.checked = selectAll.checked;
-            });
-        });
-    }
-
-    if (validateSelected) {
-        validateSelected.addEventListener('click', function() {
-            const ids = Array.from(document.querySelectorAll('.queue-row-check:checked')).map(function(cb) {
-                return parseInt(cb.dataset.id, 10);
-            });
-            if (ids.length === 0) {
-                alert('Please select at least one record to validate.');
-                return;
-            }
-            const queue = getValidationQueue().filter(function(item) {
-                return ids.indexOf(item.id) === -1;
-            });
-            setValidationQueue(queue);
-            renderValidationQueue(search ? search.value : '');
-        });
-    }
-
-    document.addEventListener('click', function(e) {
-        const one = e.target.closest('.queue-validate-one');
-        if (one) {
-            const id = parseInt(one.dataset.id, 10);
-            const queue = getValidationQueue().filter(function(item) {
-                return item.id !== id;
-            });
-            setValidationQueue(queue);
-            renderValidationQueue(search ? search.value : '');
-        }
-    });
-
-    localStorage.removeItem('lis_validation_queue');
-    updatePendingCount();
+function lisInitReports() {
+    const printBtn2 = document.getElementById('lisPrintBtn2');
+    const pdfBtn2 = document.getElementById('lisPdfBtn2');
+    const excelBtn = document.getElementById('lisExcelBtn');
+    if (printBtn2) printBtn2.addEventListener('click', function () { lisToast('Print', 'Sending reports to print...', 'info'); });
+    if (pdfBtn2) pdfBtn2.addEventListener('click', function () { lisToast('Export', 'PDF report generated.', 'success'); });
+    if (excelBtn) excelBtn.addEventListener('click', function () { lisToast('Export', 'Excel report downloaded.', 'success'); });
 }
 
-window.syncValidationQueueFromResults = syncValidationQueueFromResults;
+/* =======================================================
+   INIT
+   ======================================================= */
+document.addEventListener('DOMContentLoaded', function () {
+    lisSetupSidebar();
+    lisSetupSubToggle();
+    lisSetupScrollSpy();
+    lisSetupNotifications();
+    lisInitRequests();
+    lisInitSamples();
+    lisInitProcessing();
+    lisInitResults();
+    lisInitVerification();
+    lisInitReports();
+    lisInitCharts();
+    setTimeout(lisHideSpinner, 600);
+});

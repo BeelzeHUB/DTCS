@@ -3,662 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratory Information System | HIS</title>
-    <!-- Bootstrap 5 -->
+    <title>Laboratory Information | DTCS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">    <!-- Google Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/lis.css">
 </head>
-<body>
-
+<body class="lis-body">
+<div class="lis-spinner-overlay" id="lisSpinner"><div class="lis-spinner"></div></div>
+<div class="lis-toast-wrap" id="lisToastWrap"></div>
 <div class="dashboard-container">
-    <!-- SIDEBAR -->
     <aside class="sidebar d-flex flex-column justify-content-between" id="sidebar">
         <div>
             <div class="sidebar-topbar d-flex align-items-center justify-content-between mb-2">
-                <button type="button" class="btn-sidebar-toggle" id="sidebarToggle" aria-label="Hide sidebar">
-                    <span class="hamburger-lines"><span></span><span></span><span></span></span>
-                </button>
+                <button type="button" class="btn-sidebar-toggle" id="sidebarToggle" aria-label="Hide sidebar"><span class="hamburger-lines"><span></span><span></span><span></span></span></button>
             </div>
-            <div class="sidebar-brand">
-                <h2 class="m-0 font-weight-bold">HIS</h2>
-                <p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p>
-            </div>
-
+            <div class="sidebar-brand"><h2 class="m-0 font-weight-bold">DTCS</h2><p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p></div>
             <nav class="sidebar-nav mt-4">
-                <a href="dashboard.html" class="nav-item">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Diagnostic Dashboard</span>
-                </a>
-                <a href="lis.html" class="nav-item active">
-                    <i class="bi bi-clipboard-data"></i>
-                    <span>Laboratory Information</span>
-                </a>
-                <a href="ris.html" class="nav-item">
-                    <i class="bi bi-person-bounding-box"></i>
-                    <span>Radiology and Imaging</span>
-                </a>
-                <a href="pms.html" class="nav-item">
-                    <i class="bi bi-capsule"></i>
-                    <span>Pharmacy Management</span>
-                </a>
-                <a href="sors.html" class="nav-item">
-                    <i class="bi bi-calendar2-week"></i>
-                    <span>Surgery & Operating Room Scheduler</span>
-                </a>
-                <a href="dnms.html" class="nav-item">
-                    <i class="bi bi-egg-fried"></i>
-                    <span>Diet & Nutrition Management</span>
-                </a>
-            </nav>
-
-            <nav class="sidebar-nav mt-4">
-                <a href="#" class="nav-item medisense-ai" id="mediSenseBtn">
-                    <i class="bi bi-cpu"></i>
-                    <span>MediSense AI</span>
-                </a>
+                <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <div class="nav-group">
+                    <div class="nav-group-head">
+                        <a href="#lis-overview" class="nav-item active nav-item-toggle" id="lisParentLink"><i class="bi bi-clipboard-data"></i><span>Laboratory Information</span><button type="button" class="nav-group-toggle collapsed" id="lisSubToggle" aria-label="Toggle laboratory modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
+                    </div>
+                    <div class="nav-sub collapsed" id="lisSubMenu">
+                        <a href="#tab-requests" class="nav-sub-item active" data-lis-tab="requests"><i class="bi bi-clipboard-data"></i> Laboratory Requests</a>
+                        <a href="#tab-samples" class="nav-sub-item" data-lis-tab="samples"><i class="bi bi-eyedropper"></i> Sample Collection</a>
+                        <a href="#tab-processing" class="nav-sub-item" data-lis-tab="processing"><i class="bi bi-gear-wide-connected"></i> Test Processing</a>
+                        <a href="#tab-results" class="nav-sub-item" data-lis-tab="results"><i class="bi bi-file-medical"></i> Laboratory Results</a>
+                        <a href="#tab-verification" class="nav-sub-item" data-lis-tab="verification"><i class="bi bi-patch-check"></i> Result Verification</a>
+                        <a href="#tab-reports" class="nav-sub-item" data-lis-tab="reports"><i class="bi bi-bar-chart"></i> Laboratory Reports</a>
+                    </div>
+                </div>
+                <a href="ris.html" class="nav-item"><i class="bi bi-person-bounding-box"></i><span>Radiology and Imaging</span></a>
+                <a href="pms.html" class="nav-item"><i class="bi bi-capsule"></i><span>Pharmacy Management</span></a>
+                <a href="sors.html" class="nav-item"><i class="bi bi-calendar2-week"></i><span>Surgery & Operating Room Scheduler</span></a>
+                <a href="dnms.html" class="nav-item"><i class="bi bi-egg-fried"></i><span>Diet & Nutrition Management</span></a>
             </nav>
         </div>
-
         <div class="sidebar-footer">
-            <div class="user-panel d-flex align-items-center mb-3">
-                <div class="avatar-circle">AD</div>
-                <div class="user-info ms-2">
-                    <h6 class="m-0 text-white">NICOLAS</h6>
-                    <small class="text-muted text-uppercase">Administrator</small>
-                </div>
-            </div>
-            <a href="#" class="nav-item footer-link mb-2">
-                <i class="bi bi-gear"></i>
-                <span>Settings</span>
-            </a>
-            <a href="../index.html" class="nav-item footer-link text-danger-hover">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
-            </a>
+            <div class="user-panel d-flex align-items-center mb-3"><div class="avatar-circle">AD</div><div class="user-info ms-2"><h6 class="m-0 text-white">NICOLAS</h6><small class="text-muted text-uppercase">Administrator</small></div></div>
+            <a href="#" class="nav-item footer-link mb-2"><i class="bi bi-gear"></i><span>Settings</span></a>
+            <a href="../index.html" class="nav-item footer-link text-danger-hover"><i class="bi bi-box-arrow-left"></i><span>Logout</span></a>
         </div>
     </aside>
-
-    <!-- MAIN BODY CONTENT -->
-    <main class="main-content" id="mainContent">
-        <!-- TOP NAVBAR -->
+    <main class="main-content" id="lisMain">
         <header class="top-navbar d-flex justify-content-between align-items-center mb-4">
-            <div class="search-bar-container flex-grow-1 max-w-xl me-3">
-                <div class="input-group search-input-group">
-                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" id="lisSearchInput" class="form-control border-start-0" placeholder="Search patients or records...">
-                    <button type="button" id="lisSearchClear" class="btn border-start-0 bg-white text-muted d-none" aria-label="Clear search"><i class="bi bi-x-lg"></i></button>
-                </div>
-            </div>
-            <div class="top-actions d-flex align-items-center gap-3">
-                <button class="btn-top-icon"><i class="bi bi-bell"></i></button>
-                <button class="btn-top-icon"><i class="bi bi-question-circle"></i></button>
-                <div class="top-profile-avatar"></div>
-            </div>
+            <div class="search-bar-container flex-grow-1 max-w-xl me-3"><div class="input-group search-input-group"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" id="lisSearchInput" class="form-control border-start-0" placeholder="Search patients, tests, requests..."><button type="button" id="lisSearchClear" class="btn border-start-0 bg-white text-muted d-none" aria-label="Clear search"><i class="bi bi-x-lg"></i></button></div></div>
+            <div class="top-actions d-flex align-items-center gap-3"><button class="btn-top-icon" id="lisNotifBtn" aria-label="Notifications"><i class="bi bi-bell"></i><span class="lis-notif-dot"></span></button><button class="btn-top-icon" aria-label="Help"><i class="bi bi-question-circle"></i></button><div class="top-profile-avatar"></div></div>
         </header>
 
-        <!-- PAGE HEADER -->
-        <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
-            <div>
-                <h1 class="overview-title m-0">Laboratory Information System</h1>
-                <p class="text-muted m-0">Managing diagnostic workflows and clinical validation.</p>
+        <!-- ============ OVERVIEW ============ -->
+        <section class="lis-section" id="lis-overview">
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
+                <div><h1 class="overview-title m-0">Laboratory Information</h1><p class="text-muted m-0">Manage diagnostic requests, specimens, results, and reports.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="lisTopAction"><i class="bi bi-plus-lg"></i> New Request</button></div>
             </div>
-            <div class="d-flex gap-2 mt-2 mt-md-0">
-                <button class="btn btn-save-changes btn-action-top">Save Changes</button>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-clipboard-data"></i></div><div><div class="lis-stat-label">Requests</div><div class="lis-stat-value">128</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-eyedropper"></i></div><div><div class="lis-stat-label">Samples</div><div class="lis-stat-value">96</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-gear-wide-connected"></i></div><div><div class="lis-stat-label">Processing</div><div class="lis-stat-value">54</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-patch-check"></i></div><div><div class="lis-stat-label">Pending Verify</div><div class="lis-stat-value">2</div></div></div></div>
             </div>
-        </div>
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Modules</h5>
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-4"><a href="#tab-requests" class="lis-module-card" data-goto="requests"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon blue"><i class="bi bi-clipboard-data"></i></div><div><div class="lis-stat-label">Laboratory Requests</div><div class="text-muted fs-12">Create & track requests</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-samples" class="lis-module-card" data-goto="samples"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon teal"><i class="bi bi-eyedropper"></i></div><div><div class="lis-stat-label">Sample Collection</div><div class="text-muted fs-12">Log specimens</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-processing" class="lis-module-card" data-goto="processing"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon green"><i class="bi bi-gear-wide-connected"></i></div><div><div class="lis-stat-label">Test Processing</div><div class="text-muted fs-12">Enter results</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-results" class="lis-module-card" data-goto="results"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon slate"><i class="bi bi-file-medical"></i></div><div><div class="lis-stat-label">Laboratory Results</div><div class="text-muted fs-12">View reports</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-verification" class="lis-module-card" data-goto="verification"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon amber"><i class="bi bi-patch-check"></i></div><div><div class="lis-stat-label">Result Verification</div><div class="text-muted fs-12">Approve results</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-reports" class="lis-module-card" data-goto="reports"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon red"><i class="bi bi-bar-chart"></i></div><div><div class="lis-stat-label">Laboratory Reports</div><div class="text-muted fs-12">Analytics</div></div></div></a></div>
+                </div>
+            </div>
+        </section>
 
-        <!-- TOP SPLIT ROW: PROFILE & REQUESTED TESTS -->
-        <div class="row g-4 mb-4 align-items-stretch">
-            <!-- Patient Profile Card -->
-            <div class="col-lg-4">
-                <div class="content-card card h-100 p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="section-card-title m-0">Patient Profile</h5>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-soft-success text-success text-uppercase font-weight-bold fs-10">Active Case</span>
-                            <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="editPatientBtn" style="min-width: 32px;">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+        <!-- ============ SECTION: LABORATORY REQUESTS ============ -->
+        <section class="lis-section" id="tab-requests">
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Laboratory Requests</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="lisFilterBtn"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-filter-bar mb-3" id="lisFilterBar" style="display:none;">
+                    <div class="lis-field"><label class="lis-form-label">Priority</label><select class="lis-input"><option>Routine</option><option>Urgent</option><option>STAT</option></select></div>
+                    <div class="lis-field"><label class="lis-form-label">Status</label><select class="lis-input"><option>All</option><option>Pending</option><option>In Progress</option><option>Completed</option></select></div>
+                </div>
+                <form id="lisRequestForm" class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="lis-form-label">Patient Name</label>
+                        <input type="text" class="lis-input" placeholder="Enter patient name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="lis-form-label">Requesting Physician</label>
+                        <input type="text" class="lis-input" placeholder="Dr. Name">
+                    </div>
+                    <div class="col-12">
+                        <label class="lis-form-label">Select Tests</label>
+                        <div class="lis-test-grid">
+                            <div class="lis-test-chip"><span class="lis-test-check"></span><i class="bi bi-droplet-half"></i><span class="lis-test-name">CBC</span></div>
+                            <div class="lis-test-chip"><span class="lis-test-check"></span><i class="bi bi-activity"></i><span class="lis-test-name">Blood Chem</span></div>
+                            <div class="lis-test-chip"><span class="lis-test-check"></span><i class="bi bi-cup-straw"></i><span class="lis-test-name">Urinalysis</span></div>
+                            <div class="lis-test-chip"><span class="lis-test-check"></span><i class="bi bi-bug"></i><span class="lis-test-name">Culture</span></div>
                         </div>
                     </div>
-                    
-                    <div class="d-flex align-items-center gap-3 pb-3 border-bottom mb-3">
-                        <div class="patient-avatar-wrapper">
-                            <div class="patient-avatar-img d-flex align-items-center justify-content-center text-white bg-secondary font-weight-bold" id="patientAvatarInitials"></div>
-                            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="uploadAvatarBtn" title="Upload Photo">
-                                <i class="bi bi-camera"></i>
-                            </button>
-                            <input type="file" id="avatarInput" accept="image/*" class="d-none">
-                        </div>
-                        <div class="w-100">
-                            <table class="table table-borderless table-profile-info m-0 fs-13">
-                                <tr>
-                                    <td class="text-muted ps-0">Name:</td>
-                                    <td class="text-end font-weight-medium text-dark patient-editable" data-field="name" id="patientNameDisplay">
-                                        <input type="text" class="patient-editable-input patient-profile-input" value="">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-muted ps-0">Patient ID:</td>
-                                    <td class="font-weight-medium text-dark" id="patientIdDisplay">
-                                        <input type="text" class="patient-editable-input patient-profile-input patient-id-input" value="01" maxlength="8" readonly>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="lisCancelBtn">Cancel</button>
+                        <button type="submit" class="btn btn-save-changes" id="lisSaveBtn">Submit Request</button>
                     </div>
-
-                    <table class="table table-borderless table-profile-info m-0 fs-13">
-                        <tr>
-                            <td class="text-muted ps-0">Age:</td>
-                            <td class="font-weight-medium text-dark patient-editable patient-editable-age" data-field="age">
-                                <input type="text" class="patient-editable-input patient-profile-input" value="" inputmode="numeric" pattern="[0-9]*" maxlength="3">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted ps-0">Gender:</td>
-                            <td class="font-weight-medium text-dark patient-editable patient-editable-gender" data-field="gender">
-                                <select class="patient-editable-input patient-profile-input">
-                                    <option value=""></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted ps-0">Blood Type:</td>
-                            <td class="font-weight-medium text-dark patient-editable" data-field="bloodType">
-                                <select class="patient-editable-input patient-profile-input">
-                                    <option value=""></option>
-                                    <option value="A Positive">A Positive</option>
-                                    <option value="A Negative">A Negative</option>
-                                    <option value="B Positive">B Positive</option>
-                                    <option value="B Negative">B Negative</option>
-                                    <option value="AB Positive">AB Positive</option>
-                                    <option value="AB Negative">AB Negative</option>
-                                    <option value="O Positive">O Positive</option>
-                                    <option value="O Negative">O Negative</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted ps-0">Ward:</td>
-                            <td class="font-weight-medium text-dark patient-editable" data-field="ward">
-                                <select class="patient-editable-input patient-profile-input">
-                                    <option value=""></option>
-                                    <option value="Medical A">Medical A</option>
-                                    <option value="Medical B">Medical B</option>
-                                    <option value="ICU">ICU</option>
-                                    <option value="Surgery">Surgery</option>
-                                    <option value="Pediatrics">Pediatrics</option>
-                                    <option value="Maternity">Maternity</option>
-                                    <option value="Emergency">Emergency</option>
-                                    <option value="Ward 1">Ward 1</option>
-                                    <option value="Ward 2">Ward 2</option>
-                                    <option value="Ward 3">Ward 3</option>
-                                    <option value="Ward 4">Ward 4</option>
-                                    <option value="Ward 5">Ward 5</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted ps-0">Room:</td>
-                            <td class="font-weight-medium text-dark patient-editable" data-field="room">
-                                <select class="patient-editable-input patient-profile-input">
-                                    <option value=""></option>
-                                    <option value="101">101</option>
-                                    <option value="102">102</option>
-                                    <option value="201">201</option>
-                                    <option value="202">202</option>
-                                    <option value="301">301</option>
-                                    <option value="302">302</option>
-                                    <option value="401">401</option>
-                                    <option value="402">402</option>
-                                    <option value="501">501</option>
-                                    <option value="502">502</option>
-                                    <option value="ICU-1">ICU-1</option>
-                                    <option value="ICU-2">ICU-2</option>
-                                    <option value="ER-1">ER-1</option>
-                                    <option value="ER-2">ER-2</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted ps-0 pb-0">Physician:</td>
-                            <td class="font-weight-medium text-dark pb-0 patient-editable" data-field="physician">
-                                <select class="patient-editable-input patient-profile-input">
-                                    <option value=""></option>
-                                    <option value="Dr. Aris Estevan">Dr. Aris Estevan</option>
-                                    <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins</option>
-                                    <option value="Dr. Michael Chen">Dr. Michael Chen</option>
-                                    <option value="Dr. Elena Rodriguez">Dr. Elena Rodriguez</option>
-                                    <option value="Dr. Sarah Smith">Dr. Sarah Smith</option>
-                                    <option value="Dr. Aris Thorne">Dr. Aris Thorne</option>
-                                    <option value="Dr. Sarah Vance">Dr. Sarah Vance</option>
-                                    <option value="Dr. James Wilson">Dr. James Wilson</option>
-                                    <option value="Dr. Maria Garcia">Dr. Maria Garcia</option>
-                                    <option value="Dr. Robert Brown">Dr. Robert Brown</option>
-                                </select>
-                            </td>
-                        </tr>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="lisRequestsTable">
+                        <thead><tr><th>Request ID</th><th>Patient</th><th>Tests</th><th>Priority</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">REQ-001</td><td>Maria Santos</td><td>CBC, Blood Chem</td><td><span class="lis-badge lis-badge-pending">Routine</span></td><td><span class="lis-badge lis-badge-info">Pending</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button></td></tr>
+                            <tr><td class="lis-strong">REQ-002</td><td>Juan Dela Cruz</td><td>Urinalysis</td><td><span class="lis-badge lis-badge-critical">STAT</span></td><td><span class="lis-badge lis-badge-pending">Pending</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="6" class="lis-empty"><i class="bi bi-inbox"></i><p>No matching requests.</p></td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
+        </section>
 
-            <!-- Requested Laboratory Tests -->
-            <div class="col-lg-8">
-                <div class="content-card card h-100 p-3 d-flex flex-column justify-content-between">
-                    <div>
-                        <h5 class="section-card-title mb-3">Requested Laboratory Tests</h5>
-                        
-                        <div class="row row-cols-2 row-cols-sm-4 g-2 mb-3">
-                            <!-- CBC (Unselected State) -->
-                            <div class="col">
-                                <div class="test-selection-card text-center p-2 border rounded">
-                                    <i class="bi bi-droplet text-muted fs-3 mb-1 d-block"></i>
-                                    <span class="d-block font-weight-semibold fs-12 text-muted mb-1">CBC</span>
-                                    <div class="custom-radio-circle"><div></div></div>
-                                </div>
-                            </div>
-                            <!-- Urinalysis -->
-                            <div class="col">
-                                <div class="test-selection-card text-center p-2 border rounded">
-                                    <i class="bi bi-eyedropper text-muted fs-3 mb-1 d-block"></i>
-                                    <span class="d-block font-weight-semibold fs-12 text-muted mb-1">Urinalysis</span>
-                                    <div class="custom-radio-circle"><div></div></div>
-                                </div>
-                            </div>
-                            <!-- Blood Sugar -->
-                            <div class="col">
-                                <div class="test-selection-card text-center p-2 border rounded">
-                                    <i class="bi bi-water text-muted fs-3 mb-1 d-block"></i>
-                                    <span class="d-block font-weight-semibold fs-12 text-muted mb-1">Blood Sugar</span>
-                                    <div class="custom-radio-circle"><div></div></div>
-                                </div>
-                            </div>
-                            <!-- Lipid Profile -->
-                            <div class="col">
-                                <div class="test-selection-card text-center p-2 border rounded">
-                                    <i class="bi bi-heart-pulse text-muted fs-3 mb-1 d-block"></i>
-                                    <span class="d-block font-weight-semibold fs-12 text-muted mb-1">Lipid Profile</span>
-                                    <div class="custom-radio-circle"><div></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-
-                        <!-- Test Info Area -->
-                        <div class="test-info-area p-3 rounded mb-3" id="testInfoArea">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="w-100">
-                                    <h6 class="font-weight-bold text-dark mb-2" id="testInfoTitle">Requested Laboratory Tests</h6>
-                                    <p class="text-muted fs-12 mb-0" id="testInfoDescription">Select a test above to view its description, purpose, and how it helps this patient. Available tests: CBC, Urinalysis, Blood Sugar, and Lipid Profile.</p>
-                                </div>
-                                <button type="button" class="btn btn-sm btn-outline-secondary ms-2 d-none" id="closeTestInfo">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Clinical Alert Callout Banner -->
-                        <div class="clinical-note-box p-3 rounded d-flex gap-2">
-                            <i class="bi bi-info-circle-fill text-success fs-5"></i>
-                            <div class="clinical-note-textarea fs-12 text-dark lh-base w-100" rows="3">Patient has been fasting for 10 hours prior to sample collection. Ensure blood sugar results are cross-referenced with previous quarterly history.</div>
-                        </div>
+        <!-- ============ SECTION: SAMPLE COLLECTION ============ -->
+        <section class="lis-section" id="tab-samples">
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Sample Collection</h5>
+                <form id="lisSampleForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Specimen ID</label><input type="text" class="lis-input" placeholder="SPC-0001" required></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient</label><input type="text" class="lis-input" placeholder="Patient name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Specimen Type</label><select class="lis-input"><option>Blood</option><option>Urine</option><option>Stool</option><option>Swab</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Collected By</label><input type="text" class="lis-input" placeholder="Phlebotomist"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Collection Time</label><input type="text" class="lis-input" placeholder="HH:MM"></div>
+                    <div class="col-md-4 d-flex align-items-end"><button type="submit" class="btn btn-save-changes" id="lisSaveSampleBtn">Log Specimen</button></div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="lisSamplesTable">
+                        <thead><tr><th>Specimen ID</th><th>Patient</th><th>Type</th><th>Collected</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">SPC-0001</td><td>Maria Santos</td><td>Blood</td><td>08:30</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr><td class="lis-strong">SPC-0002</td><td>Juan Dela Cruz</td><td>Urine</td><td>09:05</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="5" class="lis-empty"><i class="bi bi-inbox"></i><p>No samples found.</p></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- RESULTS ANALYSIS TABLE DATA SECTION -->
-        <div class="content-card card p-3 mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-card-title m-0">Results Analysis</h5>
-                <div class="d-flex gap-3 fs-11 font-weight-semibold">
-                    <span><span class="status-dot-danger-sm inline-block me-1"></span> CRITICAL VALUE</span>
-                    <span><span class="status-dot-green-sm inline-block me-1"></span> NORMAL</span>
+        <!-- ============ SECTION: TEST PROCESSING ============ -->
+        <section class="lis-section" id="tab-processing">
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Test Processing</h5>
+                <form id="lisProcessForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Test</label><input type="text" class="lis-input" value="Hemoglobin" readonly></div>
+                    <div class="col-md-4"><label class="lis-form-label">Result</label><input type="text" class="lis-input" id="lisResultInput" placeholder="e.g. 13.5"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Reference Range</label><input type="text" class="lis-input" id="lisRange" value="12.0 - 16.0"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Flag</label><select class="lis-input" id="lisFlag"><option>Normal</option><option>Low</option><option>High</option><option>Critical</option></select></div>
+                    <div class="col-md-4 d-flex align-items-center"><div class="form-check"><input class="form-check-input" type="checkbox" id="lisAutoFlag" checked><label class="form-check-label" for="lisAutoFlag">Auto-flag</label></div></div>
+                    <div class="col-md-4 d-flex align-items-end"><button type="submit" class="btn btn-save-changes" id="lisSaveResultBtn">Save Result</button></div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="lisProcessTable">
+                        <thead><tr><th>Order</th><th>Test</th><th>Result</th><th>Flag</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">ORD-100</td><td>Hemoglobin</td><td>13.5</td><td><span class="lis-badge lis-badge-normal">Normal</span></td><td class="text-end"><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr><td class="lis-strong">ORD-101</td><td>Glucose</td><td>142</td><td><span class="lis-badge lis-badge-high">High</span></td><td class="text-end"><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="5" class="lis-empty"><i class="bi bi-inbox"></i><p>No tests to process.</p></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </section>
 
-            <div class="table-responsive">
-                <table class="table alignment-middle-table m-0">
-                    <thead>
-                        <tr class="table-header-row text-uppercase text-muted fs-11 font-weight-bold border-bottom">
-                            <th class="ps-3 py-3">Parameter</th>
-                            <th class="py-3">Result</th>
-                            <th class="py-3">Reference Range</th>
-                            <th class="py-3">Unit</th>
-                            <th class="py-3 status-col">Status</th>
-                            <th class="py-3 pe-3 sticky-action">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="fs-13">
-                        <!-- Hemoglobin -->
-                        <tr class="border-bottom">
-                            <td class="ps-3 py-3">
-                                <span class="d-block font-weight-semibold text-dark">Hemoglobin (CBC)</span>
-                                <small class="text-muted fs-10 text-uppercase">Automated Cell Counter</small>
-                            </td>
-                            <td class="py-3"><span class="result-value font-weight-bold text-dark">14.2</span></td>
-                            <td class="py-3 text-muted">13.5 - 17.5</td>
-                            <td class="py-3 text-muted">g/dL</td>
-                            <td class="py-3 status-col"><span class="badge-status-pill bg-soft-success text-success text-uppercase">Normal</span></td>
-                            <td class="py-3 pe-3 sticky-action">
-                                <button type="button" class="btn btn-table-edit"><i class="bi bi-pencil"></i></button>
-                                <button type="button" class="btn btn-table-print"><i class="bi bi-printer"></i></button>
-                                <button type="button" class="btn btn-table-delete"><i class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
-                        <!-- Fasting Blood Sugar -->
-                        <tr class="border-bottom">
-                            <td class="ps-3 py-3">
-                                <span class="d-block font-weight-semibold text-dark">Fasting Blood Sugar</span>
-                                <small class="text-muted fs-10 text-uppercase">Enzymatic Method</small>
-                            </td>
-                            <td class="py-3"><span class="result-value font-weight-bold text-danger-value">132</span></td>
-                            <td class="py-3 text-muted">70 - 99</td>
-                            <td class="py-3 text-muted">mg/dL</td>
-                            <td class="py-3 status-col"><span class="badge-status-pill bg-soft-danger text-danger text-uppercase">High</span></td>
-                            <td class="py-3 pe-3 sticky-action">
-                                <button type="button" class="btn btn-table-edit"><i class="bi bi-pencil"></i></button>
-                                <button type="button" class="btn btn-table-print"><i class="bi bi-printer"></i></button>
-                                <button type="button" class="btn btn-table-delete"><i class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
-                        <!-- Urine Glucose -->
-                        <tr class="border-bottom">
-                            <td class="ps-3 py-3">
-                                <span class="d-block font-weight-semibold text-dark">Urine Glucose</span>
-                                <small class="text-muted fs-10 text-uppercase">Dipstick Analysis</small>
-                            </td>
-                            <td class="py-3"><span class="result-value font-weight-bold text-dark">Negative</span></td>
-                            <td class="py-3 text-muted">Negative</td>
-                            <td class="py-3 text-muted">N/A</td>
-                            <td class="py-3 status-col"><span class="badge-status-pill bg-soft-success text-success text-uppercase">Normal</span></td>
-                            <td class="py-3 pe-3 sticky-action">
-                                <button type="button" class="btn btn-table-edit"><i class="bi bi-pencil"></i></button>
-                                <button type="button" class="btn btn-table-print"><i class="bi bi-printer"></i></button>
-                                <button type="button" class="btn btn-table-delete"><i class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr id="lisNoResults" class="d-none">
-                            <td colspan="7" class="text-center text-muted py-4">
-                                <i class="bi bi-search me-2"></i>No matching records found.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            </div>
-
-            <!-- Enter Additional Parameters Row Action -->
-            <button class="btn btn-add-record btn-add-parameter w-100 py-3 mt-2 d-flex align-items-center justify-content-center gap-2 fs-13 font-weight-semibold">
-                <i class="bi bi-plus-circle-fill"></i> Enter Additional Parameters
-            </button>
-        </div>
-
-        <!-- LOWER SECTION: ANALYZER STATUS & PENDING VALIDATION -->
-        <div class="row g-4 me-4">
-            <div class="col-12 d-flex justify-content-end align-items-start gap-4 lower-section-cards">
-                <!-- Analyzer Status -->
-                <div class="content-card card analyzer-card p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="section-card-title m-0">Analyzer Status</h5>
-                        <span class="badge bg-soft-success text-success text-uppercase fs-10 font-weight-bold">2 Online</span>
+        <!-- ============ SECTION: LABORATORY RESULTS ============ -->
+        <section class="lis-section" id="tab-results">
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Laboratory Results</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary" id="lisPrintBtn"><i class="bi bi-printer"></i> Print</button>
+                        <button class="btn btn-outline-secondary" id="lisPdfBtn"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                        <button class="btn btn-outline-secondary" id="lisEmailBtn"><i class="bi bi-envelope"></i> Email</button>
                     </div>
-                    <div class="analyzer-summary d-flex justify-content-between text-muted fs-11 mb-2 px-1">
-                        <span><i class="bi bi-arrow-repeat me-1"></i>Last sync: 06:00</span>
-                        <span><i class="bi bi-check2-circle me-1"></i>QC: Passed</span>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <div class="analyzer-item d-flex flex-column px-3 py-2 rounded">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fs-13 text-dark font-weight-semibold d-flex align-items-center">
-                                    <span class="status-dot-green me-2"></span> Sysmex XN-1000
-                                </span>
-                                <span class="text-muted fs-12">Ready</span>
-                            </div>
-                            <div class="analyzer-util mt-2">
-                                <div class="analyzer-util-bar" style="width: 71%;"></div>
-                            </div>
-                            <span class="fs-10 text-muted mt-1">Samples today: 142 / 200</span>
-                        </div>
-                        <div class="analyzer-item d-flex flex-column px-3 py-2 rounded">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fs-13 text-dark font-weight-semibold d-flex align-items-center">
-                                    <span class="status-dot-green me-2"></span> Cobas 6000 c501
-                                </span>
-                                <span class="text-muted fs-12">Calibrated</span>
-                            </div>
-                            <div class="analyzer-util mt-2">
-                                <div class="analyzer-util-bar" style="width: 45%;"></div>
-                            </div>
-                            <span class="fs-10 text-muted mt-1">Samples today: 90 / 200</span>
-                        </div>
-                    </div>
-                    <p class="text-muted fs-11 mt-3 mb-0">
-                        <i class="bi bi-lightbulb me-1"></i>
-                        <strong>MediSense AI:</strong> Auto-sync analyzer QC daily at 06:00 and flag instruments past calibration window.
-                    </p>
                 </div>
-
-                <!-- Pending Validation Block Banner -->
-                <div class="validation-dark-card card pending-card p-3 text-white d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <h6 class="m-0 text-success-light font-weight-semibold fs-15">Pending Validation</h6>
-                            <h2 class="display-5 font-weight-bold text-white my-2" id="pendingCount">12</h2>
-                            <p class="m-0 text-white-75 fs-12">Records awaiting clinical manager sign-off</p>
-                        </div>
-                        <i class="bi bi-clipboard-check text-success-light fs-4"></i>
-                    </div>
-                    <button class="btn btn-validate-queue w-100 font-weight-semibold py-2">Go to Queue</button>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="lisResultsTable">
+                        <thead><tr><th>Report</th><th>Patient</th><th>Tests</th><th>Issued</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">RPT-2201</td><td>Maria Santos</td><td>CBC, Blood Chem</td><td>Today</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="5" class="lis-empty"><i class="bi bi-inbox"></i><p>No results available.</p></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- ============ SECTION: RESULT VERIFICATION ============ -->
+        <section class="lis-section" id="tab-verification">
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Result Verification</h5>
+                    <span class="badge bg-soft-info text-info font-weight-bold px-3 py-2 rounded-3"><span id="lisPendingCount">2</span> Pending</span>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="lisVerifyTable">
+                        <thead><tr><th>Patient</th><th>Test</th><th>Result</th><th>Flag</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">Maria Santos</td><td>Hemoglobin</td><td>13.5</td><td><span class="lis-badge lis-badge-normal">Normal</span></td><td><span class="lis-badge lis-badge-pending">Pending</span></td><td class="text-end"><button class="lis-tbtn approve"><i class="bi bi-check-lg"></i></button><button class="lis-tbtn reject"><i class="bi bi-x-lg"></i></button><button class="lis-tbtn view"><i class="bi bi-eye"></i></button></td></tr>
+                            <tr><td class="lis-strong">Juan Dela Cruz</td><td>Glucose</td><td>142</td><td><span class="lis-badge lis-badge-high">High</span></td><td><span class="lis-badge lis-badge-pending">Pending</span></td><td class="text-end"><button class="lis-tbtn approve"><i class="bi bi-check-lg"></i></button><button class="lis-tbtn reject"><i class="bi bi-x-lg"></i></button><button class="lis-tbtn view"><i class="bi bi-eye"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="6" class="lis-empty"><i class="bi bi-inbox"></i><p>No results pending verification.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: LABORATORY REPORTS ============ -->
+        <section class="lis-section" id="tab-reports">
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Laboratory Reports</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary" id="lisPrintBtn2"><i class="bi bi-printer"></i> Print</button>
+                        <button class="btn btn-outline-secondary" id="lisPdfBtn2"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                        <button class="btn btn-outline-secondary" id="lisExcelBtn"><i class="bi bi-file-earmark-excel"></i> Excel</button>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-3" role="group">
+                    <button class="btn lis-btn-primary" data-range="daily">Daily</button>
+                    <button class="btn lis-btn-outline" data-range="weekly">Weekly</button>
+                    <button class="btn lis-btn-outline" data-range="monthly">Monthly</button>
+                    <button class="btn lis-btn-outline" data-range="yearly">Yearly</button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-lg-8"><div class="lis-chart-box card p-3"><canvas id="lisMainChart"></canvas></div></div>
+                    <div class="col-lg-4"><div class="lis-chart-box card p-3"><canvas id="lisCategoryChart"></canvas></div></div>
+                    <div class="col-lg-6"><div class="lis-chart-box card p-3"><canvas id="lisTrendChart"></canvas></div></div>
+                    <div class="col-lg-6"><div class="lis-chart-box card p-3"><canvas id="lisFlagChart"></canvas></div></div>
+                </div>
+            </div>
+        </section>
     </main>
 </div>
 
-<!-- ADD RECORD MODAL -->
-<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-clipboard-data text-success me-2"></i>Add Lab Result</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addRecordForm" class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Parameter</label>
-                        <select class="form-select custom-form-input" name="param" id="paramSelect" required>
-                            <option value="" disabled selected>Select parameter...</option>
-                            <option value="Hemoglobin (CBC)">Hemoglobin (CBC)</option>
-                            <option value="WBC Count">WBC Count</option>
-                            <option value="Platelet Count">Platelet Count</option>
-                            <option value="Hematocrit">Hematocrit</option>
-                            <option value="Fasting Blood Sugar">Fasting Blood Sugar</option>
-                            <option value="Postprandial Glucose">Postprandial Glucose</option>
-                            <option value="HbA1c">HbA1c</option>
-                            <option value="Total Cholesterol">Total Cholesterol</option>
-                            <option value="Triglycerides">Triglycerides</option>
-                            <option value="HDL">HDL</option>
-                            <option value="LDL">LDL</option>
-                            <option value="Serum Creatinine">Serum Creatinine</option>
-                            <option value="BUN">BUN</option>
-                            <option value="Uric Acid">Uric Acid</option>
-                            <option value="Sodium">Sodium</option>
-                            <option value="Potassium">Potassium</option>
-                            <option value="ALT">ALT</option>
-                            <option value="AST">AST</option>
-                            <option value="Total Bilirubin">Total Bilirubin</option>
-                            <option value="Albumin">Albumin</option>
-                            <option value="Urine Protein">Urine Protein</option>
-                            <option value="Urine pH">Urine pH</option>
-                            <option value="Urine Ketones">Urine Ketones</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Result</label>
-                        <input type="text" class="form-control custom-form-input" name="result" id="resultInput" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Reference Range</label>
-                        <input type="text" class="form-control custom-form-input" name="range" list="rangeList" placeholder="13.5 - 17.5">
-                        <datalist id="rangeList">
-                            <option value="13.5 - 17.5"></option>
-                            <option value="4.0 - 11.0"></option>
-                            <option value="150 - 400"></option>
-                            <option value="40 - 54"></option>
-                            <option value="70 - 99"></option>
-                            <option value="0 - 40"></option>
-                            <option value="0 - 5.6"></option>
-                            <option value="125 - 200"></option>
-                            <option value="0 - 150"></option>
-                            <option value="40 - 60"></option>
-                            <option value="0 - 100"></option>
-                            <option value="0.6 - 1.3"></option>
-                            <option value="7 - 20"></option>
-                            <option value="3.5 - 7.2"></option>
-                            <option value="135 - 145"></option>
-                            <option value="3.5 - 5.1"></option>
-                            <option value="0 - 41"></option>
-                            <option value="0 - 40"></option>
-                            <option value="0.3 - 1.2"></option>
-                            <option value="3.5 - 5.0"></option>
-                            <option value="Negative"></option>
-                            <option value="None"></option>
-                        </datalist>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Unit</label>
-                        <input type="text" class="form-control custom-form-input" name="unit" list="unitList" placeholder="g/dL">
-                        <datalist id="unitList">
-                            <option value="g/dL"></option>
-                            <option value="10^9/L"></option>
-                            <option value="10^3/µL"></option>
-                            <option value="%"></option>
-                            <option value="mg/dL"></option>
-                            <option value="mmol/L"></option>
-                            <option value="U/L"></option>
-                            <option value="mEq/L"></option>
-                            <option value="N/A"></option>
-                        </datalist>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Status</label>
-                        <select class="form-select custom-form-input" name="status" id="statusSelect">
-                            <option>Normal</option>
-                            <option>High</option>
-                            <option>Low</option>
-                            <option>Critical</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 d-flex align-items-end">
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="autoStatusCheck" checked>
-                            <label class="form-check-label fs-12 text-muted" for="autoStatusCheck">
-                                Auto-compute status from range
-                            </label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="addRecordForm" class="btn btn-save-changes btn-action-top">Save Record</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MEDISENSE AI ASSIST MODAL -->
-<div class="modal fade medisense-modal" id="mediSenseModal" tabindex="-1" aria-labelledby="mediSenseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark d-flex align-items-center gap-2" id="mediSenseModalLabel">
-                    <span class="medisense-avatar"><i class="bi bi-cpu"></i></span>
-                    MediSense AI &mdash; Automation Assistant
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="text-muted fs-13 mb-3">Here are MediSense AI's suggestions based on the current patient profile and clinical note. These are recommendations for the clinical team&mdash;not automatic actions.</p>
-                <div id="mediSenseSuggestions">
-                    <div class="medisense-advice">
-                        <strong>Verify normal results first.</strong> The <em>Normal</em> results (e.g. Hemoglobin, Urine Glucose) are good candidates for manual sign-off to clear the pending queue faster.
-                    </div>
-                    <div class="medisense-advice">
-                        <strong>Review the high value.</strong> Fasting Blood Sugar is <em>High (132 mg/dL)</em>. Consider cross-referencing with the patient's 10-hour fasting note and prior quarterly history before approval.
-                    </div>
-                    <div class="medisense-advice">
-                        <strong>Watch analyzer calibration.</strong> Both instruments show healthy status, but schedule routine QC for Sysmex XN-1000 and Cobas 6000 c501 to avoid unexpected downtime.
-                    </div>
-                    <div class="medisense-advice">
-                        <strong>Complete missing entries.</strong> Use &ldquo;Enter Additional Parameters&rdquo; to add any pending tests so every requested exam has a recorded result.
-                    </div>
-                    <div class="medisense-advice">
-                        <strong>Prioritize by urgency.</strong> Tackle Critical and High results ahead of Normal ones to shorten clinician wait time.
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-save-changes btn-action-top" id="applyToClinicalNoteBtn">Apply to Clinical Note</button>
-                <button type="button" class="btn btn-save-changes btn-action-top" id="mediSenseRunBtn">Get AI Suggestions</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- PENDING VALIDATION QUEUE MODAL -->
-<div class="modal fade" id="validationQueueModal" tabindex="-1" aria-labelledby="validationQueueModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark d-flex align-items-center gap-2" id="validationQueueModalLabel">
-                    <i class="bi bi-clipboard-check text-success"></i> Pending Validation Queue
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-between align-items-center mb-3 gap-3 flex-wrap">
-                    <span class="text-muted fs-13"><span id="queueCount">0</span> records awaiting clinical manager sign-off</span>
-                    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-                        <input type="text" id="queueSearch" class="form-control form-control-sm" placeholder="Search patient or parameter..." style="min-width: 280px; width: 100%; max-width: 360px;">
-                    </div>
-                </div>
-                <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
-                    <table class="table alignment-middle-table m-0" id="validationQueueTable">
-                        <thead class="sticky-top bg-white">
-                            <tr class="table-header-row text-uppercase text-muted fs-11 font-weight-bold border-bottom">
-                                <th class="ps-3 py-2" style="width: 22%;">Patient</th>
-                                <th class="py-2" style="width: 30%;">Parameter</th>
-                                <th class="py-2" style="width: 14%;">Result</th>
-                                <th class="py-2" style="width: 14%;">Status</th>
-                                <th class="py-2 pe-3 text-end" style="width: 20%;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="fs-13" id="validationQueueBody"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-save-changes btn-action-top" id="queueValidateSelected">Validate Selected</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="../js/add-record.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="../js/lis.js"></script>
 </body>
 </html>

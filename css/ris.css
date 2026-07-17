@@ -1,150 +1,52 @@
 /* =======================================================
-   HIS - Radiology & Imaging System (RIS) Theme Skin
+   DTCS - Radiology and Imaging System (RIS) Theme Skin
+   Reuses LIS component classes (lis-stat-card, lis-table,
+   lis-badge, lis-section, nav-group...) from lis.css for a
+   consistent design language. This file adds RIS-specific
+   components only.
    ======================================================= */
 
-.tracking-wide { letter-spacing: 0.05em; }
-.border-secondary-light { border-color: rgba(255,255,255,0.1) !important; }
+/* ---------- RIS-specific icon tint (accent teal) ---------- */
+.lis-stat-icon.accent { background: #ccfbf1; color: #14b8a6; }
 
-/* --- IMAGING MODALITY SELECTION MODULE --- */
-.modality-select-bar {
-    background-color: #ffffff;
-    border-color: #e2e8f0 !important;
-    cursor: pointer;
-    transition: all 0.15s ease;
+/* ---------- Imaging modality chips (reuse lis-test-chip base) ---------- */
+.lis-test-chip i.bi-x-diamond { color: #64748b; }
+.lis-test-chip i.bi-camera { color: #64748b; }
+.lis-test-chip i.bi-person-bounding-box { color: #64748b; }
+.lis-test-chip i.bi-soundwave { color: #64748b; }
+.lis-test-chip i.bi-heart-pulse { color: #64748b; }
+.lis-test-chip i.bi-broadcast { color: #64748b; }
+.lis-test-chip i.bi-activity { color: #64748b; }
+.lis-test-chip i.bi-bone { color: #64748b; }
+
+/* ---------- Image history timeline ---------- */
+.lis-timeline { position: relative; padding-left: 22px; }
+.lis-timeline::before {
+    content: ""; position: absolute; left: 5px; top: 4px; bottom: 4px;
+    width: 2px; background: var(--his-border-color, #eaf0ed);
 }
-
-.modality-select-bar.selected {
-    background-color: #f0faf4;
-    border-color: #127040 !important;
+.lis-timeline-item { position: relative; padding: 0 0 18px; }
+.lis-timeline-item:last-child { padding-bottom: 0; }
+.lis-timeline-dot {
+    position: absolute; left: -22px; top: 4px; width: 12px; height: 12px;
+    border-radius: 50%; background: #0a6c3a; border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e8f8f0;
 }
+.lis-timeline-item .lis-strong { font-size: 0.88rem; }
+.lis-timeline-item small { font-size: 0.76rem; }
 
-.modality-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-}
-
-/* --- CLINICAL INDICATION DARK PANEL --- */
-.indication-dark-card {
-    background-color: #03261f !important;
-    border: none;
-    border-radius: 16px;
-}
-
-/* --- DICOM VIEWPORT MODULE INTERFACE --- */
-.dicom-viewer-container {
-    background-color: #000000;
+/* ---------- Image preview placeholder ---------- */
+.lis-image-preview {
+    width: 100%; height: 160px; border-radius: 12px; background: #0c111a;
+    display: flex; align-items: center; justify-content: center;
+    color: #4ade80; font-size: 2.4rem;
+    background-image: radial-gradient(circle at center, #111827 0%, #030712 100%);
     border: 1px solid #1e293b;
-    border-radius: 16px;
-    overflow: hidden;
-    height: 520px;
 }
 
-.dicom-canvas {
-    background-color: #0c111a;
-}
-
-.viewer-layout-canvas {
-    background: radial-gradient(circle at center, #111827 0%, #030712 100%);
-}
-
-.text-success-light { color: #4ade80 !important; }
-
-.viewer-thumbnails-panel {
-    width: 90px;
-}
-
-.thumb-frame {
-    width: 74px;
-    height: 74px;
-    background-color: #1e293b;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    opacity: 0.6;
-}
-
-.thumb-frame.active, .thumb-frame:hover {
-    border-color: #4ade80;
-    opacity: 1;
-}
-
-.fs-9 { font-size: 0.6rem; }
-
-.simulated-brain-scan-graphic {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed rgba(74, 222, 128, 0.15);
-}
-
-/* Operational footbar styling rules */
-.btn-control-nav {
-    background-color: #f1f5f9;
-    border: none;
-    padding: 4px 10px;
-    border-radius: 6px;
-    color: #475569;
-}
-.btn-control-nav:hover { background-color: #e2e8f0; }
-
-.speed-toggle-group .btn-outline-speed {
-    border: 1px solid #cbd5e1;
-    color: #64748b;
-    font-size: 0.78rem;
-    padding: 4px 12px;
-    font-weight: 500;
-}
-
-.speed-toggle-group .btn-outline-speed.active {
-    background-color: #f1f5f9;
-    color: #0f172a;
-    border-color: #cbd5e1;
-}
-
-/* --- RADIOLOGY REPORT INTERPRETATION INTERFACE --- */
-.findings-textarea-mockup {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    min-height: 200px;
-}
-
-.bg-soft-warning { background-color: #fef3c7; }
-.text-warning-dark { color: #d97706; }
-.status-dot-warning { width: 7px; height: 7px; background-color: #f59e0b; border-radius: 50%; }
-
-.btn-verify-report {
-    background-color: #0a6c3a;
-    color: #ffffff;
-    border: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-radius: 8px;
-}
-.btn-verify-report:hover { background-color: #07522b; color: #ffffff; }
-
-.btn-request-opinion {
-    background-color: #f8fafc;
-    border: 1px solid #cbd5e1;
-    color: #475569;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border-radius: 8px;
-}
-.btn-request-opinion:hover { background-color: #f1f5f9; }
-
-.radiologist-avatar { width: 34px; height: 34px; font-size: 1.1rem; }
-
-/* Lower KPI Cards Border Accents */
-.border-start-thick-green { border-left: 4px solid #0a6c3a !important; }
-.border-start-thick-blue { border-left: 4px solid #2563eb !important; }
-.display-6-sm { font-size: 1.6rem; }
+/* ---------- Breadcrumb ---------- */
+.lis-breadcrumb { font-size: 0.78rem; color: #94a3b8; }
+.lis-breadcrumb a { color: #127040; text-decoration: none; }
+.lis-breadcrumb a:hover { text-decoration: underline; }
+.lis-breadcrumb .sep { margin: 0 6px; color: #cbd5e1; }
+.lis-breadcrumb .current { color: #64748b; font-weight: 600; }
