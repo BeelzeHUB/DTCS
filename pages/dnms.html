@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet & Nutrition Management | DTCS</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/dnms.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar d-flex flex-column justify-content-between">
+        <div>
+            <div class="sidebar-brand">
+                <h2 class="m-0 font-weight-bold">HIS</h2>
+                <p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p>
+            </div>
+
+            <nav class="sidebar-nav mt-4">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Diagnostic Dashboard</span>
+                </a>
+                <a href="lis.html" class="nav-item">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Laboratory Information</span>
+                </a>
+                <a href="ris.html" class="nav-item">
+                    <i class="bi bi-person-bounding-box"></i>
+                    <span>Radiology and Imaging</span>
+                </a>
+                <a href="pms.html" class="nav-item">
+                    <i class="bi bi-capsule"></i>
+                    <span>Pharmacy Management</span>
+                </a>
+                <a href="sors.html" class="nav-item">
+                    <i class="bi bi-calendar2-week"></i>
+                    <span>Surgery & Operating Room Scheduler</span>
+                </a>
+                <a href="dnms.html" class="nav-item active">
+                    <i class="bi bi-egg-fried"></i>
+                    <span>Diet & Nutrition Management</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-panel d-flex align-items-center mb-3">
+                <div class="avatar-circle">AD</div>
+                <div class="user-info ms-2">
+                    <h6 class="m-0 text-white">NICOLAS</h6>
+                    <small class="text-muted text-uppercase">Administrator</small>
+                </div>
+            </div>
+            <a href="#" class="nav-item footer-link mb-2">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
+            <a href="../index.html" class="nav-item footer-link text-danger-hover">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="main-content">
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar d-flex justify-content-between align-items-center mb-4">
+            <div class="search-bar-container flex-grow-1 max-w-xl me-3">
+                <div class="input-group search-input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0" placeholder="Search patients or records...">
+                </div>
+            </div>
+            <div class="top-actions d-flex align-items-center gap-3">
+                <button class="btn btn-add-record d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Add Record
+                </button>
+                <button class="btn-top-icon"><i class="bi bi-bell"></i></button>
+                <button class="btn-top-icon"><i class="bi bi-question-circle"></i></button>
+                <div class="top-profile-avatar"></div>
+            </div>
+        </header>
+
+        <!-- SUBHEADINGS AND MAIN MODULE TITLE -->
+        <nav class="breadcrumb-container mb-1" aria-label="breadcrumb">
+            <ol class="breadcrumb fs-12 m-0">
+                <li class="breadcrumb-item text-muted">Clinical Management</li>
+                <li class="breadcrumb-item text-success active" aria-current="page">Diet & Nutrition</li>
+            </ol>
+        </nav>
+        
+        <h1 class="overview-title mb-4">Patient Nutritional Overview</h1>
+
+        <!-- TWO MAIN COLUMN MATRIX SECTION -->
+        <div class="row g-3">
+            <!-- Left Side Grid Pane: Patient Demographics & Strategy Restrictions -->
+            <div class="col-xl-4 col-lg-5">
+                <div class="d-flex flex-column gap-3">
+                    
+                    <!-- Patient Brief Profile Card -->
+                    <div class="content-card card p-3">
+                        <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-3">
+                            <div class="patient-profile-avatar-frame">
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120&h=120" alt="Maria Santos" class="img-fluid rounded-circle">
+                            </div>
+                            <div>
+                                <h4 class="m-0 font-weight-bold text-dark fs-16">Maria Santos</h4>
+                                <small class="text-muted d-block mb-2">Patient ID: #MS-88219</small>
+                                <span class="badge bg-soft-success-bright text-success-dark font-weight-semibold rounded-pill px-3 py-05 fs-11">Stable Condition</span>
+                            </div>
+                        </div>
+
+                        <!-- Structured List Metrics Data Grid -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex justify-content-between fs-13 py-05">
+                                <span class="text-muted">Age / Gender</span>
+                                <span class="text-dark font-weight-medium">68 / Female</span>
+                            </div>
+                            <div class="d-flex justify-content-between fs-13 py-05">
+                                <span class="text-muted">Room</span>
+                                <span class="text-dark font-weight-medium">402-B (Ward 4)</span>
+                            </div>
+                            <div class="d-flex justify-content-between fs-13 py-05">
+                                <span class="text-muted">Primary Physician</span>
+                                <span class="text-dark font-weight-medium">Dr. Aris Thorne</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dark Emerald Guard Restriction Panel -->
+                    <div class="dietary-restriction-card card p-3 text-white">
+                        <div class="d-flex align-items-center gap-2 text-white font-weight-bold mb-3">
+                            <i class="bi bi-clipboard2-check-fill text-success-light fs-5"></i>
+                            <h6 class="m-0 font-weight-bold fs-13 tracking-wide text-uppercase">Active Dietary Plan</h6>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2 mb-4">
+                            <!-- Rule 1 -->
+                            <div class="inner-restriction-row p-2.5 rounded d-flex align-items-center gap-3">
+                                <div class="alert-icon-circle bg-soft-warning-opaque text-warning"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                                <div>
+                                    <span class="d-block text-white font-weight-bold fs-13 lh-sm">Low Sodium</span>
+                                    <small class="text-white-50 fs-11">Max 1,500mg daily</small>
+                                </div>
+                            </div>
+                            <!-- Rule 2 -->
+                            <div class="inner-restriction-row p-2.5 rounded d-flex align-items-center gap-3">
+                                <div class="alert-icon-circle bg-soft-danger-opaque text-danger"><i class="bi bi-dash-circle-fill"></i></div>
+                                <div>
+                                    <span class="d-block text-white font-weight-bold fs-13 lh-sm">No Added Sugar</span>
+                                    <small class="text-white-50 fs-11">Strict diabetic protocol</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-modify-restrictions w-100 py-2 font-weight-semibold text-white fs-13">Modify Restrictions</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right Side Grid Pane: Schedule Calendars & Historical Log Streams -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="d-flex flex-column gap-3">
+                    
+                    <!-- Daily Meal Schedule Modules -->
+                    <div class="content-card card p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="section-card-title m-0">Daily Meal Schedule</h5>
+                            <div class="d-flex align-items-center gap-2 schedule-navigation-row">
+                                <button class="btn btn-nav-arrow p-0"><i class="bi bi-chevron-left"></i></button>
+                                <span class="fs-12 font-weight-bold text-dark mx-1">Tuesday, Oct 24</span>
+                                <button class="btn btn-nav-arrow p-0"><i class="bi bi-chevron-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- 3 Items Triple Columns Array Grid Layout -->
+                        <div class="row g-2">
+                            <!-- Breakfast Card (Served) -->
+                            <div class="col-xl-4 col-md-6">
+                                <div class="meal-block-card p-3 rounded h-100 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-soft-success-bright text-success-dark font-weight-bold fs-9 text-uppercase tracking-wider px-2 py-05">Breakfast</span>
+                                            <small class="text-muted font-monospace fs-10">08:00 AM</small>
+                                        </div>
+                                        <h6 class="meal-title text-dark font-weight-bold fs-13 mb-1">Oatmeal with Almonds</h6>
+                                        <p class="meal-caption text-muted fs-11 lh-sm mb-3">No sweetener, 1/2 cup fresh berries.</p>
+                                    </div>
+                                    <small class="text-success font-weight-semibold d-flex align-items-center gap-1 fs-11 mt-2">
+                                        <i class="bi bi-check-circle-fill"></i> Served
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Lunch Card (Preparing) -->
+                            <div class="col-xl-4 col-md-6">
+                                <div class="meal-block-card p-3 rounded h-100 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-soft-primary text-primary font-weight-bold fs-9 text-uppercase tracking-wider px-2 py-05">Lunch</span>
+                                            <small class="text-muted font-monospace fs-10">12:30 PM</small>
+                                        </div>
+                                        <h6 class="meal-title text-dark font-weight-bold fs-13 mb-1">Grilled Salmon Salad</h6>
+                                        <p class="meal-caption text-muted fs-11 lh-sm mb-3">Olive oil dressing, steam asparagus.</p>
+                                    </div>
+                                    <small class="text-primary font-weight-semibold d-flex align-items-center gap-1 fs-11 mt-2">
+                                        <i class="bi bi-three-dots"></i> Preparing
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Dinner Card (Scheduled) -->
+                            <div class="col-xl-4 col-md-12">
+                                <div class="meal-block-card p-3 rounded h-100 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-soft-secondary text-muted font-weight-bold fs-9 text-uppercase tracking-wider px-2 py-05">Dinner</span>
+                                            <small class="text-muted font-monospace fs-10">06:30 PM</small>
+                                        </div>
+                                        <h6 class="meal-title text-dark font-weight-bold fs-13 mb-1">Quinoa Vegetable Bowl</h6>
+                                        <p class="meal-caption text-muted fs-11 lh-sm mb-3">Low-sodium broth, roasted root veg.</p>
+                                    </div>
+                                    <small class="text-muted font-weight-semibold d-flex align-items-center gap-1 fs-11 mt-2">
+                                        <i class="bi bi-clock"></i> Scheduled
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Nutritional Logs Metric Data Grid -->
+                    <div class="content-card card p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="section-card-title m-0">Recent Nutritional Logs</h5>
+                            <button class="btn btn-outline-secondary btn-action-top d-flex align-items-center gap-1 fs-11 py-1 px-2">
+                                <i class="bi bi-download"></i> Export PDF
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table alignment-middle-table text-nowrap m-0">
+                                <thead>
+                                    <tr class="table-header-row text-uppercase text-muted fs-10 font-weight-bold border-bottom">
+                                        <th class="py-2">Time / Date</th>
+                                        <th class="py-2">Intake Type</th>
+                                        <th class="py-2">Kcal</th>
+                                        <th class="py-2">Sodium (mg)</th>
+                                        <th class="py-2">Sugar (g)</th>
+                                        <th class="py-2 text-end">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fs-12">
+                                    <!-- Row 1 -->
+                                    <tr class="border-bottom">
+                                        <td class="py-3">
+                                            <span class="d-block font-weight-bold text-dark">08:15 AM</span>
+                                            <small class="text-muted font-monospace fs-10">Oct 24, 2023</small>
+                                        </td>
+                                        <td class="py-3 text-dark">Breakfast (Solid)</td>
+                                        <td class="py-3 font-weight-medium text-dark">320</td>
+                                        <td class="py-3 text-dark">120</td>
+                                        <td class="py-3 text-dark">4</td>
+                                        <td class="py-3 text-end"><span class="badge bg-soft-success-bright text-success-dark font-weight-bold text-uppercase fs-9">Optimal</span></td>
+                                    </tr>
+                                    <!-- Row 2 -->
+                                    <tr class="border-bottom">
+                                        <td class="py-3">
+                                            <span class="d-block font-weight-bold text-dark">10:45 AM</span>
+                                            <small class="text-muted font-monospace fs-10">Oct 24, 2023</small>
+                                        </td>
+                                        <td class="py-3 text-dark">Hydration (Water)</td>
+                                        <td class="py-3 font-weight-medium text-dark">0</td>
+                                        <td class="py-3 text-dark">5</td>
+                                        <td class="py-3 text-dark">0</td>
+                                        <td class="py-3 text-end"><span class="badge bg-soft-success-bright text-success-dark font-weight-bold text-uppercase fs-9">Optimal</span></td>
+                                    </tr>
+                                    <!-- Row 3 (Trigger Warning accent flag) -->
+                                    <tr class="border-bottom">
+                                        <td class="py-3">
+                                            <span class="d-block font-weight-bold text-dark">06:45 PM</span>
+                                            <small class="text-muted font-monospace fs-10">Oct 23, 2023</small>
+                                        </td>
+                                        <td class="py-3 text-dark">Dinner (Solid)</td>
+                                        <td class="py-3 font-weight-medium text-dark">450</td>
+                                        <td class="py-3 text-dark">380</td>
+                                        <td class="py-3 text-dark">12</td>
+                                        <td class="py-3 text-end"><span class="badge bg-soft-warning text-warning-dark font-weight-bold text-uppercase fs-9 text-wrap max-w-status">Warn: Sodium</span></td>
+                                    </tr>
+                                    <!-- Row 4 -->
+                                    <tr class="border-bottom">
+                                        <td class="py-3">
+                                            <span class="d-block font-weight-bold text-dark">01:00 PM</span>
+                                            <small class="text-muted font-monospace fs-10">Oct 23, 2023</small>
+                                        </td>
+                                        <td class="py-3 text-dark">Lunch (Solid)</td>
+                                        <td class="py-3 font-weight-medium text-dark">510</td>
+                                        <td class="py-3 text-dark">210</td>
+                                        <td class="py-3 text-dark">6</td>
+                                        <td class="py-3 text-end"><span class="badge bg-soft-success-bright text-success-dark font-weight-bold text-uppercase fs-9">Optimal</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ADD RECORD MODAL -->
+<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-3">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-egg-fried text-success me-2"></i>Add Nutritional Log</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addRecordForm" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Time</label>
+                        <input type="text" class="form-control custom-form-input" name="time" placeholder="08:15 AM" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Date</label>
+                        <input type="text" class="form-control custom-form-input" name="date" placeholder="Oct 24, 2026" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Intake Type</label>
+                        <input type="text" class="form-control custom-form-input" name="intake" placeholder="Breakfast (Solid)">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Kcal</label>
+                        <input type="text" class="form-control custom-form-input" name="kcal" placeholder="320">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sodium</label>
+                        <input type="text" class="form-control custom-form-input" name="sodium" placeholder="120">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sugar</label>
+                        <input type="text" class="form-control custom-form-input" name="sugar" placeholder="4">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Status</label>
+                        <select class="form-select custom-form-input" name="status">
+                            <option>Optimal</option>
+                            <option>Warn: Sodium</option>
+                            <option>Warn: Sugar</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="addRecordForm" class="btn btn-modify-restrictions">Save Record</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="../js/add-record.js"></script>
+<script src="../js/dnms.js"></script>
+</body>
+</html>

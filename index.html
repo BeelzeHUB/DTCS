@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Login | Hospital Information Management System</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="login-page d-flex align-items-center justify-content-center">
+  <div class="login-card shadow-lg">
+    <div class="row g-0 h-100">
+
+      <!-- Left brand panel -->
+      <div class="col-lg-6 d-none d-lg-flex brand-panel flex-column justify-content-between p-5">
+        <div>
+          <div class="brand-logo d-flex align-items-center gap-2">
+            <img src="images/logo.png" alt="HIMS logo" class="logo-img" onerror="this.style.display='none'">
+            <span class="brand-name">HIMS</span>
+          </div>
+        </div>
+
+        <div class="brand-copy">
+          <h1 class="brand-title">Diagnostic Treatment, and Clinical Services</h1>
+          <p class="brand-subtitle">Secure diagnostic access for healthcare professionals and clinical managers.</p>
+        </div>
+      </div>
+
+      <!-- Right form panel -->
+      <div class="col-lg-6 form-panel d-flex flex-column justify-content-center p-4 p-md-5">
+        <div class="form-wrapper mx-auto w-100">
+
+          <h2 class="form-title mb-1">System Login</h2>
+          <p class="form-subtitle mb-4">Diagnostic Dashboard Access Portal</p>
+
+          <form id="loginForm" novalidate>
+
+            <div class="mb-3">
+              <label for="username" class="form-label field-label">Username or Email</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your email" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <label for="password" class="form-label field-label mb-0">Password</label>
+                <a href="#" class="forgot-link">Forgot Password?</a>
+              </div>
+              <div class="input-group custom-input-group mt-2">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                <span class="input-group-text toggle-password" id="togglePassword" role="button">
+                  <i class="bi bi-eye"></i>
+                </span>
+              </div>
+            </div>
+
+              <input class="form-check-input" type="checkbox" id="rememberPassword">
+              <label class="form-check-label remember-label" for="rememberPassword">
+                Remember Password
+              </label>
+            </input>
+
+            <button type="submit" class="btn btn-login w-100 mb-4">Login</button>
+
+            <hr class="divider">
+
+            <p class="text-center footnote mb-0">Authorized personnel only. All access is logged and monitored.</p>
+            <p class="text-center security-note mb-0">Security Level 4 Protocols Enabled</p>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3">
+    <span class="footer-brand">MEDISENSE AI – HOSPITAL INFORMATION MANAGEMENT SYSTEM</span>
+    <nav class="footer-links d-flex gap-4 mt-2 mt-md-0">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Security Standards</a>
+      <a href="#">Contact Support</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Dashboard | HIS</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar d-flex flex-column justify-content-between">
+        <div>
+            <!-- Sidebar Header / Logo -->
+            <div class="sidebar-brand">
+                <h2 class="m-0 font-weight-bold">HIS</h2>
+                <p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav mt-4">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Diagnostic Dashboard</span>
+                </a>
+                <a href="lis.html" class="nav-item">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Laboratory Information</span>
+                </a>
+                <a href="ris.html" class="nav-item">
+                    <i class="bi bi-person-bounding-box"></i>
+                    <span>Radiology and Imaging</span>
+                </a>
+                <a href="pms.html" class="nav-item">
+                    <i class="bi bi-capsule"></i>
+                    <span>Pharmacy Management</span>
+                </a>
+                <a href="sors.html" class="nav-item">
+                    <i class="bi bi-calendar2-week"></i>
+                    <span>Surgery & Operating Room Scheduler</span>
+                </a>
+                <a href="dnms.html" class="nav-item">
+                    <i class="bi bi-egg-fried"></i>
+                    <span>Diet & Nutrition Management</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer Admin Profiling -->
+        <div class="sidebar-footer">
+            <div class="user-panel d-flex align-items-center mb-3">
+                <div class="avatar-circle">AD</div>
+                <div class="user-info ms-2">
+                    <h6 class="m-0 text-white">NICOLAS</h6>
+                    <small class="text-muted text-uppercase">Administrator</small>
+                </div>
+            </div>
+            <a href="#" class="nav-item footer-link mb-2">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
+            <a href="../index.html" class="nav-item footer-link text-danger-hover">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="main-content">
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar d-flex justify-content-between align-items-center mb-4">
+            <div class="search-bar-container flex-grow-1 max-w-xl me-3">
+                <div class="input-group search-input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0" placeholder="Search patient ID, lab record, or physician...">
+                </div>
+            </div>
+            <div class="top-actions d-flex align-items-center gap-3">
+                <button class="btn btn-add-record d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Add Record
+                </button>
+                <div class="icon-btn-badgeposition">
+                    <button class="btn-top-icon"><i class="bi bi-bell"></i></button>
+                </div>
+                <button class="btn-top-icon"><i class="bi bi-question-circle"></i></button>
+                <div class="top-profile-avatar"></div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD HERO TITLE OVERVIEW -->
+        <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
+            <div>
+                <h1 class="overview-title m-0">Diagnostic Overview</h1>
+                <p class="text-muted m-0">Real-time status for clinical department operations and equipment health.</p>
+            </div>
+            <div class="badge-systems-status mt-2 mt-md-0">
+                <span class="status-dot"></span> SYSTEMS NORMAL
+            </div>
+        </div>
+
+        <!-- TOP METRIC CARDS ROW -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
+            <!-- Lab Tests -->
+            <div class="col">
+                <div class="metric-card card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="metric-label text-uppercase">Lab Tests</span>
+                        <i class="bi bi-microscope text-success fs-5"></i>
+                    </div>
+                    <h3 class="metric-value mb-1">1,284</h3>
+                    <span class="metric-trend text-success"><i class="bi bi-graph-up-arrow"></i> +12% from avg</span>
+                </div>
+            </div>
+            <!-- Critical Results -->
+            <div class="col">
+                <div class="metric-card card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="metric-label text-uppercase text-danger-tint">Critical Results</span>
+                        <i class="bi bi-exclamation-triangle text-danger fs-5"></i>
+                    </div>
+                    <h3 class="metric-value text-danger mb-1">09</h3>
+                    <span class="metric-trend text-danger font-weight-bold"><i class="bi bi-exclamation-circle"></i> Action Required</span>
+                </div>
+            </div>
+            <!-- Imaging Proc -->
+            <div class="col">
+                <div class="metric-card card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="metric-label text-uppercase">Imaging Proc.</span>
+                        <i class="bi bi-person-bounding-box text-dark fs-5"></i>
+                    </div>
+                    <h3 class="metric-value mb-1">342</h3>
+                    <span class="metric-trend text-muted">Daily average: 310</span>
+                </div>
+            </div>
+            <!-- Pending Reports -->
+            <div class="col">
+                <div class="metric-card card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="metric-label text-uppercase">Pending Reports</span>
+                        <i class="bi bi-file-earmark-text text-dark fs-5"></i>
+                    </div>
+                    <h3 class="metric-value mb-1">56</h3>
+                    <span class="metric-trend text-dark font-weight-medium">12 Signed recently</span>
+                </div>
+            </div>
+            <!-- Equip Uptime -->
+            <div class="col">
+                <div class="metric-card card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="metric-label text-uppercase">Equip. Uptime</span>
+                        <i class="bi bi-gear text-success fs-5"></i>
+                    </div>
+                    <h3 class="metric-value mb-1">99.4%</h3>
+                    <span class="metric-trend text-success font-weight-medium">Optimal Status</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- THREE COLUMN MIDDLE CONTENT INTERFACE -->
+        <div class="row g-4 mb-4">
+            <!-- Lab Diagnostics Panel -->
+            <div class="col-lg-4 col-md-6">
+                <div class="content-card card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-card-title m-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-microscope text-success"></i> Lab Diagnostics
+                        </h5>
+                        <a href="lis.html" class="text-link-action btn-sm p-0">View All</a>
+                    </div>
+                    <div class="sub-label-header d-flex justify-content-between text-muted text-uppercase mb-2">
+                        <span>Pending Analysis</span>
+                        <span class="badge bg-dark-green rounded-pill text-white font-weight-medium">24 NEW</span>
+                    </div>
+
+                    <div class="list-stack d-flex flex-column gap-2">
+                        <div class="list-stack-item d-flex align-items-center justify-content-between p-2 border rounded">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="item-icon-avatar bg-light-danger text-danger"><i class="bi bi-droplet-fill"></i></div>
+                                <div>
+                                    <h6 class="m-0 fs-14">Full Blood Count</h6>
+                                    <small class="text-muted d-block">Patient: #4492 - J. Doe</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge-status-pill bg-soft-danger text-danger text-uppercase mb-1">Urgent</span>
+                                <small class="text-muted d-block fs-11">12 mins ago</small>
+                            </div>
+                        </div>
+
+                        <div class="list-stack-item d-flex align-items-center justify-content-between p-2 border rounded">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="item-icon-avatar bg-light text-muted"><i class="bi bi-test-tube-alt"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bezier" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h16v16H0z" fill="none"/></svg></i><i class="bi bi-funnel"></i></div>
+                                <div>
+                                    <h6 class="m-0 fs-14">Toxicology Screen</h6>
+                                    <small class="text-muted d-block">Patient: #5012 - S. Miller</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge-status-pill bg-soft-secondary text-muted text-uppercase mb-1">Routine</span>
+                                <small class="text-muted d-block fs-11">28 mins ago</small>
+                            </div>
+                        </div>
+
+                        <div class="list-stack-item d-flex align-items-center justify-content-between p-2 border rounded">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="item-icon-avatar bg-light text-muted"><i class="bi bi-dna"></i></div>
+                                <div>
+                                    <h6 class="m-0 fs-14">Molecular Profiling</h6>
+                                    <small class="text-muted d-block">Patient: #3312 - A. West</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge-status-pill bg-soft-secondary text-muted text-uppercase mb-1">Routine</span>
+                                <small class="text-muted d-block fs-11">45 mins ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imaging Rooms Panel -->
+            <div class="col-lg-4 col-md-6">
+                <div class="content-card card h-100 p-3 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="section-card-title m-0 d-flex align-items-center gap-2">
+                                <i class="bi bi-person-bounding-box text-success"></i> Imaging Rooms
+                            </h5>
+                        </div>
+                        <div class="list-stack d-flex flex-column gap-3 mb-3">
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
+                                <span class="room-name font-weight-semibold text-dark"><span class="status-dot-green me-2"></span>X-Ray Room 01</span>
+                                <span class="badge-status-pill bg-soft-success text-success text-uppercase">Available</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
+                                <span class="room-name font-weight-semibold text-dark"><span class="status-dot-danger me-2"></span>MRI Suite A</span>
+                                <span class="badge-status-pill bg-soft-danger text-danger text-uppercase">In Use - 14:00m</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pb-1">
+                                <span class="room-name font-weight-semibold text-dark"><span class="status-dot-green me-2"></span>CT Scan 04</span>
+                                <span class="badge-status-pill bg-soft-success text-success text-uppercase">Available</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recent-scans-footer border-top pt-2">
+                        <small class="text-muted text-uppercase d-block mb-1 fs-11">Recent Scans</small>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="item-icon-avatar bg-light text-muted rounded-circle"><i class="bi bi-person"></i></div>
+                            <div>
+                                <h6 class="m-0 fs-12 font-weight-semibold">ID: #9901 Chest CT</h6>
+                                <p class="m-0 text-muted fs-11">Uploading to PACS...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critical Alerts & Staff Activity -->
+            <div class="col-lg-4 col-md-12">
+                <div class="d-flex flex-column gap-3 h-100">
+                    <!-- Critical Alerts (Dark Card) -->
+                    <div class="alert-dark-card card p-3 flex-grow-1 text-white">
+                        <h6 class="mb-3 d-flex align-items-center gap-2 text-white font-weight-semibold">
+                            <i class="bi bi-bell-fill text-success-light"></i> Critical Alerts
+                        </h6>
+                        <div class="alert-block mb-3">
+                            <span class="alert-block-tag text-success-light text-uppercase font-weight-bold d-block mb-1">Lab System</span>
+                            <p class="m-0 text-white-75 fs-13">Reagent low on Auto-Analyzer Module 3. Expected depletion: 2hrs.</p>
+                        </div>
+                        <div class="alert-block">
+                            <span class="alert-block-tag text-danger-light text-uppercase font-weight-bold d-block mb-1">Critical Result</span>
+                            <p class="m-0 text-white-75 fs-13">Glucose result 42 mg/dL for patient #8822 (Critical Low).</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Staff Activity -->
+                    <div class="content-card card p-3">
+                        <h6 class="mb-3 font-weight-semibold d-flex align-items-center gap-2"><i class="bi bi-people"></i> Recent Staff Activity</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="staff-avatar-placeholder bg-secondary rounded-circle"></div>
+                                    <div>
+                                        <h6 class="m-0 fs-13 font-weight-semibold">Dr. Sarah Vance</h6>
+                                        <small class="text-muted">Approved 5 Radiographs</small>
+                                    </div>
+                                </div>
+                                <small class="text-muted fs-11 mt-1">4 mins ago</small>
+                            </div>
+                            <div class="d-flex align-items-start justify-content-between mt-1">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="staff-avatar-placeholder bg-secondary rounded-circle"></div>
+                                    <div>
+                                        <h6 class="m-0 fs-13 font-weight-semibold">Tech. Marcus Chen</h6>
+                                        <small class="text-muted">Calibrated PCR Machine</small>
+                                    </div>
+                                </div>
+                                <small class="text-muted fs-11 mt-1">15 mins ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EQUIPMENT HEALTH MONITOR BOTTOM CARDS PANEL -->
+        <div class="content-card card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="section-card-title m-0 d-flex align-items-center gap-2">
+                    <i class="bi bi-activity text-success"></i> Equipment Health Monitor
+                </h5>
+                <div class="d-flex gap-3 fs-12">
+                    <span><span class="status-dot-green inline-block me-1"></span> ACTIVE</span>
+                    <span><span class="status-dot-danger inline-block me-1"></span> ISSUE</span>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
+                <!-- Auto Analyzer -->
+                <div class="col border-end-lg pe-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div>
+                            <small class="text-muted text-uppercase fs-11 d-block">Equipment</small>
+                            <span class="font-weight-semibold text-dark fs-14">Auto-Analyzer</span>
+                        </div>
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    </div>
+                    <div class="progress-bar-container my-2">
+                        <div class="progress custom-progress"><div class="progress-bar bg-success" style="width: 92%"></div></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <small class="text-muted fs-11"><i class="bi bi-calendar-event"></i> Maintenance due in 12 days</small>
+                        <span class="text-success font-weight-bold fs-15">92%</span>
+                    </div>
+                </div>
+
+                <!-- CT Scanner -->
+                <div class="col border-end-lg px-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div>
+                            <small class="text-muted text-uppercase fs-11 d-block">Equipment</small>
+                            <span class="font-weight-semibold text-dark fs-14">CT Scanner</span>
+                        </div>
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    </div>
+                    <div class="progress-bar-container my-2">
+                        <div class="progress custom-progress"><div class="progress-bar bg-success" style="width: 88%"></div></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <small class="text-muted fs-11"><i class="bi bi-clock-history"></i> Last service: Oct 2023</small>
+                        <span class="text-success font-weight-bold fs-15">88%</span>
+                    </div>
+                </div>
+
+                <!-- PCR Machine -->
+                <div class="col border-end-lg px-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div>
+                            <small class="text-muted text-uppercase fs-11 d-block">Equipment</small>
+                            <span class="font-weight-semibold text-dark fs-14">PCR Machine</span>
+                        </div>
+                        <i class="bi bi-exclamation-circle-fill text-danger fs-5"></i>
+                    </div>
+                    <div class="progress-bar-container my-2">
+                        <div class="progress custom-progress"><div class="progress-bar bg-danger" style="width: 45%"></div></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <small class="text-danger fs-11"><i class="bi bi-exclamation-triangle"></i> Calibration drift detected</small>
+                        <span class="text-danger font-weight-bold fs-15">45%</span>
+                    </div>
+                </div>
+
+                <!-- MRI Unit 02 -->
+                <div class="col ps-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div>
+                            <small class="text-muted text-uppercase fs-11 d-block">Equipment</small>
+                            <span class="font-weight-semibold text-dark fs-14">MRI Unit 02</span>
+                        </div>
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    </div>
+                    <div class="progress-bar-container my-2">
+                        <div class="progress custom-progress"><div class="progress-bar bg-success" style="width: 95%"></div></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <small class="text-muted fs-11"><i class="bi bi-snow"></i> Superconducting: Stable</small>
+                        <span class="text-success font-weight-bold fs-15">4.2K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="../js/dashboard.js"></script>
+</body>
+</html>

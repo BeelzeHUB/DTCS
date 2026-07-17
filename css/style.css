@@ -1,0 +1,234 @@
+/* ===========================================
+   HIMS - Global / Login Page Styles
+   =========================================== */
+
+:root{
+  --hims-green-bg:      #4f9d76;   /* outer page background */
+  --hims-green-dark:     #0b2620;   /* left brand panel */
+  --hims-green-primary:  #1e7a3f;   /* button / links */
+  --hims-green-primary-dark: #146030;
+  --hims-text-dark:      #1f2a28;
+  --hims-text-muted:     #6b7573;
+  --hims-border:         #dfe3e1;
+  --hims-danger:         #c0392b;
+  --font-main: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+*{
+  font-family: var(--font-main);
+}
+
+html, body{
+  height: 100%;
+}
+
+body{
+  margin: 0;
+  background: var(--hims-green-bg);
+  color: var(--hims-text-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---------- Layout wrapper ---------- */
+.login-page{
+  flex: 1;
+  padding: 48px 20px;
+}
+
+.login-card{
+  width: 100%;
+  max-width: 1080px;
+  min-height: 620px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* ---------- Left brand panel ---------- */
+.brand-panel{
+  background: linear-gradient(160deg, #0b2620 0%, #08201b 60%, #061a15 100%);
+  color: #fff;
+}
+
+.brand-logo{
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.logo-img{
+  height: 32px;
+  width: auto;
+}
+
+.brand-name{
+  font-size: 1.1rem;
+}
+
+.brand-title{
+  font-size: 2.35rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+
+.brand-subtitle{
+  font-size: 1.02rem;
+  color: rgba(255,255,255,.78);
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+/* ---------- Right form panel ---------- */
+.form-panel{
+  background: #ffffff;
+}
+
+.form-wrapper{
+  max-width: 420px;
+}
+
+.form-title{
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--hims-text-dark);
+}
+
+.form-subtitle{
+  color: var(--hims-text-muted);
+  font-size: .98rem;
+}
+
+.field-label{
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--hims-text-dark);
+}
+
+.custom-input-group .input-group-text{
+  background: #fff;
+  border-right: none;
+  color: #8a9390;
+}
+
+.custom-input-group .form-control{
+  border-left: none;
+  padding-top: .65rem;
+  padding-bottom: .65rem;
+}
+
+.custom-input-group .form-control:focus{
+  box-shadow: none;
+  border-color: var(--hims-green-primary);
+}
+
+.custom-input-group .form-control:focus + .input-group-text,
+.custom-input-group:focus-within .input-group-text{
+  border-color: var(--hims-green-primary);
+}
+
+.custom-input-group{
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.custom-input-group .form-control,
+.custom-input-group .input-group-text{
+  border-color: var(--hims-border);
+}
+
+.toggle-password{
+  cursor: pointer;
+  border-left: none;
+  background: #fff;
+}
+
+.forgot-link{
+  color: var(--hims-green-primary);
+  font-size: .9rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-link:hover{
+  text-decoration: underline;
+}
+
+.remember-label{
+  color: var(--hims-text-dark);
+  font-size: .95rem;
+}
+
+.form-check-input:checked{
+  background-color: var(--hims-green-primary);
+  border-color: var(--hims-green-primary);
+}
+
+.btn-login{
+  background: var(--hims-green-primary);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: .75rem 1rem;
+  border-radius: 10px;
+  transition: background .15s ease;
+}
+
+.btn-login:hover,
+.btn-login:focus{
+  background: var(--hims-green-primary-dark);
+  color: #fff;
+}
+
+.divider{
+  border-top: 1px solid var(--hims-border);
+  opacity: 1;
+  margin: 0 0 16px;
+}
+
+.footnote{
+  font-size: .85rem;
+  color: var(--hims-text-muted);
+}
+
+.security-note{
+  font-size: .85rem;
+  color: var(--hims-danger);
+  font-weight: 500;
+}
+
+/* ---------- Footer ---------- */
+.site-footer{
+  background: #ffffff;
+  border-top: 1px solid var(--hims-border);
+}
+
+.footer-brand{
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--hims-text-dark);
+}
+
+.footer-links a{
+  font-size: .9rem;
+  color: var(--hims-text-dark);
+  text-decoration: none;
+}
+
+.footer-links a:hover{
+  color: var(--hims-green-primary);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 991.98px){
+  .login-card{
+    min-height: auto;
+  }
+  .form-panel{
+    padding-top: 40px !important;
+  }
+}
