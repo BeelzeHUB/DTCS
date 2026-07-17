@@ -1,373 +1,351 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pharmacy Management System | HIS</title>
-    <!-- Bootstrap 5 -->
+    <title>Pharmacy Management System | DTCS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/lis.css">
     <link rel="stylesheet" href="../css/pms.css">
 </head>
-<body>
-
+<body class="lis-body">
+<div class="lis-spinner-overlay" id="pmsSpinner"><div class="lis-spinner"></div></div>
+<div class="lis-toast-wrap" id="pmsToastWrap"></div>
 <div class="dashboard-container">
-    <!-- SIDEBAR -->
-    <aside class="sidebar d-flex flex-column justify-content-between">
+    <aside class="sidebar d-flex flex-column justify-content-between" id="sidebar">
         <div>
-            <div class="sidebar-brand">
-                <h2 class="m-0 font-weight-bold">HIS</h2>
-                <p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p>
+            <div class="sidebar-topbar d-flex align-items-center justify-content-between mb-2">
+                <button type="button" class="btn-sidebar-toggle" id="sidebarToggle" aria-label="Hide sidebar"><span class="hamburger-lines"><span></span><span></span><span></span></span></button>
             </div>
-
+            <div class="sidebar-brand"><h2 class="m-0 font-weight-bold">DTCS</h2><p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p></div>
             <nav class="sidebar-nav mt-4">
-                <a href="dashboard.html" class="nav-item">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Diagnostic Dashboard</span>
-                </a>
-                <a href="lis.html" class="nav-item">
-                    <i class="bi bi-clipboard-data"></i>
-                    <span>Laboratory Information</span>
-                </a>
-                <a href="ris.html" class="nav-item">
-                    <i class="bi bi-person-bounding-box"></i>
-                    <span>Radiology and Imaging</span>
-                </a>
-                <a href="pms.html" class="nav-item active">
-                    <i class="bi bi-capsule"></i>
-                    <span>Pharmacy Management</span>
-                </a>
-                <a href="sors.html" class="nav-item">
-                    <i class="bi bi-calendar2-week"></i>
-                    <span>Surgery & Operating Room Scheduler</span>
-                </a>
-                <a href="dnms.html" class="nav-item">
-                    <i class="bi bi-egg-fried"></i>
-                    <span>Diet & Nutrition Management</span>
-                </a>
+                <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <a href="lis.html" class="nav-item"><i class="bi bi-clipboard-data"></i><span>Laboratory Information</span></a>
+                <a href="ris.html" class="nav-item"><i class="bi bi-person-bounding-box"></i><span>Radiology and Imaging</span></a>
+                <div class="nav-group">
+                    <div class="nav-group-head">
+                        <a href="#pms-overview" class="nav-item active nav-item-toggle" id="pmsParentLink"><i class="bi bi-capsule"></i><span>Pharmacy Management</span><button type="button" class="nav-group-toggle collapsed" id="pmsSubToggle" aria-label="Toggle pharmacy modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
+                    </div>
+                    <div class="nav-sub collapsed" id="pmsSubMenu">
+                        <a href="#tab-inventory" class="nav-sub-item" data-lis-tab="inventory"><i class="bi bi-capsule"></i> Medicine Inventory</a>
+                        <a href="#tab-stock" class="nav-sub-item" data-lis-tab="stock"><i class="bi bi-graph-up"></i> Stock Monitoring</a>
+                        <a href="#tab-dispensing" class="nav-sub-item" data-lis-tab="dispensing"><i class="bi bi-bag-check"></i> Dispensing</a>
+                        <a href="#tab-validation" class="nav-sub-item" data-lis-tab="validation"><i class="bi bi-shield-check"></i> Prescription Validation</a>
+                        <a href="#tab-expiration" class="nav-sub-item" data-lis-tab="expiration"><i class="bi bi-calendar-x"></i> Expiration Monitoring</a>
+                        <a href="#tab-orders" class="nav-sub-item" data-lis-tab="orders"><i class="bi bi-receipt"></i> Purchase Orders</a>
+                    </div>
+                </div>
+                <a href="sors.html" class="nav-item"><i class="bi bi-calendar2-week"></i><span>Surgery & Operating Room Scheduler</span></a>
+                <a href="dnms.html" class="nav-item"><i class="bi bi-egg-fried"></i><span>Diet & Nutrition Management</span></a>
             </nav>
         </div>
-
         <div class="sidebar-footer">
-            <div class="user-panel d-flex align-items-center mb-3">
-                <div class="avatar-circle">AD</div>
-                <div class="user-info ms-2">
-                    <h6 class="m-0 text-white">NICOLAS</h6>
-                    <small class="text-muted text-uppercase">Administrator</small>
-                </div>
-            </div>
-            <a href="#" class="nav-item footer-link mb-2">
-                <i class="bi bi-gear"></i>
-                <span>Settings</span>
-            </a>
-            <a href="../index.html" class="nav-item footer-link text-danger-hover">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
-            </a>
+            <div class="user-panel d-flex align-items-center mb-3"><div class="avatar-circle">AD</div><div class="user-info ms-2"><h6 class="m-0 text-white">NICOLAS</h6><small class="text-muted text-uppercase">Administrator</small></div></div>
+            <a href="#" class="nav-item footer-link mb-2"><i class="bi bi-gear"></i><span>Settings</span></a>
+            <a href="../index.html" class="nav-item footer-link text-danger-hover"><i class="bi bi-box-arrow-left"></i><span>Logout</span></a>
         </div>
     </aside>
-
-    <!-- MAIN BODY CONTENT -->
-    <main class="main-content">
-        <!-- TOP NAVBAR -->
+    <main class="main-content" id="pmsMain">
         <header class="top-navbar d-flex justify-content-between align-items-center mb-4">
-            <div class="search-bar-container flex-grow-1 max-w-xl me-3">
-                <div class="input-group search-input-group">
-                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search medicines, patients, or records...">
-                </div>
-            </div>
-            <div class="top-actions d-flex align-items-center gap-3">
-                <button class="btn btn-add-record d-flex align-items-center gap-2">
-                    <i class="bi bi-plus-lg"></i> Add Record
-                </button>
-                <button class="btn-top-icon"><i class="bi bi-bell"></i></button>
-                <button class="btn-top-icon"><i class="bi bi-question-circle"></i></button>
-                <div class="top-profile-avatar"></div>
-            </div>
+            <div class="search-bar-container flex-grow-1 max-w-xl me-3"><div class="input-group search-input-group"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" id="pmsSearchInput" class="form-control border-start-0" placeholder="Search medicines, prescriptions, PO..."><button type="button" id="pmsSearchClear" class="btn border-start-0 bg-white text-muted d-none" aria-label="Clear search"><i class="bi bi-x-lg"></i></button></div></div>
+            <div class="top-actions d-flex align-items-center gap-3"><button class="btn-top-icon" id="pmsNotifBtn" aria-label="Notifications"><i class="bi bi-bell"></i><span class="lis-notif-dot"></span></button><button class="btn-top-icon" aria-label="Help"><i class="bi bi-question-circle"></i></button><div class="top-profile-avatar"></div></div>
         </header>
 
-        <!-- TITLE BAR BLOCK -->
-        <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
-            <div>
-                <h1 class="overview-title m-0">Pharmacy Management</h1>
-                <p class="text-muted m-0 fs-13">Real-time inventory and dispensation tracking</p>
+        <!-- ============ OVERVIEW ============ -->
+        <section class="lis-section" id="pms-overview">
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
+                <div><h1 class="overview-title m-0">Pharmacy Management System</h1><p class="text-muted m-0">Manage inventory, dispensing, validation, expiration, and purchase orders.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="pmsTopAction"><i class="bi bi-plus-lg"></i> Add Medicine</button></div>
             </div>
-            <div class="d-flex gap-2 mt-2 mt-md-0">
-                <button class="btn btn-outline-secondary btn-action-top d-flex align-items-center gap-2">
-                    <i class="bi bi-filter"></i> Filter
-                </button>
-                <button class="btn btn-outline-secondary btn-action-top d-flex align-items-center gap-2">
-                    <i class="bi bi-download"></i> Export Ledger
-                </button>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-capsule"></i></div><div><div class="lis-stat-label">Medicines</div><div class="lis-stat-value">842</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-graph-up"></i></div><div><div class="lis-stat-label">In Stock</div><div class="lis-stat-value">798</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-exclamation-triangle"></i></div><div><div class="lis-stat-label">Low Stock</div><div class="lis-stat-value">12</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-x-octagon"></i></div><div><div class="lis-stat-label">Out of Stock</div><div class="lis-stat-value">4</div></div></div></div>
             </div>
-        </div>
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Modules</h5>
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-4"><a href="#tab-inventory" class="lis-module-card" data-goto="inventory"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon blue"><i class="bi bi-capsule"></i></div><div><div class="lis-stat-label">Medicine Inventory</div><div class="text-muted fs-12">Manage medicines</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-stock" class="lis-module-card" data-goto="stock"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon teal"><i class="bi bi-graph-up"></i></div><div><div class="lis-stat-label">Stock Monitoring</div><div class="text-muted fs-12">Levels & alerts</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-dispensing" class="lis-module-card" data-goto="dispensing"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon green"><i class="bi bi-bag-check"></i></div><div><div class="lis-stat-label">Dispensing</div><div class="text-muted fs-12">Dispense meds</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-validation" class="lis-module-card" data-goto="validation"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon slate"><i class="bi bi-shield-check"></i></div><div><div class="lis-stat-label">Prescription Validation</div><div class="text-muted fs-12">Verify Rx</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-expiration" class="lis-module-card" data-goto="expiration"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon red"><i class="bi bi-calendar-x"></i></div><div><div class="lis-stat-label">Expiration Monitoring</div><div class="text-muted fs-12">Track expiry</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-orders" class="lis-module-card" data-goto="orders"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon amber"><i class="bi bi-receipt"></i></div><div><div class="lis-stat-label">Purchase Orders</div><div class="text-muted fs-12">Replenish</div></div></div></a></div>
+                </div>
+            </div>
+        </section>
 
-        <!-- MAIN LAYOUT MATRIX SPLIT -->
-        <div class="row g-3">
-            <!-- Left Grid Pane: Queue and Ledgers -->
-            <div class="col-lg-8">
-                <div class="d-flex flex-column gap-3">
-                    
-                    <!-- Priority Dispensation Request Panel -->
-                    <div class="content-card card border-left-thick-green-accent p-3" id="priorityDispensationPanel" style="display: none;">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="dispense-patient-avatar bg-secondary rounded text-white font-weight-bold d-flex align-items-center justify-content-center" id="pmsPatientAvatar"></div>
-                                <div>
-                                    <small class="text-success text-uppercase font-weight-bold fs-10 tracking-wide d-block mb-1">Priority Dispensation</small>
-                                    <h4 class="patient-title-name m-0" id="pmsPatientName"></h4>
-                                    <small class="text-muted fs-12" id="pmsPatientInfo"></small>
-                                </div>
-                            </div>
-                            <span class="badge bg-soft-success-bright text-success-dark font-weight-bold fs-11 rounded-pill px-3 py-1" id="pmsPatientStatus">Pending Approval</span>
-                        </div>
+        <!-- ============ SECTION: MEDICINE INVENTORY ============ -->
+        <section class="lis-section" id="tab-inventory">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#pms-overview">Pharmacy</a><span class="sep">/</span><span class="current">Medicine Inventory</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Medicine Inventory</h2><p class="text-muted m-0">Manage and organize all medicines available in the pharmacy.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="pmsAddMedicineBtn"><i class="bi bi-plus-lg"></i> Add New Medicine</button></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="pmsMedicineForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Medicine ID</label><input type="text" class="lis-input" value="MED-1001" readonly></div>
+                    <div class="col-md-4"><label class="lis-form-label">Generic Name</label><input type="text" class="lis-input" placeholder="e.g. Paracetamol" required></div>
+                    <div class="col-md-4"><label class="lis-form-label">Brand Name</label><input type="text" class="lis-input" placeholder="e.g. Biogesic"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Drug Category</label><select class="lis-input"><option>Analgesic</option><option>Antibiotic</option><option>Antihypertensive</option><option>Antidiabetic</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dosage Form</label><select class="lis-input"><option>Tablet</option><option>Capsule</option><option>Syrup</option><option>Injection</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Strength</label><input type="text" class="lis-input" placeholder="e.g. 500mg"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Unit</label><input type="text" class="lis-input" placeholder="e.g. Box"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Storage Location</label><input type="text" class="lis-input" placeholder="e.g. Shelf A-3"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Manufacturer</label><input type="text" class="lis-input" placeholder="e.g. Unilab"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Batch Number</label><input type="text" class="lis-input" placeholder="e.g. B-2291"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Supplier</label><input type="text" class="lis-input" placeholder="e.g. MedSupply Co."></div>
+                    <div class="col-md-4"><label class="lis-form-label">Quantity in Stock</label><input type="text" class="lis-input" placeholder="0"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Reorder Level</label><input type="text" class="lis-input" placeholder="e.g. 100"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Selling Price</label><input type="text" class="lis-input" placeholder="e.g. $0.15"></div>
+                    <div class="col-12"><label class="lis-form-label">Description</label><textarea class="lis-input" rows="2" placeholder="Description..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="pmsMedReset">Reset</button>
+                        <button type="button" class="btn btn-outline-secondary" id="pmsMedCancel">Cancel</button>
+                        <button type="submit" class="btn btn-save-changes" id="pmsMedSave">Save</button>
+                    </div>
+                </form>
+                <hr class="lis-divider">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Inventory List</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="pmsInvFilter"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="pmsInventoryTable">
+                        <thead><tr><th>Medicine ID</th><th>Generic Name</th><th>Brand Name</th><th>Category</th><th>Strength</th><th>Quantity</th><th>Location</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">MED-1001</td><td>Paracetamol</td><td>Biogesic</td><td>Analgesic</td><td>500mg</td><td>2450</td><td>Shelf A-3</td><td><span class="lis-badge lis-badge-normal">Available</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr><td class="lis-strong">MED-1002</td><td>Amoxicillin</td><td>Amoxil</td><td>Antibiotic</td><td>250mg</td><td>20</td><td>Shelf B-1</td><td><span class="lis-badge lis-badge-low">Low Stock</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="9" class="lis-empty"><i class="bi bi-inbox"></i><p>No medicines found.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-                        <!-- Inner Medicine Prescription Sheet -->
-                        <div class="inner-prescription-sheet p-3 rounded mb-3 position-relative">
-                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="capsule-icon-wrap rounded-circle bg-soft-success-bright text-success"><i class="bi bi-capsule"></i></div>
-                                    <div>
-                                        <h5 class="m-0 fs-14 font-weight-bold text-dark" id="pmsMedicineName">-</h5>
-                                        <small class="text-muted fs-12" id="pmsMedicineDetails">No prescription yet</small>
-                                    </div>
-                                </div>
-                                <div class="text-md-end">
-                                    <small class="text-success d-block font-weight-semibold fs-11 mb-1" id="pmsPhysician">Physician: -</small>
-                                    <span class="d-block font-weight-bold text-dark fs-13" id="pmsDosage">Dosage: -</span>
-                                    <small class="text-muted d-block fs-11" id="pmsFrequency">Frequency: -</small>
-                                </div>
-                            </div>
-                        </div>
+        <!-- ============ SECTION: STOCK MONITORING ============ -->
+        <section class="lis-section" id="tab-stock">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#pms-overview">Pharmacy</a><span class="sep">/</span><span class="current">Stock Monitoring</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Stock Monitoring</h2><p class="text-muted m-0">Monitor stock levels and receive low-stock alerts.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-capsule"></i></div><div><div class="lis-stat-label">Total Medicines</div><div class="lis-stat-value">842</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-check2-circle"></i></div><div><div class="lis-stat-label">Available Stock</div><div class="lis-stat-value">798</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-exclamation-triangle"></i></div><div><div class="lis-stat-label">Low Stock</div><div class="lis-stat-value">12</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-x-octagon"></i></div><div><div class="lis-stat-label">Out of Stock</div><div class="lis-stat-value">4</div></div></div></div>
+            </div>
+            <div class="content-card card p-4 mb-3">
+                <h5 class="section-card-title m-0 mb-3">Inventory Status</h5>
+                <div class="lis-chart-box"><canvas id="pmsStockChart"></canvas></div>
+            </div>
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Stock Levels</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="pmsStockFilter"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="pmsStockTable">
+                        <thead><tr><th>Medicine</th><th>Current Stock</th><th>Reorder Level</th><th>Status</th><th>Last Updated</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">Paracetamol 500mg</td><td>2450</td><td>1000</td><td><span class="lis-badge lis-badge-normal">In Stock</span></td><td>2026-07-16</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-arrow-repeat"></i></button></td></tr>
+                            <tr><td class="lis-strong">Amoxicillin 250mg</td><td>20</td><td>120</td><td><span class="lis-badge lis-badge-low">Low Stock</span></td><td>2026-07-15</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-arrow-repeat"></i></button></td></tr>
+                            <tr><td class="lis-strong">Ibuprofen 400mg</td><td>0</td><td>150</td><td><span class="lis-badge lis-badge-critical">Out of Stock</span></td><td>2026-07-14</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-arrow-repeat"></i></button></td></tr>
+                            <tr><td class="lis-strong">Vitamin C 500mg</td><td>3200</td><td>500</td><td><span class="lis-badge lis-badge-high">Overstock</span></td><td>2026-07-16</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-arrow-repeat"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="6" class="lis-empty"><i class="bi bi-inbox"></i><p>No stock records.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-                        <!-- Action Controls Row -->
+        <!-- ============ SECTION: DISPENSING ============ -->
+        <section class="lis-section" id="tab-dispensing">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#pms-overview">Pharmacy</a><span class="sep">/</span><span class="current">Dispensing</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Dispensing</h2><p class="text-muted m-0">Dispense prescribed medicines to patients.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-receipt"></i></div><div><div class="lis-stat-label">Prescriptions Today</div><div class="lis-stat-value">38</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-bag-check"></i></div><div><div class="lis-stat-label">Dispensed</div><div class="lis-stat-value">156</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-hourglass-split"></i></div><div><div class="lis-stat-label">Pending</div><div class="lis-stat-value">9</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Dispense Medicine</h5>
+                    <div class="input-group search-input-group" style="max-width:280px;"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" placeholder="Search prescription..."></div>
+                </div>
+                <form id="pmsDispenseForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Prescription Number</label><input type="text" class="lis-input" value="RX-7782" readonly></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient ID</label><input type="text" class="lis-input" placeholder="ID"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Physician</label><input type="text" class="lis-input" placeholder="Dr. Name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Medicine Name</label><select class="lis-input"><option>Paracetamol 500mg</option><option>Amoxicillin 250mg</option><option>Ibuprofen 400mg</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dosage</label><input type="text" class="lis-input" placeholder="e.g. 1 tab TID"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Quantity</label><input type="text" class="lis-input" placeholder="e.g. 20"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dispensing Date</label><input type="text" class="lis-input" value="2026-07-17"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Pharmacist</label><input type="text" class="lis-input" value="Pharm. Reyes"></div>
+                    <div class="col-12"><label class="lis-form-label">Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="pmsDispenseCancel">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" id="pmsDispensePrint">Print Receipt</button>
+                        <button type="submit" class="btn btn-save-changes" id="pmsDispenseBtn">Dispense</button>
+                    </div>
+                </form>
+                <hr class="lis-divider">
+                <h5 class="section-card-title m-0 mb-3">Recent Dispensing</h5>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="pmsDispenseTable">
+                        <thead><tr><th>Prescription No.</th><th>Patient</th><th>Medicine</th><th>Quantity</th><th>Pharmacist</th><th>Date</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">RX-7782</td><td>Maria Santos</td><td>Paracetamol 500mg</td><td>20</td><td>Pharm. Reyes</td><td>2026-07-17</td><td><span class="lis-badge lis-badge-approved">Dispensed</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="8" class="lis-empty"><i class="bi bi-inbox"></i><p>No dispensing records.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: PRESCRIPTION VALIDATION ============ -->
+        <section class="lis-section" id="tab-validation">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#pms-overview">Pharmacy</a><span class="sep">/</span><span class="current">Prescription Validation</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Prescription Validation</h2><p class="text-muted m-0">Validate prescriptions before dispensing.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><div class="input-group search-input-group" style="max-width:260px;"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" placeholder="Search prescription..."></div></div>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-4">
+                    <div class="content-card card p-3 mb-3">
+                        <h6 class="section-card-title m-0 mb-2">Patient Information</h6>
+                        <div class="d-flex align-items-center gap-3"><div class="lis-avatar-sm">MS</div><div><div class="lis-strong">Maria Santos</div><small class="text-muted">ID: RS-4429 &bull; Female, 34</small></div></div>
+                    </div>
+                    <div class="alert alert-warning pms-alert-panel"><i class="bi bi-exclamation-triangle-fill"></i> <strong>Drug Interaction:</strong> Amoxicillin + Warfarin may increase bleeding risk.</div>
+                    <div class="alert alert-danger pms-alert-panel"><i class="bi bi-shield-exclamation"></i> <strong>Allergy Alert:</strong> Patient allergic to Penicillin.</div>
+                    <div class="alert alert-info pms-alert-panel"><i class="bi bi-clone"></i> <strong>Duplicate:</strong> Same medication prescribed by two physicians.</div>
+                    <div class="content-card card p-3"><h6 class="section-card-title m-0 mb-2">Authenticity</h6><span class="lis-badge lis-badge-approved"><i class="bi bi-patch-check"></i> Verified</span></div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="content-card card p-4">
+                        <h5 class="section-card-title m-0 mb-3">Prescription Details</h5>
+                        <div class="mb-3"><label class="lis-form-label">Medicine List</label><div class="lis-test-grid">
+                            <div class="lis-test-chip selected"><span class="lis-test-check"></span><i class="bi bi-capsule"></i><span class="lis-test-name">Amoxicillin 250mg</span></div>
+                            <div class="lis-test-chip"><span class="lis-test-check"></span><i class="bi bi-capsule"></i><span class="lis-test-name">Paracetamol 500mg</span></div>
+                        </div></div>
+                        <div class="mb-3"><label class="lis-form-label">Validation Result</label><textarea class="lis-input" rows="3" placeholder="Notes...">Prescription validated. Dispensing approved with monitoring.</textarea></div>
                         <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-flag-interaction">Flag Interaction</button>
-                            <button class="btn btn-approve-dispense">Approve & Dispense</button>
+                            <button class="btn btn-outline-secondary" id="pmsValClarify">Request Clarification</button>
+                            <button class="btn btn-outline-secondary text-danger-hover" id="pmsValReject">Reject</button>
+                            <button class="btn btn-save-changes" id="pmsValApprove">Approve</button>
                         </div>
                     </div>
-
-                    <!-- Empty State when no patient data -->
-                    <div class="content-card card p-5 text-center" id="priorityDispensationEmpty">
-                        <i class="bi bi-person-plus fs-1 text-muted mb-3 d-block"></i>
-                        <h5 class="text-muted mb-2">No Patient Data</h5>
-                        <p class="text-muted fs-12 mb-0">Patient profile from Laboratory Information System will appear here after saving.</p>
-                    </div>
-
-                    <!-- Pharmacy Inventory Ledger Card -->
-                    <div class="content-card card p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="section-card-title m-0">Pharmacy Inventory Ledger</h5>
-                            <small class="text-muted fs-11"><i class="bi bi-arrow-clockwise"></i> Updated 2 mins ago</small>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table alignment-middle-table m-0">
-                                <thead>
-                                    <tr class="table-header-row text-uppercase text-muted fs-11 font-weight-bold border-bottom">
-                                        <th class="py-2">Medicine Name</th>
-                                        <th class="py-2">Stock Level</th>
-                                        <th class="py-2">Unit Price</th>
-                                        <th class="py-2">Expiration</th>
-                                        <th class="py-2 text-end">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="fs-13">
-                                    <!-- Item 1 -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">Paracetamol</span>
-                                            <small class="text-muted fs-11">500mg Oral Tablet</small>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">2,450 Units</span>
-                                            <div class="progress custom-progress mt-1" style="width: 80px;"><div class="progress-bar bg-success" style="width: 100%"></div></div>
-                                        </td>
-                                        <td class="py-3 font-weight-medium text-dark">$0.15</td>
-                                        <td class="py-3 text-muted">Oct 2026</td>
-                                        <td class="py-3 text-end"><span class="badge-status-pill bg-soft-success-bright text-success-dark font-weight-bold text-uppercase">In Stock</span></td>
-                                    </tr>
-                                    <!-- Item 2 -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">Amoxicillin</span>
-                                            <small class="text-muted fs-11">250mg Capsule</small>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">120 Units</span>
-                                            <div class="progress custom-progress mt-1" style="width: 80px;"><div class="progress-bar bg-danger" style="width: 15%"></div></div>
-                                        </td>
-                                        <td class="py-3 font-weight-medium text-dark">$1.45</td>
-                                        <td class="py-3 text-danger font-weight-medium">Mar 2024</td>
-                                        <td class="py-3 text-end"><span class="badge-status-pill bg-soft-danger text-danger text-uppercase">Critical</span></td>
-                                    </tr>
-                                    <!-- Item 3 -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">Ibuprofen</span>
-                                            <small class="text-muted fs-11">400mg Softgel</small>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">890 Units</span>
-                                            <div class="progress custom-progress mt-1" style="width: 80px;"><div class="progress-bar bg-info" style="width: 55%"></div></div>
-                                        </td>
-                                        <td class="py-3 font-weight-medium text-dark">$0.45</td>
-                                        <td class="py-3 text-muted">Dec 2025</td>
-                                        <td class="py-3 text-end"><span class="badge-status-pill bg-soft-secondary text-muted text-uppercase">Reorder Soon</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="text-center mt-3">
-                            <a href="#" class="view-full-ledger-link text-decoration-none fs-12 font-weight-bold">View Full Inventory Ledger</a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-
-            <!-- Right Grid Pane: Alerts and Monitoring -->
-            <div class="col-lg-4">
-                <div class="d-flex flex-column gap-3">
-                    
-                    <!-- Expiration Alert Soft Red Panel -->
-                    <div class="expiration-alert-card card p-3 position-relative overflow-hidden">
-                        <div class="d-flex align-items-center gap-2 text-danger font-weight-bold mb-3">
-                            <i class="bi bi-exclamation-octagon-fill fs-5"></i>
-                            <h6 class="m-0 font-weight-bold fs-14">Expiration Alert</h6>
-                        </div>
-                        <!-- Absolute background watermark icon style matching layout -->
-                        <i class="bi bi-exclamation-triangle structural-alert-watermark text-danger opacity-5 position-absolute"></i>
-                        
-                        <p class="fs-12 text-dark lh-base mb-3">
-                            There are 12 items reaching expiration within the next 30 days. Immediate action required for disposal or discount protocols.
-                        </p>
-
-                        <div class="alert-expiry-item border rounded p-2 bg-white d-flex justify-content-between align-items-center mb-2">
-                            <span class="fs-12 text-dark font-weight-semibold">Amoxicillin 250mg</span>
-                            <span class="badge bg-danger fs-9 px-2">3 days left</span>
-                        </div>
-                        <div class="alert-expiry-item border rounded p-2 bg-white d-flex justify-content-between align-items-center mb-3">
-                            <span class="fs-12 text-dark font-weight-semibold">Lipitor 10mg</span>
-                            <span class="badge bg-danger fs-9 px-2">12 days left</span>
-                        </div>
-
-                        <button class="btn btn-process-disposal text-white py-2 font-weight-semibold">Process Disposal Queue</button>
-                    </div>
-
-                    <!-- Inventory Summary Quick Dashboard Metrics -->
-                    <div class="content-card card p-3">
-                        <small class="text-muted text-uppercase fs-10 font-weight-bold tracking-wide d-block mb-3">Inventory Summary</small>
-                        
-                        <div class="d-flex flex-column gap-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="summary-icon-avatar bg-soft-success-bright text-success"><i class="bi bi-box-seam"></i></div>
-                                <div>
-                                    <h4 class="m-0 font-weight-bold text-dark fs-16">842</h4>
-                                    <small class="text-muted fs-12">Active SKUs</small>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="summary-icon-avatar bg-soft-info text-info"><i class="bi bi-truck"></i></div>
-                                <div>
-                                    <h4 class="m-0 font-weight-bold text-dark fs-16">18</h4>
-                                    <small class="text-muted fs-12">Incoming Deliveries</small>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="summary-icon-avatar bg-soft-secondary text-muted"><i class="bi bi-journal-check"></i></div>
-                                <div>
-                                    <h4 class="m-0 font-weight-bold text-dark fs-16">156</h4>
-                                    <small class="text-muted fs-12">Dispensed Today</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cold Storage Monitor Module Card -->
-                    <div class="cold-storage-card card p-3 text-white">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small class="text-white-50 text-uppercase font-weight-bold tracking-wide fs-10">Cold Storage Monitor</small>
-                            <span class="ambient-status-dot"></span>
-                        </div>
-                        
-                        <div class="d-flex align-items-baseline gap-2 my-1">
-                            <h2 class="display-6 font-weight-bold m-0 text-white">4.2°C</h2>
-                            <small class="text-success-light font-weight-bold fs-11">Optimal</small>
-                        </div>
-
-                        <div class="progress storage-progress my-2"><div class="progress-bar bg-success" style="width: 45%"></div></div>
-                        
-                        <div class="d-flex justify-content-between text-white-50 fs-9 font-weight-medium">
-                            <span>2.0°C MIN</span>
-                            <span>8.0°C MAX</span>
-                        </div>
-                    </div>
-
+            <div class="content-card card p-4 mt-3">
+                <h5 class="section-card-title m-0 mb-3">Validation Queue</h5>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="pmsValidationTable">
+                        <thead><tr><th>Prescription No.</th><th>Patient</th><th>Physician</th><th>Validation Status</th><th>Date</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">RX-7782</td><td>Maria Santos</td><td>Dr. Reyes</td><td><span class="lis-badge lis-badge-pending">Pending</span></td><td>2026-07-17</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn approve"><i class="bi bi-check-lg"></i></button><button class="lis-tbtn reject"><i class="bi bi-x-lg"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="6" class="lis-empty"><i class="bi bi-inbox"></i><p>No prescriptions to validate.</p></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- ============ SECTION: EXPIRATION MONITORING ============ -->
+        <section class="lis-section" id="tab-expiration">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#pms-overview">Pharmacy</a><span class="sep">/</span><span class="current">Expiration Monitoring</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Expiration Monitoring</h2><p class="text-muted m-0">Track medicine expiration dates and identify medicines nearing expiration.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><div class="input-group search-input-group" style="max-width:260px;"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" placeholder="Search medicine..."></div></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-shield-check"></i></div><div><div class="lis-stat-label">Safe Medicines</div><div class="lis-stat-value">828</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-hourglass-split"></i></div><div><div class="lis-stat-label">Expiring Soon</div><div class="lis-stat-value">10</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-x-octagon"></i></div><div><div class="lis-stat-label">Expired</div><div class="lis-stat-value">4</div></div></div></div>
+            </div>
+            <div class="content-card card p-4 mb-3">
+                <h5 class="section-card-title m-0 mb-3">Expiration Timeline</h5>
+                <div class="lis-timeline">
+                    <div class="lis-timeline-item"><span class="lis-timeline-dot" style="background:#dc2626;box-shadow:0 0 0 2px #fee2e2;"></span><div><div class="lis-strong">Amoxicillin 250mg (B-2291)</div><small class="text-muted">Expired 2026-07-10 &bull; 120 units</small></div></div>
+                    <div class="lis-timeline-item"><span class="lis-timeline-dot" style="background:#d97706;box-shadow:0 0 0 2px #fef3c7;"></span><div><div class="lis-strong">Ibuprofen 400mg (B-1180)</div><small class="text-muted">Expires in 12 days &bull; 89 units</small></div></div>
+                    <div class="lis-timeline-item"><span class="lis-timeline-dot"></span><div><div class="lis-strong">Paracetamol 500mg (B-3300)</div><small class="text-muted">Expires in 240 days &bull; 2450 units</small></div></div>
+                </div>
+            </div>
+            <div class="content-card card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Expiring / Expired Medicines</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="pmsExpFilter"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="pmsExpirationTable">
+                        <thead><tr><th>Medicine</th><th>Batch Number</th><th>Expiration Date</th><th>Remaining Days</th><th>Quantity</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">Amoxicillin 250mg</td><td>B-2291</td><td>2026-07-10</td><td class="text-danger">-7</td><td>120</td><td><span class="lis-badge lis-badge-critical">Expired</span></td><td class="text-end"><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-box-arrow-up"></i></button><button class="lis-tbtn view"><i class="bi bi-eye"></i></button></td></tr>
+                            <tr><td class="lis-strong">Ibuprofen 400mg</td><td>B-1180</td><td>2026-07-29</td><td class="text-warning">12</td><td>89</td><td><span class="lis-badge lis-badge-low">Near Expiration</span></td><td class="text-end"><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-box-arrow-up"></i></button><button class="lis-tbtn view"><i class="bi bi-eye"></i></button></td></tr>
+                            <tr><td class="lis-strong">Paracetamol 500mg</td><td>B-3300</td><td>2027-03-14</td><td class="text-success">240</td><td>2450</td><td><span class="lis-badge lis-badge-normal">Safe</span></td><td class="text-end"><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-box-arrow-up"></i></button><button class="lis-tbtn view"><i class="bi bi-eye"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="7" class="lis-empty"><i class="bi bi-inbox"></i><p>No expiration records.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: PURCHASE ORDERS ============ -->
+        <section class="lis-section" id="tab-orders">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#pms-overview">Pharmacy</a><span class="sep">/</span><span class="current">Purchase Orders</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Purchase Orders</h2><p class="text-muted m-0">Manage medicine replenishment from suppliers.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-hourglass-split"></i></div><div><div class="lis-stat-label">Pending</div><div class="lis-stat-value">5</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-check2-circle"></i></div><div><div class="lis-stat-label">Approved</div><div class="lis-stat-value">3</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-truck"></i></div><div><div class="lis-stat-label">Delivered</div><div class="lis-stat-value">18</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-x-octagon"></i></div><div><div class="lis-stat-label">Cancelled</div><div class="lis-stat-value">2</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="pmsOrderForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">PO Number</label><input type="text" class="lis-input" value="PO-5521" readonly></div>
+                    <div class="col-md-4"><label class="lis-form-label">Supplier</label><input type="text" class="lis-input" placeholder="Supplier name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Order Date</label><input type="text" class="lis-input" value="2026-07-17"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Expected Delivery</label><input type="text" class="lis-input" placeholder="YYYY-MM-DD"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Medicine</label><input type="text" class="lis-input" placeholder="Medicine name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Quantity</label><input type="text" class="lis-input" placeholder="e.g. 500"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Unit Price</label><input type="text" class="lis-input" placeholder="$0.15"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Total Cost</label><input type="text" class="lis-input" placeholder="Auto/Manual"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Status</label><select class="lis-input"><option>Pending</option><option>Approved</option><option>Ordered</option><option>Delivered</option><option>Cancelled</option></select></div>
+                    <div class="col-12"><label class="lis-form-label">Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="pmsOrderCancel">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" id="pmsOrderDraft">Save Draft</button>
+                        <button type="button" class="btn btn-outline-secondary" id="pmsOrderSubmit">Submit</button>
+                        <button type="submit" class="btn btn-save-changes" id="pmsOrderCreate">Create Order</button>
+                    </div>
+                </form>
+                <hr class="lis-divider">
+                <h5 class="section-card-title m-0 mb-3">Purchase Orders</h5>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="pmsOrderTable">
+                        <thead><tr><th>PO Number</th><th>Supplier</th><th>Total Items</th><th>Total Amount</th><th>Status</th><th>Order Date</th><th>Delivery Date</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">PO-5521</td><td>MedSupply Co.</td><td>500</td><td>$75.00</td><td><span class="lis-badge lis-badge-pending">Pending</span></td><td>2026-07-17</td><td>2026-07-24</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="8" class="lis-empty"><i class="bi bi-inbox"></i><p>No purchase orders.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </main>
 </div>
 
-<!-- ADD RECORD MODAL -->
-<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-capsule text-success me-2"></i>Add Inventory Item</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addRecordForm" class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Medicine Name</label>
-                        <input type="text" class="form-control custom-form-input" name="medicine" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Dosage / Form</label>
-                        <input type="text" class="form-control custom-form-input" name="dosage" placeholder="500mg Oral Tablet">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Stock Level</label>
-                        <input type="text" class="form-control custom-form-input" name="stock" placeholder="100 Units">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Unit Price</label>
-                        <input type="text" class="form-control custom-form-input" name="price" placeholder="$0.20">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Expiration</label>
-                        <input type="text" class="form-control custom-form-input" name="expiry" placeholder="Dec 2026">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Status</label>
-                        <select class="form-select custom-form-input" name="status">
-                            <option>In Stock</option>
-                            <option>Critical</option>
-                            <option>Reorder Soon</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="addRecordForm" class="btn btn-approve-dispense">Save Record</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="../js/add-record.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="../js/pms.js"></script>
 </body>
 </html>

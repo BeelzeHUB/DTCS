@@ -1,138 +1,27 @@
-/* =======================================================
-   HIS - Pharmacy Management System (PMS) Stylesheet Module
+﻿/* =======================================================
+   DTCS - Pharmacy Management System (PMS) Theme Skin
+   Reuses LIS component classes (lis-stat-card, lis-table,
+   lis-badge, lis-section, nav-group...) from lis.css for a
+   consistent design language. This file adds PMS-specific
+   components only.
    ======================================================= */
 
-.border-left-thick-green-accent {
-    border-left: 4px solid #10b981 !important;
-}
+/* ---------- Alert panels (validation) ---------- */
+.pms-alert-panel { display: flex; align-items: flex-start; gap: 8px; font-size: 0.8rem; border-radius: 10px; margin-bottom: 10px; }
+.pms-alert-panel i { font-size: 1rem; line-height: 1.2; }
 
-.dispense-patient-avatar {
-    width: 48px;
-    height: 48px;
-    font-size: 1.1rem;
-}
+/* ---------- Expiration timeline (reuse LIS timeline base) ---------- */
+.lis-timeline { position: relative; padding-left: 22px; }
+.lis-timeline::before { content: ""; position: absolute; left: 5px; top: 4px; bottom: 4px; width: 2px; background: var(--his-border-color, #eaf0ed); }
+.lis-timeline-item { position: relative; padding: 0 0 18px; }
+.lis-timeline-item:last-child { padding-bottom: 0; }
+.lis-timeline-dot { position: absolute; left: -22px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: #0a6c3a; border: 2px solid #fff; box-shadow: 0 0 0 2px #e8f8f0; }
+.lis-timeline-item .lis-strong { font-size: 0.88rem; }
+.lis-timeline-item small { font-size: 0.76rem; }
 
-.patient-title-name {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #091a16;
-}
-
-.bg-soft-success-bright { background-color: #ecfdf5 !important; }
-.text-success-dark { color: #065f46 !important; }
-
-.inner-prescription-sheet {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-}
-
-.capsule-icon-wrap {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.fs-16 { font-size: 1.1rem; }
-
-/* Control buttons style layout mapping */
-.btn-flag-interaction {
-    background-color: #ffffff;
-    border: 1px solid #dc2626;
-    color: #dc2626;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 8px 18px;
-    border-radius: 8px;
-    transition: background 0.15s;
-}
-
-.btn-flag-interaction:hover {
-    background-color: #fef2f2;
-}
-
-.btn-approve-dispense {
-    background-color: #066838;
-    color: #ffffff;
-    border: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 8px 18px;
-    border-radius: 8px;
-    transition: background 0.15s;
-}
-
-.btn-approve-dispense:hover {
-    background-color: #04522b;
-}
-
-/* --- INVENTORY SUMMARY & LEDGERS --- */
-.view-full-ledger-link {
-    color: #066838;
-}
-
-.view-full-ledger-link:hover {
-    text-decoration: underline !important;
-}
-
-.summary-icon-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-}
-
-.bg-soft-info { background-color: #f0f9ff; }
-
-/* --- EXPIRATION ALERT CONTAINER SIDEBAR PANEL --- */
-.expiration-alert-card {
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 16px;
-}
-
-.structural-alert-watermark {
-    font-size: 6.5rem;
-    bottom: -15px;
-    right: -10px;
-    pointer-events: none;
-}
-
-.btn-process-disposal {
-    background-color: #b91c1c;
-    border: none;
-    font-size: 0.85rem;
-    border-radius: 8px;
-    transition: background 0.15s;
-    z-index: 2;
-}
-
-.btn-process-disposal:hover {
-    background-color: #991b1b;
-}
-
-/* --- COLD STORAGE ACCENT UNIT MOCKUP --- */
-.cold-storage-card {
-    background-color: #01241b !important;
-    border: none;
-    border-radius: 16px;
-}
-
-.ambient-status-dot {
-    width: 7px;
-    height: 7px;
-    background-color: #10b981;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.storage-progress {
-    height: 5px !important;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 10px;
-}
+/* ---------- Breadcrumb ---------- */
+.lis-breadcrumb { font-size: 0.78rem; color: #94a3b8; }
+.lis-breadcrumb a { color: #127040; text-decoration: none; }
+.lis-breadcrumb a:hover { text-decoration: underline; }
+.lis-breadcrumb .sep { margin: 0 6px; color: #cbd5e1; }
+.lis-breadcrumb .current { color: #64748b; font-weight: 600; }
