@@ -59,11 +59,10 @@ function sorsSetupScrollSpy() {
             sections.forEach(function (sec) {
                 if (sec.offsetTop - offset <= top) current = sec.id;
             });
+            if (parentLink) parentLink.classList.add("active");
             if (current === "sors-overview") {
                 items.forEach(function (i) { i.classList.remove("active"); });
-                if (parentLink) parentLink.classList.add("active");
             } else {
-                if (parentLink) parentLink.classList.remove("active");
                 setActive(current.replace("tab-", ""));
             }
             ticking = false;

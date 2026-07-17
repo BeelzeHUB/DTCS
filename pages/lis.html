@@ -22,10 +22,11 @@
             </div>
             <div class="sidebar-brand"><h2 class="m-0 font-weight-bold">DTCS</h2><p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p></div>
             <nav class="sidebar-nav mt-4">
-                <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <a href="dashboard.html" class="nav-item nav-dash"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <div class="lis-nav-section-label">Clinical Modules</div>
                 <div class="nav-group">
                     <div class="nav-group-head">
-                        <a href="#lis-overview" class="nav-item active nav-item-toggle" id="lisParentLink"><i class="bi bi-clipboard-data"></i><span>Laboratory Information</span><button type="button" class="nav-group-toggle collapsed" id="lisSubToggle" aria-label="Toggle laboratory modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
+                        <a href="#lis-overview" class="nav-item active nav-item-toggle mod-link" id="lisParentLink"><i class="bi bi-clipboard-data"></i><span>Laboratory<br>Information</span><button type="button" class="nav-group-toggle collapsed" id="lisSubToggle" aria-label="Toggle laboratory modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
                     </div>
                     <div class="nav-sub collapsed" id="lisSubMenu">
                         <a href="#tab-requests" class="nav-sub-item active" data-lis-tab="requests"><i class="bi bi-clipboard-data"></i> Laboratory Requests</a>
@@ -36,10 +37,12 @@
                         <a href="#tab-reports" class="nav-sub-item" data-lis-tab="reports"><i class="bi bi-bar-chart"></i> Laboratory Reports</a>
                     </div>
                 </div>
-                <a href="ris.html" class="nav-item"><i class="bi bi-person-bounding-box"></i><span>Radiology and Imaging</span></a>
-                <a href="pms.html" class="nav-item"><i class="bi bi-capsule"></i><span>Pharmacy Management</span></a>
-                <a href="sors.html" class="nav-item"><i class="bi bi-calendar2-week"></i><span>Surgery & Operating Room Scheduler</span></a>
-                <a href="dnms.html" class="nav-item"><i class="bi bi-egg-fried"></i><span>Diet & Nutrition Management</span></a>
+                <a href="ris.html" class="nav-item mod-link"><i class="bi bi-person-bounding-box"></i><span>Radiology &amp;<br>Imaging</span></a>
+                <a href="pms.html" class="nav-item mod-link"><i class="bi bi-capsule"></i><span>Pharmacy<br>Management</span></a>
+                <a href="sors.html" class="nav-item mod-link"><i class="bi bi-calendar2-week"></i><span>Surgery &amp; Operating<br>Room Scheduler</span></a>
+                <a href="dnms.html" class="nav-item mod-link"><i class="bi bi-egg-fried"></i><span>Diet &amp; Nutrition<br>Management</span></a>
+                <div class="lis-nav-section-label">Automated AI</div>
+                <a href="medisense.html" class="nav-item mod-link"><i class="bi bi-cpu"></i><span>MediSense AI</span></a>
             </nav>
         </div>
         <div class="sidebar-footer">
@@ -247,7 +250,11 @@
     </main>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="../js/chart.umd.js"></script>
 <script src="../js/lis.js"></script>
 </body>
 </html>
+
+
+
+

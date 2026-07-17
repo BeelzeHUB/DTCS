@@ -171,6 +171,7 @@ body.sidebar-hidden .main-content {
     border-radius: 10px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.nav-item span { white-space: nowrap; }
 
 .nav-item i {
     font-size: 1.1rem;
@@ -494,3 +495,11 @@ body.sidebar-hidden .main-content {
     .sidebar .nav-item { justify-content: center; padding: 12px 0; }
     .main-content { margin-left: 70px; width: calc(100% - 70px); padding: 20px; }
 }
+
+/* ---------- Highlighted clinical module links in sidebar ---------- */
+.nav-item.mod-link { color: #ffffff; font-weight: 600; }
+.nav-item.mod-link i { color: #2ed573; }
+.nav-item.mod-link:hover { background-color: rgba(46,213,115,0.12); color: #ffffff; }
+
+/* Diagnostic Dashboard link - slightly bolder text */
+.nav-item.nav-dash { font-weight: 700; font-size: 0.92rem; }

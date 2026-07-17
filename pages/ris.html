@@ -23,11 +23,12 @@
             </div>
             <div class="sidebar-brand"><h2 class="m-0 font-weight-bold">DTCS</h2><p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p></div>
             <nav class="sidebar-nav mt-4">
-                <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
-                <a href="lis.html" class="nav-item"><i class="bi bi-clipboard-data"></i><span>Laboratory Information</span></a>
+                <a href="dashboard.html" class="nav-item nav-dash"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <div class="lis-nav-section-label">Clinical Modules</div>
+                <a href="lis.html" class="nav-item mod-link"><i class="bi bi-clipboard-data"></i><span>Laboratory<br>Information</span></a>
                 <div class="nav-group">
                     <div class="nav-group-head">
-                        <a href="#ris-overview" class="nav-item active nav-item-toggle" id="risParentLink"><i class="bi bi-person-bounding-box"></i><span>Radiology and Imaging</span><button type="button" class="nav-group-toggle collapsed" id="risSubToggle" aria-label="Toggle radiology modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
+                        <a href="#ris-overview" class="nav-item active nav-item-toggle mod-link" id="risParentLink"><i class="bi bi-person-bounding-box"></i><span>Radiology &amp;<br>Imaging</span><button type="button" class="nav-group-toggle collapsed" id="risSubToggle" aria-label="Toggle radiology modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
                     </div>
                     <div class="nav-sub collapsed" id="risSubMenu">
                         <a href="#tab-requests" class="nav-sub-item" data-lis-tab="requests"><i class="bi bi-clipboard-plus"></i> Imaging Requests</a>
@@ -37,9 +38,11 @@
                         <a href="#tab-history" class="nav-sub-item" data-lis-tab="history"><i class="bi bi-clock-history"></i> Image History</a>
                     </div>
                 </div>
-                <a href="pms.html" class="nav-item"><i class="bi bi-capsule"></i><span>Pharmacy Management</span></a>
-                <a href="sors.html" class="nav-item"><i class="bi bi-calendar2-week"></i><span>Surgery & Operating Room Scheduler</span></a>
-                <a href="dnms.html" class="nav-item"><i class="bi bi-egg-fried"></i><span>Diet & Nutrition Management</span></a>
+                <a href="pms.html" class="nav-item mod-link"><i class="bi bi-capsule"></i><span>Pharmacy<br>Management</span></a>
+                <a href="sors.html" class="nav-item mod-link"><i class="bi bi-calendar2-week"></i><span>Surgery &amp; Operating<br>Room Scheduler</span></a>
+                <a href="dnms.html" class="nav-item mod-link"><i class="bi bi-egg-fried"></i><span>Diet &amp; Nutrition<br>Management</span></a>
+                <div class="lis-nav-section-label">Automated AI</div>
+                <a href="medisense.html" class="nav-item mod-link"><i class="bi bi-cpu"></i><span>MediSense AI</span></a>
             </nav>
         </div>
         <div class="sidebar-footer">
@@ -332,3 +335,8 @@
 <script src="../js/ris.js"></script>
 </body>
 </html>
+
+
+
+
+
