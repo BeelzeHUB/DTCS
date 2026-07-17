@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diet & Nutrition Management | DTCS</title>
+    <title>Diet & Nutrition Management | MediSense AI</title>
     <!-- Bootstrap 5 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -22,8 +22,9 @@
     <aside class="sidebar d-flex flex-column justify-content-between">
         <div>
             <div class="sidebar-brand">
-                <h2 class="m-0 font-weight-bold">HIS</h2>
-                <p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p>
+<h2 class="m-0 font-weight-bold">MediSense AI</h2>
+                <p class="brand-sub m-0">Web-Based Hospital Information Management System</p>
+                <small class="text-muted d-block mt-2" style="font-size:0.7rem;letter-spacing:0.02em;">DJNRMHS • Tala, Caloocan City • DOH Tertiary Referral</small>
             </div>
 
             <nav class="sidebar-nav mt-4">
@@ -260,6 +261,7 @@
                                         <th class="py-2">Sodium (mg)</th>
                                         <th class="py-2">Sugar (g)</th>
                                         <th class="py-2 text-end">Status</th>
+                                        <th class="py-2 pe-3 sticky-action">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="fs-12">
@@ -322,43 +324,51 @@
     </main>
 </div>
 
-<!-- ADD RECORD MODAL -->
+<!-- NUTRITIONAL INTAKE RECORD MODAL -->
 <div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 rounded-3">
             <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-egg-fried text-success me-2"></i>Add Nutritional Log</h5>
+                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-egg-fried text-success me-2"></i>Add Nutritional Intake</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addRecordForm" class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Time</label>
-                        <input type="text" class="form-control custom-form-input" name="time" placeholder="08:15 AM" required>
+                        <input type="text" class="form-control custom-form-input" name="time" id="timeInput" placeholder="08:15 AM" required>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Date</label>
-                        <input type="text" class="form-control custom-form-input" name="date" placeholder="Oct 24, 2026" required>
+                        <input type="text" class="form-control custom-form-input" name="date" id="dateInput" placeholder="Oct 24, 2023" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Intake Type</label>
-                        <input type="text" class="form-control custom-form-input" name="intake" placeholder="Breakfast (Solid)">
+                        <select class="form-select custom-form-input" name="intake" id="intakeSelect" required>
+                            <option value="" disabled selected>Select intake type...</option>
+                            <option value="Breakfast (Solid)">Breakfast (Solid)</option>
+                            <option value="Lunch (Solid)">Lunch (Solid)</option>
+                            <option value="Dinner (Solid)">Dinner (Solid)</option>
+                            <option value="Snack (Solid)">Snack (Solid)</option>
+                            <option value="Hydration (Water)">Hydration (Water)</option>
+                            <option value="Supplement (Liquid)">Supplement (Liquid)</option>
+                        </select>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Kcal</label>
-                        <input type="text" class="form-control custom-form-input" name="kcal" placeholder="320">
+                        <input type="text" class="form-control custom-form-input" name="kcal" id="kcalInput" placeholder="320" required>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sodium</label>
-                        <input type="text" class="form-control custom-form-input" name="sodium" placeholder="120">
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sodium (mg)</label>
+                        <input type="text" class="form-control custom-form-input" name="sodium" id="sodiumInput" placeholder="120" required>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sugar</label>
-                        <input type="text" class="form-control custom-form-input" name="sugar" placeholder="4">
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sugar (g)</label>
+                        <input type="text" class="form-control custom-form-input" name="sugar" id="sugarInput" placeholder="4" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Status</label>
-                        <select class="form-select custom-form-input" name="status">
+                        <select class="form-select custom-form-input" name="status" id="statusSelect">
                             <option>Optimal</option>
                             <option>Warn: Sodium</option>
                             <option>Warn: Sugar</option>
@@ -368,7 +378,7 @@
             </div>
             <div class="modal-footer border-top-0">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="addRecordForm" class="btn btn-modify-restrictions">Save Record</button>
+                <button type="submit" form="addRecordForm" class="btn btn-save-changes btn-action-top">Save Record</button>
             </div>
         </div>
     </div>
