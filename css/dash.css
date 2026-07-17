@@ -1,0 +1,22 @@
+﻿/* =======================================================
+   DTCS - Diagnostic Dashboard Skin
+   Reuses LIS component classes (lis-stat-card, lis-table,
+   lis-badge, lis-section, lis-timeline...) from lis.css.
+   ======================================================= */
+
+/* ---------- Quick access shortcut cards ---------- */
+.dash-quick { display: block; text-align: left; transition: all 0.15s ease; }
+.dash-quick:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,23,42,0.08); }
+.dash-quick .btn { pointer-events: none; }
+
+/* ---------- Critical alert cards ---------- */
+.dash-alert { border-radius: 12px; border: 1px solid transparent; align-items: flex-start; }
+.dash-alert i { flex-shrink: 0; }
+.alert-danger.dash-alert { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.alert-warning.dash-alert { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.alert-info.dash-alert { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+
+/* ---------- Breadcrumb ---------- */
+.lis-breadcrumb { font-size: 0.78rem; color: #94a3b8; }
+.lis-breadcrumb .sep { margin: 0 6px; color: #cbd5e1; }
+.lis-breadcrumb .current { color: #64748b; font-weight: 600; }
