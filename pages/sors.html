@@ -1,367 +1,321 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surgery & Operating Room Scheduler | HIS</title>
-    <!-- Bootstrap 5 -->
+    <title>Surgery & Operating Room Scheduler | DTCS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/lis.css">
     <link rel="stylesheet" href="../css/sors.css">
 </head>
-<body>
-
+<body class="lis-body">
+<div class="lis-spinner-overlay" id="sorsSpinner"><div class="lis-spinner"></div></div>
+<div class="lis-toast-wrap" id="sorsToastWrap"></div>
 <div class="dashboard-container">
-    <!-- SIDEBAR -->
-    <aside class="sidebar d-flex flex-column justify-content-between">
+    <aside class="sidebar d-flex flex-column justify-content-between" id="sidebar">
         <div>
-            <div class="sidebar-brand">
-                <h2 class="m-0 font-weight-bold">HIS</h2>
-                <p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p>
+            <div class="sidebar-topbar d-flex align-items-center justify-content-between mb-2">
+                <button type="button" class="btn-sidebar-toggle" id="sidebarToggle" aria-label="Hide sidebar"><span class="hamburger-lines"><span></span><span></span><span></span></span></button>
             </div>
-
+            <div class="sidebar-brand"><h2 class="m-0 font-weight-bold">DTCS</h2><p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p></div>
             <nav class="sidebar-nav mt-4">
-                <a href="dashboard.html" class="nav-item">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Diagnostic Dashboard</span>
-                </a>
-                <a href="lis.html" class="nav-item">
-                    <i class="bi bi-clipboard-data"></i>
-                    <span>Laboratory Information</span>
-                </a>
-                <a href="ris.html" class="nav-item">
-                    <i class="bi bi-person-bounding-box"></i>
-                    <span>Radiology and Imaging</span>
-                </a>
-                <a href="pms.html" class="nav-item">
-                    <i class="bi bi-capsule"></i>
-                    <span>Pharmacy Management</span>
-                </a>
-                <a href="sors.html" class="nav-item active">
-                    <i class="bi bi-calendar2-week"></i>
-                    <span>Surgery & Operating Room Scheduler</span>
-                </a>
-                <a href="dnms.html" class="nav-item">
-                    <i class="bi bi-egg-fried"></i>
-                    <span>Diet & Nutrition Management</span>
-                </a>
+                <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <a href="lis.html" class="nav-item"><i class="bi bi-clipboard-data"></i><span>Laboratory Information</span></a>
+                <a href="ris.html" class="nav-item"><i class="bi bi-person-bounding-box"></i><span>Radiology and Imaging</span></a>
+                <a href="pms.html" class="nav-item"><i class="bi bi-capsule"></i><span>Pharmacy Management</span></a>
+                <div class="nav-group">
+                    <div class="nav-group-head">
+                        <a href="#sors-overview" class="nav-item active nav-item-toggle" id="sorsParentLink"><i class="bi bi-calendar2-week"></i><span>Surgery & OR Scheduler</span><button type="button" class="nav-group-toggle collapsed" id="sorsSubToggle" aria-label="Toggle surgery modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
+                    </div>
+                    <div class="nav-sub collapsed" id="sorsSubMenu">
+                        <a href="#tab-scheduling" class="nav-sub-item" data-lis-tab="scheduling"><i class="bi bi-calendar-plus"></i> Surgery Scheduling</a>
+                        <a href="#tab-reservation" class="nav-sub-item" data-lis-tab="reservation"><i class="bi bi-door-closed"></i> Operating Room Reservation</a>
+                        <a href="#tab-surgeon" class="nav-sub-item" data-lis-tab="surgeon"><i class="bi bi-person-workspace"></i> Surgeon Assignment</a>
+                        <a href="#tab-equipment" class="nav-sub-item" data-lis-tab="equipment"><i class="bi bi-tools"></i> Equipment Scheduling</a>
+                        <a href="#tab-records" class="nav-sub-item" data-lis-tab="records"><i class="bi bi-file-medical"></i> Surgical Records</a>
+                    </div>
+                </div>
+                <a href="dnms.html" class="nav-item"><i class="bi bi-egg-fried"></i><span>Diet & Nutrition Management</span></a>
             </nav>
         </div>
-
         <div class="sidebar-footer">
-            <div class="user-panel d-flex align-items-center mb-3">
-                <div class="avatar-circle">AD</div>
-                <div class="user-info ms-2">
-                    <h6 class="m-0 text-white">NICOLAS</h6>
-                    <small class="text-muted text-uppercase">Administrator</small>
-                </div>
-            </div>
-            <a href="#" class="nav-item footer-link mb-2">
-                <i class="bi bi-gear"></i>
-                <span>Settings</span>
-            </a>
-            <a href="../index.html" class="nav-item footer-link text-danger-hover">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
-            </a>
+            <div class="user-panel d-flex align-items-center mb-3"><div class="avatar-circle">AD</div><div class="user-info ms-2"><h6 class="m-0 text-white">NICOLAS</h6><small class="text-muted text-uppercase">Administrator</small></div></div>
+            <a href="#" class="nav-item footer-link mb-2"><i class="bi bi-gear"></i><span>Settings</span></a>
+            <a href="../index.html" class="nav-item footer-link text-danger-hover"><i class="bi bi-box-arrow-left"></i><span>Logout</span></a>
         </div>
     </aside>
-
-    <!-- MAIN BODY CONTENT -->
-    <main class="main-content">
-        <!-- TOP NAVBAR -->
+    <main class="main-content" id="sorsMain">
         <header class="top-navbar d-flex justify-content-between align-items-center mb-4">
-            <div class="search-bar-container flex-grow-1 max-w-xl me-3">
-                <div class="input-group search-input-group">
-                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search records...">
-                </div>
-            </div>
-            <div class="top-actions d-flex align-items-center gap-3">
-                <button class="btn btn-add-record d-flex align-items-center gap-2">
-                    <i class="bi bi-plus-lg"></i> Add Record
-                </button>
-                <button class="btn-top-icon"><i class="bi bi-bell"></i></button>
-                <button class="btn-top-icon"><i class="bi bi-question-circle"></i></button>
-                <div class="top-profile-avatar"></div>
-            </div>
+            <div class="search-bar-container flex-grow-1 max-w-xl me-3"><div class="input-group search-input-group"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" id="sorsSearchInput" class="form-control border-start-0" placeholder="Search surgeries, rooms, surgeons..."><button type="button" id="sorsSearchClear" class="btn border-start-0 bg-white text-muted d-none" aria-label="Clear search"><i class="bi bi-x-lg"></i></button></div></div>
+            <div class="top-actions d-flex align-items-center gap-3"><button class="btn-top-icon" id="sorsNotifBtn" aria-label="Notifications"><i class="bi bi-bell"></i><span class="lis-notif-dot"></span></button><button class="btn-top-icon" aria-label="Help"><i class="bi bi-question-circle"></i></button><div class="top-profile-avatar"></div></div>
         </header>
 
-        <!-- TITLE BAR BLOCK WITH QUICK ACCENT BADGES -->
-        <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
-            <div>
-                <h1 class="overview-title m-0">Surgery & OR Scheduler</h1>
-                <p class="text-muted m-0 fs-13">Managing 8 Operating Rooms for St. Mary's General Hospital</p>
+        <!-- ============ OVERVIEW ============ -->
+        <section class="lis-section" id="sors-overview">
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
+                <div><h1 class="overview-title m-0">Surgery & Operating Room Scheduler</h1><p class="text-muted m-0">Plan surgeries, reserve operating rooms, assign surgeons and equipment.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="sorsTopAction"><i class="bi bi-plus-lg"></i> Schedule Surgery</button></div>
             </div>
-            <div class="d-flex gap-2 mt-2 mt-md-0">
-                <span class="badge bg-soft-success-bright text-success-dark font-weight-semibold px-3 py-2 d-flex align-items-center gap-2 rounded-3 fs-12">
-                    <i class="bi bi-door-open-fill"></i> 6/8 Rooms Active
-                </span>
-                <span class="badge bg-soft-info text-info font-weight-semibold px-3 py-2 d-flex align-items-center gap-2 rounded-3 fs-12">
-                    <i class="bi bi-clock-history"></i> 14 Today
-                </span>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-calendar-plus"></i></div><div><div class="lis-stat-label">Scheduled</div><div class="lis-stat-value">14</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-door-closed"></i></div><div><div class="lis-stat-label">Rooms Active</div><div class="lis-stat-value">6/8</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-people"></i></div><div><div class="lis-stat-label">Surgeons</div><div class="lis-stat-value">9</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-tools"></i></div><div><div class="lis-stat-label">Equip Reserved</div><div class="lis-stat-value">11</div></div></div></div>
             </div>
-        </div>
-
-        <!-- SCHEDULER CONTROLS & LIVE THEATER LAYOUT GRID -->
-        <div class="row g-3 mb-4">
-            <!-- Left Side Grid Container: Booking Assignment Box -->
-            <div class="col-lg-8">
-                <div class="content-card card p-4 h-100 justify-content-between">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="d-flex align-items-center gap-2 text-dark font-weight-bold">
-                                <i class="bi bi-calendar-plus fs-5 text-success"></i>
-                                <h5 class="m-0 font-weight-bold fs-16">New Surgery Assignment</h5>
-                            </div>
-                            <span class="badge bg-light text-muted font-weight-bold font-monospace tracking-wide px-2 py-1 fs-10">DRAFT ID: 8820</span>
-                        </div>
-
-                        <div class="row g-3">
-                            <!-- Input Form Matrix Columns -->
-                            <div class="col-md-6">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase mb-1">Patient Name</label>
-                                    <div class="input-icon-group position-relative">
-                                        <input type="text" class="form-control custom-form-input valided-border" value="Pedro Reyes">
-                                        <i class="bi bi-check-circle-fill validation-check-icon text-success"></i>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase mb-1">Operation Type</label>
-                                    <select class="form-select custom-form-input">
-                                        <option selected>Appendectomy</option>
-                                        <option>Cholecystectomy</option>
-                                        <option>Hip Replacement</option>
-                                    </select>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase mb-1">Date</label>
-                                        <input type="text" class="form-control custom-form-input text-center" value="11/24/2026">
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase mb-1">Time</label>
-                                        <input type="text" class="form-control custom-form-input text-center" value="08:30 AM">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Staff Direct Configuration Inner Box -->
-                            <div class="col-md-6">
-                                <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase mb-1">Surgical Team Assignment</label>
-                                <div class="inner-team-config-panel p-3 rounded d-flex flex-column gap-2">
-                                    <div class="d-flex align-items-center gap-2 py-1">
-                                        <div class="team-avatar bg-dark text-white font-weight-bold fs-10">DR</div>
-                                        <div>
-                                            <span class="d-block text-dark font-weight-bold fs-12 lh-1">Dr. Elena Rodriguez</span>
-                                            <small class="text-muted fs-10">Lead Surgeon</small>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 py-1">
-                                        <div class="team-avatar bg-teal-dark text-white font-weight-bold fs-10">MK</div>
-                                        <div>
-                                            <span class="d-block text-dark font-weight-bold fs-12 lh-1">Mark Kovac</span>
-                                            <small class="text-muted fs-10">Anesthesiologist</small>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 py-1">
-                                        <div class="team-avatar bg-success text-white font-weight-bold fs-10">SL</div>
-                                        <div>
-                                            <span class="d-block text-dark font-weight-bold fs-12 lh-1">Sarah Lewis</span>
-                                            <small class="text-muted fs-10">Scrub Nurse</small>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-add-staff-dashed mt-2 w-100 py-1 font-weight-medium fs-11 text-muted">
-                                        <i class="bi bi-plus"></i> Add Staff
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lower Pipeline Form Buttons Row -->
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <button class="btn btn-discard-schedule">Discard</button>
-                        <button class="btn btn-commit-schedule">Schedule Surgery</button>
-                    </div>
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Modules</h5>
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-4"><a href="#tab-scheduling" class="lis-module-card" data-goto="scheduling"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon blue"><i class="bi bi-calendar-plus"></i></div><div><div class="lis-stat-label">Surgery Scheduling</div><div class="text-muted fs-12">Plan surgeries</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-reservation" class="lis-module-card" data-goto="reservation"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon teal"><i class="bi bi-door-closed"></i></div><div><div class="lis-stat-label">OR Reservation</div><div class="text-muted fs-12">Reserve rooms</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-surgeon" class="lis-module-card" data-goto="surgeon"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon green"><i class="bi bi-person-workspace"></i></div><div><div class="lis-stat-label">Surgeon Assignment</div><div class="text-muted fs-12">Assign teams</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-equipment" class="lis-module-card" data-goto="equipment"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon slate"><i class="bi bi-tools"></i></div><div><div class="lis-stat-label">Equipment Scheduling</div><div class="text-muted fs-12">Reserve equip</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-records" class="lis-module-card" data-goto="records"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon red"><i class="bi bi-file-medical"></i></div><div><div class="lis-stat-label">Surgical Records</div><div class="text-muted fs-12">Document outcomes</div></div></div></a></div>
                 </div>
             </div>
+        </section>
 
-            <!-- Right Side Grid Container: Live Status and Performance metrics -->
-            <div class="col-lg-4">
-                <div class="d-flex flex-column gap-3">
-                    <!-- Live Theater Overview Module -->
-                    <div class="live-theater-card card p-3 text-white">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <small class="text-white-50 text-uppercase font-weight-bold tracking-wide fs-10">Live Theater Status</small>
-                            <span class="live-blink-indicator fs-9 font-weight-bold text-danger"><span class="live-red-dot"></span> LIVE</span>
-                        </div>
-
-                        <!-- 4x2 Grid Matrix Map of Operating Rooms -->
-                        <div class="row g-2 mb-3">
-                            <div class="col-3"><div class="or-box active text-center py-2"><span class="d-block fs-10">OR-1</span><i class="bi bi-door-open-fill"></i></div></div>
-                            <div class="col-3"><div class="or-box active text-center py-2"><span class="d-block fs-10">OR-2</span><i class="bi bi-door-open-fill"></i></div></div>
-                            <div class="col-3"><div class="or-box inactive text-center py-2"><span class="d-block fs-10">OR-3</span><i class="bi bi-door-closed"></i></div></div>
-                            <div class="col-3"><div class="or-box active text-center py-2"><span class="d-block fs-10">OR-4</span><i class="bi bi-door-open-fill"></i></div></div>
-                            <div class="col-3"><div class="or-box active text-center py-2"><span class="d-block fs-10">OR-5</span><i class="bi bi-door-open-fill"></i></div></div>
-                            <div class="col-3"><div class="or-box active text-center py-2"><span class="d-block fs-10">OR-6</span><i class="bi bi-door-open-fill"></i></div></div>
-                            <div class="col-3"><div class="or-box inactive text-center py-2"><span class="d-block fs-10">OR-7</span><i class="bi bi-door-closed"></i></div></div>
-                            <div class="col-3"><div class="or-box active text-center py-2"><span class="d-block fs-10">OR-8</span><i class="bi bi-door-open-fill"></i></div></div>
-                        </div>
-
-                        <div class="text-center border-top border-secondary-light pt-2">
-                            <h2 class="display-6 font-weight-bold m-0 text-success-light">75%</h2>
-                            <small class="text-white-50 text-uppercase tracking-wide fs-9 font-weight-semibold">Overall Capacity Utilization</small>
-                        </div>
+        <!-- ============ SECTION: SURGERY SCHEDULING ============ -->
+        <section class="lis-section" id="tab-scheduling">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#sors-overview">Surgery</a><span class="sep">/</span><span class="current">Surgery Scheduling</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Surgery Scheduling</h2><p class="text-muted m-0">Plan and manage elective and emergency surgeries.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="sorsSchedBtn"><i class="bi bi-plus-lg"></i> Schedule Surgery</button></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="sorsSchedForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Surgery ID</label><input type="text" class="lis-input" value="SUR-8820" readonly></div>
+                    <div class="col-md-4"><label class="lis-form-label">Surgery Date</label><input type="text" class="lis-input" value="2026-07-24"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Surgery Time</label><input type="text" class="lis-input" value="08:30"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name" required></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient ID</label><input type="text" class="lis-input" placeholder="ID"></div>
+                    <div class="col-md-2"><label class="lis-form-label">Age</label><input type="text" class="lis-input" placeholder="Years"></div>
+                    <div class="col-md-2"><label class="lis-form-label">Sex</label><select class="lis-input"><option>Male</option><option>Female</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Attending Physician</label><input type="text" class="lis-input" placeholder="Dr. Name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Lead Surgeon</label><input type="text" class="lis-input" value="Dr. Elena Rodriguez"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Department</label><select class="lis-input"><option>General Surgery</option><option>Orthopedics</option><option>Neurosurgery</option><option>Cardiothoracic</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Surgery Type</label><select class="lis-input"><option>Elective</option><option>Emergency</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Procedure Name</label><input type="text" class="lis-input" placeholder="e.g. Appendectomy"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Operating Room</label><select class="lis-input"><option>OR-01</option><option>OR-02</option><option>OR-03</option><option>OR-04</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Estimated Duration</label><input type="text" class="lis-input" value="120 min"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Priority Level</label><select class="lis-input"><option>Routine</option><option>Urgent</option><option>STAT</option></select></div>
+                    <div class="col-12"><label class="lis-form-label">Pre-operative Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="sorsSchedReset">Reset</button>
+                        <button type="button" class="btn btn-outline-secondary" id="sorsSchedCancel">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" id="sorsSchedDraft">Save Draft</button>
+                        <button type="submit" class="btn btn-save-changes" id="sorsSchedSave">Schedule Surgery</button>
                     </div>
+                </form>
+                <hr class="lis-divider">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Surgery Schedule</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="sorsSchedFilter"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="sorsSchedTable">
+                        <thead><tr><th>Surgery ID</th><th>Patient</th><th>Procedure</th><th>Lead Surgeon</th><th>Operating Room</th><th>Date</th><th>Time</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">SUR-8820</td><td>Pedro Reyes</td><td>Appendectomy</td><td>Dr. Elena Rodriguez</td><td>OR-01</td><td>2026-07-24</td><td>08:30</td><td><span class="lis-badge lis-badge-pending">Scheduled</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr><td class="lis-strong">SUR-8819</td><td>Sonia Gupta</td><td>Cholecystectomy</td><td>Dr. Michael Chen</td><td>OR-02</td><td>2026-07-24</td><td>10:00</td><td><span class="lis-badge lis-badge-critical">Emergency</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="9" class="lis-empty"><i class="bi bi-inbox"></i><p>No surgeries scheduled.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-                    <!-- Efficiency Metrics Metrics Card -->
+        <!-- ============ SECTION: OPERATING ROOM RESERVATION ============ -->
+        <section class="lis-section" id="tab-reservation">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#sors-overview">Surgery</a><span class="sep">/</span><span class="current">Operating Room Reservation</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Operating Room Reservation</h2><p class="text-muted m-0">Reserve and manage operating room availability.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-door-open"></i></div><div><div class="lis-stat-label">Available Rooms</div><div class="lis-stat-value">6/8</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-door-closed"></i></div><div><div class="lis-stat-label">Reserved</div><div class="lis-stat-value">2</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-activity"></i></div><div><div class="lis-stat-label">Ongoing</div><div class="lis-stat-value">1</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon slate"><i class="bi bi-check2-circle"></i></div><div><div class="lis-stat-label">Completed Today</div><div class="lis-stat-value">5</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="sorsResForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Reservation Number</label><input type="text" class="lis-input" value="RES-201"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Operating Room</label><select class="lis-input"><option>OR-01</option><option>OR-02</option><option>OR-03</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Surgery ID</label><input type="text" class="lis-input" value="SUR-8820"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Procedure</label><input type="text" class="lis-input" placeholder="Procedure"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Date</label><input type="text" class="lis-input" value="2026-07-24"></div>
+                    <div class="col-md-3"><label class="lis-form-label">Start Time</label><input type="text" class="lis-input" value="08:00"></div>
+                    <div class="col-md-3"><label class="lis-form-label">End Time</label><input type="text" class="lis-input" value="10:00"></div>
+                    <div class="col-md-6"><label class="lis-form-label">Assigned Team</label><input type="text" class="lis-input" value="Team A"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Reservation Status</label><select class="lis-input"><option>Reserved</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select></div>
+                    <div class="col-12"><label class="lis-form-label">Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="sorsResCancel">Cancel Reservation</button>
+                        <button type="button" class="btn btn-outline-secondary" id="sorsResUpdate">Update Reservation</button>
+                        <button type="submit" class="btn btn-save-changes" id="sorsResSave">Reserve Room</button>
+                    </div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="sorsResTable">
+                        <thead><tr><th>Reservation ID</th><th>Operating Room</th><th>Patient</th><th>Procedure</th><th>Date</th><th>Time</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">RES-201</td><td>OR-01</td><td>Pedro Reyes</td><td>Appendectomy</td><td>2026-07-24</td><td>08:00</td><td><span class="lis-badge lis-badge-info">Reserved</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="8" class="lis-empty"><i class="bi bi-inbox"></i><p>No reservations.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: SURGEON ASSIGNMENT ============ -->
+        <section class="lis-section" id="tab-surgeon">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#sors-overview">Surgery</a><span class="sep">/</span><span class="current">Surgeon Assignment</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Surgeon Assignment</h2><p class="text-muted m-0">Assign surgeons and surgical teams to procedures.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-person-check"></i></div><div><div class="lis-stat-label">Available Surgeons</div><div class="lis-stat-value">9</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-people"></i></div><div><div class="lis-stat-label">Assigned</div><div class="lis-stat-value">7</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-hourglass-split"></i></div><div><div class="lis-stat-label">Pending</div><div class="lis-stat-value">2</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="sorsAsgForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Surgery ID</label><input type="text" class="lis-input" value="SUR-8820"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Procedure</label><input type="text" class="lis-input" placeholder="Procedure"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Lead Surgeon</label><input type="text" class="lis-input" value="Dr. Elena Rodriguez"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Assistant Surgeon</label><input type="text" class="lis-input" value="Dr. Mark Kovac"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Anesthesiologist</label><input type="text" class="lis-input" value="Dr. Sarah Lewis"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Scrub Nurse</label><input type="text" class="lis-input" value="Nurse A. Cruz"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Circulating Nurse</label><input type="text" class="lis-input" value="Nurse B. Tan"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Assignment Date</label><input type="text" class="lis-input" value="2026-07-24"></div>
+                    <div class="col-12"><label class="lis-form-label">Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="sorsAsgClear">Clear</button>
+                        <button type="button" class="btn btn-outline-secondary" id="sorsAsgUpdate">Update Assignment</button>
+                        <button type="submit" class="btn btn-save-changes" id="sorsAsgSave">Assign Team</button>
+                    </div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="sorsAsgTable">
+                        <thead><tr><th>Surgery ID</th><th>Patient</th><th>Lead Surgeon</th><th>Surgical Team</th><th>Procedure</th><th>Status</th><th>Date</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">SUR-8820</td><td>Pedro Reyes</td><td>Dr. Elena Rodriguez</td><td>5 members</td><td>Appendectomy</td><td><span class="lis-badge lis-badge-approved">Assigned</span></td><td>2026-07-24</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="8" class="lis-empty"><i class="bi bi-inbox"></i><p>No assignments.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: EQUIPMENT SCHEDULING ============ -->
+        <section class="lis-section" id="tab-equipment">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#sors-overview">Surgery</a><span class="sep">/</span><span class="current">Equipment Scheduling</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Equipment Scheduling</h2><p class="text-muted m-0">Reserve surgical instruments and operating room equipment.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-check2-circle"></i></div><div><div class="lis-stat-label">Available</div><div class="lis-stat-value">24</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-calendar-check"></i></div><div><div class="lis-stat-label">Reserved</div><div class="lis-stat-value">11</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-activity"></i></div><div><div class="lis-stat-label">In Use</div><div class="lis-stat-value">6</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-wrench"></i></div><div><div class="lis-stat-label">Maintenance</div><div class="lis-stat-value">3</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="sorsEquipForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Reservation Number</label><input type="text" class="lis-input" value="EQ-500"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Surgery ID</label><input type="text" class="lis-input" value="SUR-8820"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Operating Room</label><select class="lis-input"><option>OR-01</option><option>OR-02</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Equipment Name</label><input type="text" class="lis-input" placeholder="e.g. Anesthesia Machine"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Equipment Category</label><select class="lis-input"><option>Anesthesia</option><option>Monitoring</option><option>Surgical Instrument</option><option>Imaging</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Quantity</label><input type="text" class="lis-input" value="1"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Reservation Date</label><input type="text" class="lis-input" value="2026-07-24"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Start Time</label><input type="text" class="lis-input" value="08:00"></div>
+                    <div class="col-md-4"><label class="lis-form-label">End Time</label><input type="text" class="lis-input" value="11:00"></div>
+                    <div class="col-md-6"><label class="lis-form-label">Assigned Staff</label><input type="text" class="lis-input" value="Tech. R. Mendoza"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Status</label><select class="lis-input"><option>Reserved</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select></div>
+                    <div class="col-12"><label class="lis-form-label">Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="sorsEquipCancel">Cancel Reservation</button>
+                        <button type="button" class="btn btn-outline-secondary" id="sorsEquipUpdate">Update Reservation</button>
+                        <button type="submit" class="btn btn-save-changes" id="sorsEquipSave">Reserve Equipment</button>
+                    </div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="sorsEquipTable">
+                        <thead><tr><th>Equipment ID</th><th>Equipment Name</th><th>Category</th><th>Quantity</th><th>Status</th><th>Assigned Surgery</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">EQ-500</td><td>Anesthesia Machine</td><td>Anesthesia</td><td>1</td><td><span class="lis-badge lis-badge-info">Reserved</span></td><td>SUR-8820</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="7" class="lis-empty"><i class="bi bi-inbox"></i><p>No equipment reservations.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: SURGICAL RECORDS ============ -->
+        <section class="lis-section" id="tab-records">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#sors-overview">Surgery</a><span class="sep">/</span><span class="current">Surgical Records</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Surgical Records</h2><p class="text-muted m-0">Document surgical procedures and patient outcomes.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0">
+                    <button class="btn btn-outline-secondary btn-action-top" id="sorsRecPrint"><i class="bi bi-printer"></i> Print Record</button>
+                    <button class="btn btn-outline-secondary btn-action-top" id="sorsRecPdf"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-4">
+                    <div class="content-card card p-3 mb-3">
+                        <h6 class="section-card-title m-0 mb-2">Patient Information</h6>
+                        <div class="d-flex align-items-center gap-3"><div class="lis-avatar-sm">PR</div><div><div class="lis-strong">Pedro Reyes</div><small class="text-muted">ID: PT-7781 &bull; Male, 45</small></div></div>
+                    </div>
                     <div class="content-card card p-3">
-                        <h6 class="section-card-title m-0 text-dark font-weight-bold fs-12 mb-3">Turnover Efficiency</h6>
-                        
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                <small class="text-muted text-uppercase fs-9 font-weight-bold">OR Clean-up</small>
-                                <span class="fs-11 font-weight-bold text-dark">22m avg</span>
-                            </div>
-                            <div class="progress performance-progress"><div class="progress-bar bg-success" style="width: 78%"></div></div>
-                        </div>
-
-                        <div>
-                            <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                <small class="text-muted text-uppercase fs-9 font-weight-bold">Pre-Op Prep</small>
-                                <span class="fs-11 font-weight-bold text-dark">15m avg</span>
-                            </div>
-                            <div class="progress performance-progress"><div class="progress-bar bg-info" style="width: 55%"></div></div>
+                        <h6 class="section-card-title m-0 mb-2">Surgery Information</h6>
+                        <ul class="list-unstyled mb-0 fs-13 text-muted">
+                            <li>Procedure: Appendectomy</li><li>OR: OR-01</li><li>Lead Surgeon: Dr. Elena Rodriguez</li><li>Date: 2026-07-24</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="content-card card p-4">
+                        <div class="mb-2"><label class="lis-form-label">Pre-operative Diagnosis</label><textarea class="lis-input" rows="2">Acute appendicitis.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Post-operative Diagnosis</label><textarea class="lis-input" rows="2">Acute appendicitis, resolved.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Procedure Performed</label><textarea class="lis-input" rows="2">Laparoscopic appendectomy.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Complications</label><textarea class="lis-input" rows="2">None.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Outcome</label><input type="text" class="lis-input" value="Successful"></div>
+                        <div class="mb-2"><label class="lis-form-label">Recovery Status</label><select class="lis-input"><option>Recovering</option><option>Stable</option><option>Critical</option></select></div>
+                        <div class="mb-2"><label class="lis-form-label">Surgeon's Notes</label><textarea class="lis-input" rows="2">Patient tolerated procedure well.</textarea></div>
+                        <div class="d-flex align-items-center gap-3 mb-3"><div class="lis-avatar-sm" style="background:#e0f2fe;color:#0369a1;">ER</div><div><div class="lis-strong">Dr. Elena Rodriguez</div><small class="text-muted">Surgeon</small></div><div class="ms-auto"><span class="lis-badge lis-badge-muted"><i class="bi bi-pencil-square"></i> e-Signature</span></div></div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-outline-secondary" id="sorsRecUpdate">Update Record</button>
+                            <button class="btn btn-save-changes" id="sorsRecSave">Save Record</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- LOWER PIPELINE DATA LOG TABLE -->
-        <div class="content-card card p-3">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="section-card-title m-0">Pending Surgical Pipeline</h5>
-                <a href="#" class="view-all-pipeline-link text-decoration-none fs-12 font-weight-bold">View All Schedule</a>
+            <div class="content-card card p-4 mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Surgical Records</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="sorsRecFilter"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="sorsRecTable">
+                        <thead><tr><th>Record ID</th><th>Patient</th><th>Procedure</th><th>Lead Surgeon</th><th>Date</th><th>Outcome</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">REC-4401</td><td>Pedro Reyes</td><td>Appendectomy</td><td>Dr. Elena Rodriguez</td><td>2026-07-24</td><td>Successful</td><td><span class="lis-badge lis-badge-approved">Completed</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="8" class="lis-empty"><i class="bi bi-inbox"></i><p>No surgical records.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="table alignment-middle-table m-0">
-                    <thead>
-                        <tr class="table-header-row text-uppercase text-muted fs-11 font-weight-bold border-bottom">
-                            <th class="py-2">Patient</th>
-                            <th class="py-2">Procedure</th>
-                            <th class="py-2">Theater</th>
-                            <th class="py-2">Lead Surgeon</th>
-                            <th class="py-2">Status</th>
-                            <th class="py-2 text-end">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="fs-13">
-                        <!-- Patient Row 1 -->
-                        <tr class="border-bottom">
-                            <td class="py-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="patient-icon-circle bg-light text-muted"><i class="bi bi-person"></i></div>
-                                    <span class="font-weight-bold text-dark">Pedro Reyes</span>
-                                </div>
-                            </td>
-                            <td class="py-3 text-muted">Appendectomy</td>
-                            <td class="py-3"><span class="badge bg-light text-dark font-monospace px-2 py-1 border text-uppercase fs-10">OR-04</span></td>
-                            <td class="py-3 text-dark font-weight-medium">Dr. Elena Rodriguez</td>
-                            <td class="py-3"><span class="badge-status-pill bg-soft-success-bright text-success-dark font-weight-bold">Confirmed</span></td>
-                            <td class="py-3 text-end"><button class="btn p-0 text-muted fs-5"><i class="bi bi-three-dots-vertical"></i></button></td>
-                        </tr>
-                        <!-- Patient Row 2 -->
-                        <tr class="border-bottom">
-                            <td class="py-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="patient-icon-circle bg-light text-muted"><i class="bi bi-person"></i></div>
-                                    <span class="font-weight-bold text-dark">Sonia Gupta</span>
-                                </div>
-                            </td>
-                            <td class="py-3 text-muted">Cholecystectomy</td>
-                            <td class="py-3"><span class="badge bg-light text-dark font-monospace px-2 py-1 border text-uppercase fs-10">OR-01</span></td>
-                            <td class="py-3 text-dark font-weight-medium">Dr. Michael Chen</td>
-                            <td class="py-3"><span class="badge-status-pill bg-soft-info text-info font-weight-bold">In Preparation</span></td>
-                            <td class="py-3 text-end"><button class="btn p-0 text-muted fs-5"><i class="bi bi-three-dots-vertical"></i></button></td>
-                        </tr>
-                        <!-- Patient Row 3 -->
-                        <tr class="border-bottom">
-                            <td class="py-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="patient-icon-circle bg-light text-muted"><i class="bi bi-person"></i></div>
-                                    <span class="font-weight-bold text-dark">Marcus Thompson</span>
-                                </div>
-                            </td>
-                            <td class="py-3 text-muted">Hip Replacement</td>
-                            <td class="py-3"><span class="badge bg-light text-dark font-monospace px-2 py-1 border text-uppercase fs-10">OR-02</span></td>
-                            <td class="py-3 text-dark font-weight-medium">Dr. Sarah Miller</td>
-                            <td class="py-3"><span class="badge-status-pill bg-soft-danger text-danger font-weight-bold">Delayed</span></td>
-                            <td class="py-3 text-end"><button class="btn p-0 text-muted fs-5"><i class="bi bi-three-dots-vertical"></i></button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </section>
     </main>
 </div>
 
-<!-- ADD RECORD MODAL -->
-<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-calendar-plus text-success me-2"></i>Add Surgical Record</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addRecordForm" class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Patient Name</label>
-                        <input type="text" class="form-control custom-form-input" name="patient" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Procedure</label>
-                        <input type="text" class="form-control custom-form-input" name="procedure" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Theater</label>
-                        <input type="text" class="form-control custom-form-input" name="theater" placeholder="OR-09" required>
-                    </div>
-                    <div class="col-md-8">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Lead Surgeon</label>
-                        <input type="text" class="form-control custom-form-input" name="surgeon" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Status</label>
-                        <select class="form-select custom-form-input" name="status">
-                            <option>Confirmed</option>
-                            <option>In Preparation</option>
-                            <option>Delayed</option>
-                            <option>Pending</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-discard-schedule" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="addRecordForm" class="btn btn-commit-schedule">Save Record</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="../js/add-record.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script src="../js/sors.js"></script>
 </body>
 </html>
