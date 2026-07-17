@@ -1,391 +1,325 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diet & Nutrition Management | MediSense AI</title>
-    <!-- Bootstrap 5 -->
+    <title>Diet & Nutrition Management System | DTCS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/lis.css">
     <link rel="stylesheet" href="../css/dnms.css">
 </head>
-<body>
-
+<body class="lis-body">
+<div class="lis-spinner-overlay" id="dnmsSpinner"><div class="lis-spinner"></div></div>
+<div class="lis-toast-wrap" id="dnmsToastWrap"></div>
 <div class="dashboard-container">
-    <!-- SIDEBAR -->
-    <aside class="sidebar d-flex flex-column justify-content-between">
+    <aside class="sidebar d-flex flex-column justify-content-between" id="sidebar">
         <div>
-            <div class="sidebar-brand">
-<h2 class="m-0 font-weight-bold">MediSense AI</h2>
-                <p class="brand-sub m-0">Web-Based Hospital Information Management System</p>
-                <small class="text-muted d-block mt-2" style="font-size:0.7rem;letter-spacing:0.02em;">DJNRMHS • Tala, Caloocan City • DOH Tertiary Referral</small>
+            <div class="sidebar-topbar d-flex align-items-center justify-content-between mb-2">
+                <button type="button" class="btn-sidebar-toggle" id="sidebarToggle" aria-label="Hide sidebar"><span class="hamburger-lines"><span></span><span></span><span></span></span></button>
             </div>
-
+            <div class="sidebar-brand"><h2 class="m-0 font-weight-bold">DTCS</h2><p class="brand-sub m-0">Diagnostic Treatment, and Clinical Services</p></div>
             <nav class="sidebar-nav mt-4">
-                <a href="dashboard.html" class="nav-item">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Diagnostic Dashboard</span>
-                </a>
-                <a href="lis.html" class="nav-item">
-                    <i class="bi bi-clipboard-data"></i>
-                    <span>Laboratory Information</span>
-                </a>
-                <a href="ris.html" class="nav-item">
-                    <i class="bi bi-person-bounding-box"></i>
-                    <span>Radiology and Imaging</span>
-                </a>
-                <a href="pms.html" class="nav-item">
-                    <i class="bi bi-capsule"></i>
-                    <span>Pharmacy Management</span>
-                </a>
-                <a href="sors.html" class="nav-item">
-                    <i class="bi bi-calendar2-week"></i>
-                    <span>Surgery & Operating Room Scheduler</span>
-                </a>
-                <a href="dnms.html" class="nav-item active">
-                    <i class="bi bi-egg-fried"></i>
-                    <span>Diet & Nutrition Management</span>
-                </a>
+                <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i><span>Diagnostic Dashboard</span></a>
+                <a href="lis.html" class="nav-item"><i class="bi bi-clipboard-data"></i><span>Laboratory Information</span></a>
+                <a href="ris.html" class="nav-item"><i class="bi bi-person-bounding-box"></i><span>Radiology and Imaging</span></a>
+                <a href="pms.html" class="nav-item"><i class="bi bi-capsule"></i><span>Pharmacy Management</span></a>
+                <a href="sors.html" class="nav-item"><i class="bi bi-calendar2-week"></i><span>Surgery & Operating Room Scheduler</span></a>
+                <div class="nav-group">
+                    <div class="nav-group-head">
+                        <a href="#dnms-overview" class="nav-item active nav-item-toggle" id="dnmsParentLink"><i class="bi bi-egg-fried"></i><span>Diet & Nutrition</span><button type="button" class="nav-group-toggle collapsed" id="dnmsSubToggle" aria-label="Toggle nutrition modules" aria-expanded="false"><i class="bi bi-chevron-down"></i></button></a>
+                    </div>
+                    <div class="nav-sub collapsed" id="dnmsSubMenu">
+                        <a href="#tab-prescription" class="nav-sub-item" data-lis-tab="prescription"><i class="bi bi-clipboard-pulse"></i> Diet Prescription</a>
+                        <a href="#tab-mealplan" class="nav-sub-item" data-lis-tab="mealplan"><i class="bi bi-egg-fried"></i> Meal Planning</a>
+                        <a href="#tab-monitoring" class="nav-sub-item" data-lis-tab="monitoring"><i class="bi bi-graph-up"></i> Nutrition Monitoring</a>
+                        <a href="#tab-recommendation" class="nav-sub-item" data-lis-tab="recommendation"><i class="bi bi-lightbulb"></i> Dietary Recommendations</a>
+                        <a href="#tab-reports" class="nav-sub-item" data-lis-tab="reports"><i class="bi bi-bar-chart"></i> Nutrition Reports</a>
+                    </div>
+                </div>
             </nav>
         </div>
-
         <div class="sidebar-footer">
-            <div class="user-panel d-flex align-items-center mb-3">
-                <div class="avatar-circle">AD</div>
-                <div class="user-info ms-2">
-                    <h6 class="m-0 text-white">NICOLAS</h6>
-                    <small class="text-muted text-uppercase">Administrator</small>
-                </div>
-            </div>
-            <a href="#" class="nav-item footer-link mb-2">
-                <i class="bi bi-gear"></i>
-                <span>Settings</span>
-            </a>
-            <a href="../index.html" class="nav-item footer-link text-danger-hover">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
-            </a>
+            <div class="user-panel d-flex align-items-center mb-3"><div class="avatar-circle">AD</div><div class="user-info ms-2"><h6 class="m-0 text-white">NICOLAS</h6><small class="text-muted text-uppercase">Administrator</small></div></div>
+            <a href="#" class="nav-item footer-link mb-2"><i class="bi bi-gear"></i><span>Settings</span></a>
+            <a href="../index.html" class="nav-item footer-link text-danger-hover"><i class="bi bi-box-arrow-left"></i><span>Logout</span></a>
         </div>
     </aside>
-
-    <!-- MAIN BODY CONTENT -->
-    <main class="main-content">
-        <!-- TOP NAVBAR -->
+    <main class="main-content" id="dnmsMain">
         <header class="top-navbar d-flex justify-content-between align-items-center mb-4">
-            <div class="search-bar-container flex-grow-1 max-w-xl me-3">
-                <div class="input-group search-input-group">
-                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search patients or records...">
-                </div>
-            </div>
-            <div class="top-actions d-flex align-items-center gap-3">
-                <button class="btn btn-add-record d-flex align-items-center gap-2">
-                    <i class="bi bi-plus-lg"></i> Add Record
-                </button>
-                <button class="btn-top-icon"><i class="bi bi-bell"></i></button>
-                <button class="btn-top-icon"><i class="bi bi-question-circle"></i></button>
-                <div class="top-profile-avatar"></div>
-            </div>
+            <div class="search-bar-container flex-grow-1 max-w-xl me-3"><div class="input-group search-input-group"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" id="dnmsSearchInput" class="form-control border-start-0" placeholder="Search patients, diets, meals..."><button type="button" id="dnmsSearchClear" class="btn border-start-0 bg-white text-muted d-none" aria-label="Clear search"><i class="bi bi-x-lg"></i></button></div></div>
+            <div class="top-actions d-flex align-items-center gap-3"><button class="btn-top-icon" id="dnmsNotifBtn" aria-label="Notifications"><i class="bi bi-bell"></i><span class="lis-notif-dot"></span></button><button class="btn-top-icon" aria-label="Help"><i class="bi bi-question-circle"></i></button><div class="top-profile-avatar"></div></div>
         </header>
 
-        <!-- SUBHEADINGS AND MAIN MODULE TITLE -->
-        <nav class="breadcrumb-container mb-1" aria-label="breadcrumb">
-            <ol class="breadcrumb fs-12 m-0">
-                <li class="breadcrumb-item text-muted">Clinical Management</li>
-                <li class="breadcrumb-item text-success active" aria-current="page">Diet & Nutrition</li>
-            </ol>
-        </nav>
-        
-        <h1 class="overview-title mb-4">Patient Nutritional Overview</h1>
-
-        <!-- TWO MAIN COLUMN MATRIX SECTION -->
-        <div class="row g-3">
-            <!-- Left Side Grid Pane: Patient Demographics & Strategy Restrictions -->
-            <div class="col-xl-4 col-lg-5">
-                <div class="d-flex flex-column gap-3">
-                    
-                    <!-- Patient Brief Profile Card -->
-                    <div class="content-card card p-3">
-                        <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-3">
-                            <div class="patient-profile-avatar-frame">
-                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120&h=120" alt="Maria Santos" class="img-fluid rounded-circle">
-                            </div>
-                            <div>
-                                <h4 class="m-0 font-weight-bold text-dark fs-16">Maria Santos</h4>
-                                <small class="text-muted d-block mb-2">Patient ID: #MS-88219</small>
-                                <span class="badge bg-soft-success-bright text-success-dark font-weight-semibold rounded-pill px-3 py-05 fs-11">Stable Condition</span>
-                            </div>
-                        </div>
-
-                        <!-- Structured List Metrics Data Grid -->
-                        <div class="d-flex flex-column gap-2">
-                            <div class="d-flex justify-content-between fs-13 py-05">
-                                <span class="text-muted">Age / Gender</span>
-                                <span class="text-dark font-weight-medium">68 / Female</span>
-                            </div>
-                            <div class="d-flex justify-content-between fs-13 py-05">
-                                <span class="text-muted">Room</span>
-                                <span class="text-dark font-weight-medium">402-B (Ward 4)</span>
-                            </div>
-                            <div class="d-flex justify-content-between fs-13 py-05">
-                                <span class="text-muted">Primary Physician</span>
-                                <span class="text-dark font-weight-medium">Dr. Aris Thorne</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dark Emerald Guard Restriction Panel -->
-                    <div class="dietary-restriction-card card p-3 text-white">
-                        <div class="d-flex align-items-center gap-2 text-white font-weight-bold mb-3">
-                            <i class="bi bi-clipboard2-check-fill text-success-light fs-5"></i>
-                            <h6 class="m-0 font-weight-bold fs-13 tracking-wide text-uppercase">Active Dietary Plan</h6>
-                        </div>
-
-                        <div class="d-flex flex-column gap-2 mb-4">
-                            <!-- Rule 1 -->
-                            <div class="inner-restriction-row p-2.5 rounded d-flex align-items-center gap-3">
-                                <div class="alert-icon-circle bg-soft-warning-opaque text-warning"><i class="bi bi-exclamation-triangle-fill"></i></div>
-                                <div>
-                                    <span class="d-block text-white font-weight-bold fs-13 lh-sm">Low Sodium</span>
-                                    <small class="text-white-50 fs-11">Max 1,500mg daily</small>
-                                </div>
-                            </div>
-                            <!-- Rule 2 -->
-                            <div class="inner-restriction-row p-2.5 rounded d-flex align-items-center gap-3">
-                                <div class="alert-icon-circle bg-soft-danger-opaque text-danger"><i class="bi bi-dash-circle-fill"></i></div>
-                                <div>
-                                    <span class="d-block text-white font-weight-bold fs-13 lh-sm">No Added Sugar</span>
-                                    <small class="text-white-50 fs-11">Strict diabetic protocol</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-modify-restrictions w-100 py-2 font-weight-semibold text-white fs-13">Modify Restrictions</button>
-                    </div>
-
+        <!-- ============ OVERVIEW ============ -->
+        <section class="lis-section" id="dnms-overview">
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-4">
+                <div><h1 class="overview-title m-0">Diet & Nutrition Management System</h1><p class="text-muted m-0">Manage therapeutic diets, meal plans, monitoring, and recommendations.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="dnmsTopAction"><i class="bi bi-plus-lg"></i> New Diet Prescription</button></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-clipboard-pulse"></i></div><div><div class="lis-stat-label">Prescriptions</div><div class="lis-stat-value">64</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-egg-fried"></i></div><div><div class="lis-stat-label">Meal Plans</div><div class="lis-stat-value">120</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-graph-up"></i></div><div><div class="lis-stat-label">Monitored</div><div class="lis-stat-value">48</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-lightbulb"></i></div><div><div class="lis-stat-label">Recommendations</div><div class="lis-stat-value">30</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Modules</h5>
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-4"><a href="#tab-prescription" class="lis-module-card" data-goto="prescription"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon blue"><i class="bi bi-clipboard-pulse"></i></div><div><div class="lis-stat-label">Diet Prescription</div><div class="text-muted fs-12">Therapeutic diets</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-mealplan" class="lis-module-card" data-goto="mealplan"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon teal"><i class="bi bi-egg-fried"></i></div><div><div class="lis-stat-label">Meal Planning</div><div class="text-muted fs-12">Daily menus</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-monitoring" class="lis-module-card" data-goto="monitoring"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon green"><i class="bi bi-graph-up"></i></div><div><div class="lis-stat-label">Nutrition Monitoring</div><div class="text-muted fs-12">Intake tracking</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-recommendation" class="lis-module-card" data-goto="recommendation"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon slate"><i class="bi bi-lightbulb"></i></div><div><div class="lis-stat-label">Dietary Recommendations</div><div class="text-muted fs-12">Meal suggestions</div></div></div></a></div>
+                    <div class="col-md-6 col-lg-4"><a href="#tab-reports" class="lis-module-card" data-goto="reports"><div class="d-flex align-items-center gap-3"><div class="lis-stat-icon red"><i class="bi bi-bar-chart"></i></div><div><div class="lis-stat-label">Nutrition Reports</div><div class="text-muted fs-12">Analytics</div></div></div></a></div>
                 </div>
             </div>
+        </section>
 
-            <!-- Right Side Grid Pane: Schedule Calendars & Historical Log Streams -->
-            <div class="col-xl-8 col-lg-7">
-                <div class="d-flex flex-column gap-3">
-                    
-                    <!-- Daily Meal Schedule Modules -->
-                    <div class="content-card card p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="section-card-title m-0">Daily Meal Schedule</h5>
-                            <div class="d-flex align-items-center gap-2 schedule-navigation-row">
-                                <button class="btn btn-nav-arrow p-0"><i class="bi bi-chevron-left"></i></button>
-                                <span class="fs-12 font-weight-bold text-dark mx-1">Tuesday, Oct 24</span>
-                                <button class="btn btn-nav-arrow p-0"><i class="bi bi-chevron-right"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- 3 Items Triple Columns Array Grid Layout -->
-                        <div class="row g-2">
-                            <!-- Breakfast Card (Served) -->
-                            <div class="col-xl-4 col-md-6">
-                                <div class="meal-block-card p-3 rounded h-100 d-flex flex-column justify-content-between">
-                                    <div>
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-soft-success-bright text-success-dark font-weight-bold fs-9 text-uppercase tracking-wider px-2 py-05">Breakfast</span>
-                                            <small class="text-muted font-monospace fs-10">08:00 AM</small>
-                                        </div>
-                                        <h6 class="meal-title text-dark font-weight-bold fs-13 mb-1">Oatmeal with Almonds</h6>
-                                        <p class="meal-caption text-muted fs-11 lh-sm mb-3">No sweetener, 1/2 cup fresh berries.</p>
-                                    </div>
-                                    <small class="text-success font-weight-semibold d-flex align-items-center gap-1 fs-11 mt-2">
-                                        <i class="bi bi-check-circle-fill"></i> Served
-                                    </small>
-                                </div>
-                            </div>
-
-                            <!-- Lunch Card (Preparing) -->
-                            <div class="col-xl-4 col-md-6">
-                                <div class="meal-block-card p-3 rounded h-100 d-flex flex-column justify-content-between">
-                                    <div>
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-soft-primary text-primary font-weight-bold fs-9 text-uppercase tracking-wider px-2 py-05">Lunch</span>
-                                            <small class="text-muted font-monospace fs-10">12:30 PM</small>
-                                        </div>
-                                        <h6 class="meal-title text-dark font-weight-bold fs-13 mb-1">Grilled Salmon Salad</h6>
-                                        <p class="meal-caption text-muted fs-11 lh-sm mb-3">Olive oil dressing, steam asparagus.</p>
-                                    </div>
-                                    <small class="text-primary font-weight-semibold d-flex align-items-center gap-1 fs-11 mt-2">
-                                        <i class="bi bi-three-dots"></i> Preparing
-                                    </small>
-                                </div>
-                            </div>
-
-                            <!-- Dinner Card (Scheduled) -->
-                            <div class="col-xl-4 col-md-12">
-                                <div class="meal-block-card p-3 rounded h-100 d-flex flex-column justify-content-between">
-                                    <div>
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-soft-secondary text-muted font-weight-bold fs-9 text-uppercase tracking-wider px-2 py-05">Dinner</span>
-                                            <small class="text-muted font-monospace fs-10">06:30 PM</small>
-                                        </div>
-                                        <h6 class="meal-title text-dark font-weight-bold fs-13 mb-1">Quinoa Vegetable Bowl</h6>
-                                        <p class="meal-caption text-muted fs-11 lh-sm mb-3">Low-sodium broth, roasted root veg.</p>
-                                    </div>
-                                    <small class="text-muted font-weight-semibold d-flex align-items-center gap-1 fs-11 mt-2">
-                                        <i class="bi bi-clock"></i> Scheduled
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
+        <!-- ============ SECTION: DIET PRESCRIPTION ============ -->
+        <section class="lis-section" id="tab-prescription">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#dnms-overview">Nutrition</a><span class="sep">/</span><span class="current">Diet Prescription</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Diet Prescription</h2><p class="text-muted m-0">Create and manage therapeutic diet prescriptions.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0"><button class="btn btn-save-changes btn-action-top" id="dnmsNewRxBtn"><i class="bi bi-plus-lg"></i> New Diet Prescription</button></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="dnmsRxForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Prescription Number</label><input type="text" class="lis-input" value="DP-3015" readonly></div>
+                    <div class="col-md-4"><label class="lis-form-label">Prescription Date</label><input type="text" class="lis-input" value="2026-07-17"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name" required></div>
+                    <div class="col-md-3"><label class="lis-form-label">Patient ID</label><input type="text" class="lis-input" placeholder="ID"></div>
+                    <div class="col-md-3"><label class="lis-form-label">Age</label><input type="text" class="lis-input" placeholder="Years"></div>
+                    <div class="col-md-2"><label class="lis-form-label">Sex</label><select class="lis-input"><option>Male</option><option>Female</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Attending Physician</label><input type="text" class="lis-input" placeholder="Dr. Name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dietitian</label><input type="text" class="lis-input" value="Diet. Anna Cruz"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Department</label><select class="lis-input"><option>Endocrinology</option><option>Cardiology</option><option>GI</option><option>Oncology</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Medical Diagnosis</label><input type="text" class="lis-input" placeholder="e.g. Diabetes Mellitus"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Therapeutic Diet Type</label><select class="lis-input"><option>Diabetic Diet</option><option>Low Sodium</option><option>Renal Diet</option><option>Low Fat</option><option>Soft Diet</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Calorie Requirement</label><input type="text" class="lis-input" placeholder="e.g. 1800 kcal"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Fluid Restriction</label><input type="text" class="lis-input" placeholder="e.g. 1500 ml"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Food Allergies</label><input type="text" class="lis-input" placeholder="e.g. Peanuts"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dietary Restrictions</label><input type="text" class="lis-input" placeholder="e.g. No pork"></div>
+                    <div class="col-md-6"><label class="lis-form-label">Nutrition Goals</label><input type="text" class="lis-input" placeholder="e.g. Weight control"></div>
+                    <div class="col-12"><label class="lis-form-label">Special Instructions</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsRxReset">Reset</button>
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsRxCancel">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsRxDraft">Save Draft</button>
+                        <button type="submit" class="btn btn-save-changes" id="dnmsRxSave">Save Prescription</button>
                     </div>
-
-                    <!-- Recent Nutritional Logs Metric Data Grid -->
-                    <div class="content-card card p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="section-card-title m-0">Recent Nutritional Logs</h5>
-                            <button class="btn btn-outline-secondary btn-action-top d-flex align-items-center gap-1 fs-11 py-1 px-2">
-                                <i class="bi bi-download"></i> Export PDF
-                            </button>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table alignment-middle-table text-nowrap m-0">
-                                <thead>
-                                    <tr class="table-header-row text-uppercase text-muted fs-10 font-weight-bold border-bottom">
-                                        <th class="py-2">Time / Date</th>
-                                        <th class="py-2">Intake Type</th>
-                                        <th class="py-2">Kcal</th>
-                                        <th class="py-2">Sodium (mg)</th>
-                                        <th class="py-2">Sugar (g)</th>
-                                        <th class="py-2 text-end">Status</th>
-                                        <th class="py-2 pe-3 sticky-action">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="fs-12">
-                                    <!-- Row 1 -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">08:15 AM</span>
-                                            <small class="text-muted font-monospace fs-10">Oct 24, 2023</small>
-                                        </td>
-                                        <td class="py-3 text-dark">Breakfast (Solid)</td>
-                                        <td class="py-3 font-weight-medium text-dark">320</td>
-                                        <td class="py-3 text-dark">120</td>
-                                        <td class="py-3 text-dark">4</td>
-                                        <td class="py-3 text-end"><span class="badge bg-soft-success-bright text-success-dark font-weight-bold text-uppercase fs-9">Optimal</span></td>
-                                    </tr>
-                                    <!-- Row 2 -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">10:45 AM</span>
-                                            <small class="text-muted font-monospace fs-10">Oct 24, 2023</small>
-                                        </td>
-                                        <td class="py-3 text-dark">Hydration (Water)</td>
-                                        <td class="py-3 font-weight-medium text-dark">0</td>
-                                        <td class="py-3 text-dark">5</td>
-                                        <td class="py-3 text-dark">0</td>
-                                        <td class="py-3 text-end"><span class="badge bg-soft-success-bright text-success-dark font-weight-bold text-uppercase fs-9">Optimal</span></td>
-                                    </tr>
-                                    <!-- Row 3 (Trigger Warning accent flag) -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">06:45 PM</span>
-                                            <small class="text-muted font-monospace fs-10">Oct 23, 2023</small>
-                                        </td>
-                                        <td class="py-3 text-dark">Dinner (Solid)</td>
-                                        <td class="py-3 font-weight-medium text-dark">450</td>
-                                        <td class="py-3 text-dark">380</td>
-                                        <td class="py-3 text-dark">12</td>
-                                        <td class="py-3 text-end"><span class="badge bg-soft-warning text-warning-dark font-weight-bold text-uppercase fs-9 text-wrap max-w-status">Warn: Sodium</span></td>
-                                    </tr>
-                                    <!-- Row 4 -->
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <span class="d-block font-weight-bold text-dark">01:00 PM</span>
-                                            <small class="text-muted font-monospace fs-10">Oct 23, 2023</small>
-                                        </td>
-                                        <td class="py-3 text-dark">Lunch (Solid)</td>
-                                        <td class="py-3 font-weight-medium text-dark">510</td>
-                                        <td class="py-3 text-dark">210</td>
-                                        <td class="py-3 text-dark">6</td>
-                                        <td class="py-3 text-end"><span class="badge bg-soft-success-bright text-success-dark font-weight-bold text-uppercase fs-9">Optimal</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
+                </form>
+                <hr class="lis-divider">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="section-card-title m-0">Diet Prescriptions</h5>
+                    <button class="btn btn-outline-secondary btn-action-top" id="dnmsRxFilter"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="dnmsRxTable">
+                        <thead><tr><th>Prescription ID</th><th>Patient</th><th>Therapeutic Diet</th><th>Dietitian</th><th>Physician</th><th>Status</th><th>Date</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">DP-3015</td><td>Maria Santos</td><td>Diabetic Diet</td><td>Diet. Anna Cruz</td><td>Dr. Reyes</td><td><span class="lis-badge lis-badge-approved">Active</span></td><td>2026-07-17</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button><button class="lis-tbtn delete"><i class="bi bi-trash"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="8" class="lis-empty"><i class="bi bi-inbox"></i><p>No prescriptions.</p></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- ============ SECTION: MEAL PLANNING ============ -->
+        <section class="lis-section" id="tab-mealplan">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#dnms-overview">Nutrition</a><span class="sep">/</span><span class="current">Meal Planning</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Meal Planning</h2><p class="text-muted m-0">Plan and organize daily meals for patients.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-calendar-day"></i></div><div><div class="lis-stat-label">Meals Today</div><div class="lis-stat-value">210</div></div></div></div>
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-sunrise"></i></div><div><div class="lis-stat-label">Breakfast</div><div class="lis-stat-value">70</div></div></div></div>
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-sun"></i></div><div><div class="lis-stat-label">Lunch</div><div class="lis-stat-value">70</div></div></div></div>
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-sunset"></i></div><div><div class="lis-stat-label">Dinner</div><div class="lis-stat-value">70</div></div></div></div>
+                <div class="col-6 col-lg-4"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-heart-pulse"></i></div><div><div class="lis-stat-label">Special Diet Meals</div><div class="lis-stat-value">32</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="dnmsMealForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Meal Plan Number</label><input type="text" class="lis-input" value="MP-9001"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Therapeutic Diet</label><select class="lis-input"><option>Diabetic Diet</option><option>Low Sodium</option><option>Renal Diet</option><option>Soft Diet</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Meal Date</label><input type="text" class="lis-input" value="2026-07-17"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Breakfast Menu</label><input type="text" class="lis-input" placeholder="Menu"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Morning Snack</label><input type="text" class="lis-input" placeholder="Snack"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Lunch Menu</label><input type="text" class="lis-input" placeholder="Menu"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Afternoon Snack</label><input type="text" class="lis-input" placeholder="Snack"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dinner Menu</label><input type="text" class="lis-input" placeholder="Menu"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Evening Snack</label><input type="text" class="lis-input" placeholder="Snack"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Beverage</label><input type="text" class="lis-input" placeholder="e.g. Water"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Calories</label><input type="text" class="lis-input" placeholder="e.g. 1800 kcal"></div>
+                    <div class="col-12"><label class="lis-form-label">Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsMealReset">Reset</button>
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsMealUpdate">Update</button>
+                        <button type="submit" class="btn btn-save-changes" id="dnmsMealSave">Save Meal Plan</button>
+                    </div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="dnmsMealTable">
+                        <thead><tr><th>Meal Plan ID</th><th>Patient</th><th>Diet Type</th><th>Meal Date</th><th>Calories</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">MP-9001</td><td>Maria Santos</td><td>Diabetic Diet</td><td>2026-07-17</td><td>1800 kcal</td><td><span class="lis-badge lis-badge-info">Planned</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="7" class="lis-empty"><i class="bi bi-inbox"></i><p>No meal plans.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: NUTRITION MONITORING ============ -->
+        <section class="lis-section" id="tab-monitoring">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#dnms-overview">Nutrition</a><span class="sep">/</span><span class="current">Nutrition Monitoring</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Nutrition Monitoring</h2><p class="text-muted m-0">Monitor patient nutritional intake and compliance.</p></div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-cup-straw"></i></div><div><div class="lis-stat-label">Daily Intake</div><div class="lis-stat-value">1650</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-graph-up-arrow"></i></div><div><div class="lis-stat-label">Goal Achievement</div><div class="lis-stat-value">91%</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-people"></i></div><div><div class="lis-stat-label">Monitored</div><div class="lis-stat-value">48</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-shield-check"></i></div><div><div class="lis-stat-label">Compliance</div><div class="lis-stat-value">Good</div></div></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <form id="dnmsMonForm" class="row g-3 mb-3">
+                    <div class="col-md-4"><label class="lis-form-label">Patient Name</label><input type="text" class="lis-input" placeholder="Full name"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Diet Prescription</label><input type="text" class="lis-input" value="DP-3015"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Date</label><input type="text" class="lis-input" value="2026-07-17"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Breakfast Intake</label><input type="text" class="lis-input" placeholder="%"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Lunch Intake</label><input type="text" class="lis-input" placeholder="%"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Dinner Intake</label><input type="text" class="lis-input" placeholder="%"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Snack Intake</label><input type="text" class="lis-input" placeholder="%"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Water Intake</label><input type="text" class="lis-input" placeholder="ml"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Total Calories</label><input type="text" class="lis-input" placeholder="kcal"></div>
+                    <div class="col-md-4"><label class="lis-form-label">Nutrition Status</label><select class="lis-input"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option></select></div>
+                    <div class="col-md-4"><label class="lis-form-label">Compliance Level</label><select class="lis-input"><option>Excellent</option><option>Good</option><option>Fair</option><option>Poor</option></select></div>
+                    <div class="col-12"><label class="lis-form-label">Dietitian Notes</label><textarea class="lis-input" rows="2" placeholder="Notes..."></textarea></div>
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsMonClear">Clear</button>
+                        <button type="button" class="btn btn-outline-secondary" id="dnmsMonUpdate">Update</button>
+                        <button type="submit" class="btn btn-save-changes" id="dnmsMonSave">Save Monitoring Record</button>
+                    </div>
+                </form>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="dnmsMonTable">
+                        <thead><tr><th>Patient</th><th>Date</th><th>Calories Consumed</th><th>Nutrition Status</th><th>Compliance</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">Maria Santos</td><td>2026-07-17</td><td>1650 kcal</td><td><span class="lis-badge lis-badge-normal">Good</span></td><td><span class="lis-badge lis-badge-normal">Good</span></td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn edit"><i class="bi bi-pencil"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="6" class="lis-empty"><i class="bi bi-inbox"></i><p>No monitoring records.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: DIETARY RECOMMENDATIONS ============ -->
+        <section class="lis-section" id="tab-recommendation">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#dnms-overview">Nutrition</a><span class="sep">/</span><span class="current">Dietary Recommendations</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Dietary Recommendations</h2><p class="text-muted m-0">Provide meal suggestions based on diet, allergies, and restrictions.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0">
+                    <button class="btn btn-outline-secondary btn-action-top" id="dnmsRecPrint"><i class="bi bi-printer"></i> Print</button>
+                    <button class="btn btn-outline-secondary btn-action-top" id="dnmsRecPdf"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                </div>
+            </div>
+            <div class="content-card card p-3 mb-3">
+                <div class="input-group search-input-group"><span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span><input type="text" id="dnmsRecSearch" class="form-control border-start-0" placeholder="Search patient..."></div>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-4">
+                    <div class="content-card card p-3 mb-3">
+                        <h6 class="section-card-title m-0 mb-2">Patient Information</h6>
+                        <div class="d-flex align-items-center gap-3"><div class="lis-avatar-sm">MS</div><div><div class="lis-strong">Maria Santos</div><small class="text-muted">ID: PT-9012 &bull; Female, 34</small></div></div>
+                    </div>
+                    <div class="content-card card p-3">
+                        <h6 class="section-card-title m-0 mb-2">Diet Prescription Summary</h6>
+                        <p class="fs-13 text-muted mb-0">Diabetic Diet &bull; 1800 kcal &bull; Fluid 1500 ml</p>
+                        <hr class="lis-divider">
+                        <h6 class="section-card-title m-0 mb-2">Food Allergy Summary</h6>
+                        <p class="fs-13 text-muted mb-0">Peanuts, Shellfish</p>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="content-card card p-4">
+                        <div class="mb-2"><label class="lis-form-label">Recommended Foods</label><textarea class="lis-input" rows="2">Oats, leafy greens, lean chicken, berries.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Foods to Avoid</label><textarea class="lis-input" rows="2">Sugary drinks, white rice, fried foods.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Daily Nutrition Goals</label><input type="text" class="lis-input" value="1800 kcal, 45g protein"></div>
+                        <div class="mb-2"><label class="lis-form-label">Healthy Meal Suggestions</label><textarea class="lis-input" rows="2">Grilled chicken salad, vegetable soup.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Alternative Meal Options</label><textarea class="lis-input" rows="2">Tofu stir-fry, quinoa bowl.</textarea></div>
+                        <div class="mb-2"><label class="lis-form-label">Hydration Recommendations</label><input type="text" class="lis-input" value="At least 1500 ml water"></div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-outline-secondary" id="dnmsRecPdf2">Download PDF</button>
+                            <button class="btn btn-save-changes" id="dnmsRecGen">Generate Recommendation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-card card p-4 mt-3">
+                <h5 class="section-card-title m-0 mb-3">Recommendations</h5>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="dnmsRecTable">
+                        <thead><tr><th>Recommendation ID</th><th>Patient</th><th>Diet Type</th><th>Dietitian</th><th>Date</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">RC-2201</td><td>Maria Santos</td><td>Diabetic Diet</td><td>Diet. Anna Cruz</td><td>2026-07-17</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="6" class="lis-empty"><i class="bi bi-inbox"></i><p>No recommendations.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECTION: NUTRITION REPORTS ============ -->
+        <section class="lis-section" id="tab-reports">
+            <nav aria-label="breadcrumb" class="lis-breadcrumb mb-2"><a href="#dnms-overview">Nutrition</a><span class="sep">/</span><span class="current">Nutrition Reports</span></nav>
+            <div class="d-flex justify-content-between align-items-md-center align-items-start flex-column flex-md-row mb-3">
+                <div><h2 class="overview-title m-0">Nutrition Reports</h2><p class="text-muted m-0">Generate reports summarizing nutritional status.</p></div>
+                <div class="d-flex gap-2 mt-2 mt-md-0">
+                    <button class="btn btn-outline-secondary btn-action-top" id="dnmsRepPdf"><i class="bi bi-file-earmark-pdf"></i> Export PDF</button>
+                    <button class="btn btn-outline-secondary btn-action-top" id="dnmsRepExcel"><i class="bi bi-file-earmark-excel"></i> Export Excel</button>
+                    <button class="btn btn-outline-secondary btn-action-top" id="dnmsRepPrint"><i class="bi bi-printer"></i> Print</button>
+                </div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon blue"><i class="bi bi-clipboard-pulse"></i></div><div><div class="lis-stat-label">Active Rx</div><div class="lis-stat-value">64</div></div></div></div>
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon teal"><i class="bi bi-egg-fried"></i></div><div><div class="lis-stat-label">Meal Plans</div><div class="lis-stat-value">120</div></div></div></div>
+                <div class="col-6 col-lg-2"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon green"><i class="bi bi-graph-up"></i></div><div><div class="lis-stat-label">Assessments</div><div class="lis-stat-value">48</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon amber"><i class="bi bi-graph-up-arrow"></i></div><div><div class="lis-stat-label">Improving</div><div class="lis-stat-value">35</div></div></div></div>
+                <div class="col-6 col-lg-3"><div class="content-card card p-3 lis-stat-card"><div class="lis-stat-icon red"><i class="bi bi-exclamation-triangle"></i></div><div><div class="lis-stat-label">Follow-up</div><div class="lis-stat-value">13</div></div></div></div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3" role="group">
+                <button class="btn lis-btn-primary" data-range="daily">Daily</button>
+                <button class="btn lis-btn-outline" data-range="weekly">Weekly</button>
+                <button class="btn lis-btn-outline" data-range="monthly">Monthly</button>
+                <button class="btn lis-btn-outline" data-range="yearly">Yearly</button>
+            </div>
+            <div class="row g-3 mb-3">
+                <div class="col-lg-8"><div class="lis-chart-box card p-3"><canvas id="dnmsBarChart"></canvas></div></div>
+                <div class="col-lg-4"><div class="lis-chart-box card p-3"><canvas id="dnmsPieChart"></canvas></div></div>
+                <div class="col-lg-12"><div class="lis-chart-box card p-3"><canvas id="dnmsLineChart"></canvas></div></div>
+            </div>
+            <div class="content-card card p-4">
+                <h5 class="section-card-title m-0 mb-3">Reports</h5>
+                <div class="lis-table-responsive">
+                    <table class="lis-table" id="dnmsRepTable">
+                        <thead><tr><th>Report ID</th><th>Patient</th><th>Diet Type</th><th>Nutrition Status</th><th>Dietitian</th><th>Date</th><th class="text-end">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td class="lis-strong">NR-8801</td><td>Maria Santos</td><td>Diabetic Diet</td><td><span class="lis-badge lis-badge-normal">Good</span></td><td>Diet. Anna Cruz</td><td>2026-07-17</td><td class="text-end"><button class="lis-tbtn view"><i class="bi bi-eye"></i></button><button class="lis-tbtn print"><i class="bi bi-printer"></i></button></td></tr>
+                            <tr class="lis-empty-row d-none"><td colspan="7" class="lis-empty"><i class="bi bi-inbox"></i><p>No reports.</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </main>
 </div>
 
-<!-- NUTRITIONAL INTAKE RECORD MODAL -->
-<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title font-weight-bold text-dark" id="addRecordModalLabel"><i class="bi bi-egg-fried text-success me-2"></i>Add Nutritional Intake</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addRecordForm" class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Time</label>
-                        <input type="text" class="form-control custom-form-input" name="time" id="timeInput" placeholder="08:15 AM" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Date</label>
-                        <input type="text" class="form-control custom-form-input" name="date" id="dateInput" placeholder="Oct 24, 2023" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Intake Type</label>
-                        <select class="form-select custom-form-input" name="intake" id="intakeSelect" required>
-                            <option value="" disabled selected>Select intake type...</option>
-                            <option value="Breakfast (Solid)">Breakfast (Solid)</option>
-                            <option value="Lunch (Solid)">Lunch (Solid)</option>
-                            <option value="Dinner (Solid)">Dinner (Solid)</option>
-                            <option value="Snack (Solid)">Snack (Solid)</option>
-                            <option value="Hydration (Water)">Hydration (Water)</option>
-                            <option value="Supplement (Liquid)">Supplement (Liquid)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Kcal</label>
-                        <input type="text" class="form-control custom-form-input" name="kcal" id="kcalInput" placeholder="320" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sodium (mg)</label>
-                        <input type="text" class="form-control custom-form-input" name="sodium" id="sodiumInput" placeholder="120" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Sugar (g)</label>
-                        <input type="text" class="form-control custom-form-input" name="sugar" id="sugarInput" placeholder="4" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-weight-semibold text-muted fs-11 text-uppercase">Status</label>
-                        <select class="form-select custom-form-input" name="status" id="statusSelect">
-                            <option>Optimal</option>
-                            <option>Warn: Sodium</option>
-                            <option>Warn: Sugar</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="addRecordForm" class="btn btn-save-changes btn-action-top">Save Record</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="../js/add-record.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="../js/dnms.js"></script>
 </body>
 </html>
